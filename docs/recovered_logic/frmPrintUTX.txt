@@ -1,0 +1,38 @@
+=== RebPayRollWeb.frmPrintUTX
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::GetCurrentPeriod
+   -> TextBox::set_Text
+
+-- btnPrint_Click
+   -> this::fncUTX_Data
+
+-- fncUTX_Data
+   -> TextBox::get_Text
+   -> this::fncOpenConnection
+   "SELECT 'TWO' AS UTD,0 AS UD_AMOUNT,0 AS ELDAYS,0 AS OTHRS,0 AS OTHRSRATE,0 AS OTDAYS,0 AS OTDAYSRATE,0 AS LWP,SD.*  FROM TBL_UTXDETAILS UD inner join VW_SALARY_DETAILS SD ON UD.EMPLOYEEID=SD.EMPLOYEEID AND UD.PERIOD=SD.PERIOD AND UD.PAYID=SD.PAYID AND UD.AMOUNT=SD.AMOUNT AND SD.REMARKS='UTX' WHERE UD.PERIOD="
+   "  UNION ALL SELECT 'ONE' AS UTD,sd.amount AS UD_AMOUNT, UM.ELDAYS,UM.OTHRS,UM.OTHRSRATE,UM.OTDAYS,UM.OTDAYSRATE,UM.LWP,SD.*  FROM TBL_UTXMASTER UM inner join VW_SALARY_DETAILS SD ON UM.EMPLOYEEID=SD.EMPLOYEEID AND UM.PERIOD=SD.PERIOD WHERE UM.PERIOD="
+   " AND SD.PAYID =29 "
+   -> this::GetTable
+   -> this::.ctor
+   -> String::Substring
+   ", "
+   -> String::Substring
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "UTX"
+   -> this::fncPrintReport
+   -> Object::GetType
+   "pdfView"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- .ctor
+   -> Page::.ctor

@@ -1,0 +1,56 @@
+=== RebPayRollWeb.rptfrmSchedule
+
+-- Page_Load
+   -> Page::get_IsPostBack
+   "July"
+   "June"
+   -> DateTime::get_Now
+   -> DateTime::get_Year
+   -> this::GetCurrentPeriod
+   -> String::Substring
+   -> String::Substring
+   "07"
+   -> String::Substring
+   "06"
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   "07"
+   "06"
+   "-"
+   " - "
+   "-"
+   "-"
+   -> ListItem::.ctor
+
+-- lnkHBScheduleInt_Click
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> CheckBox::get_Checked
+   -> this::HB_Schedule_Interest
+   -> this::ShowReport
+
+-- lnkHBSchedule_Click
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> CheckBox::get_Checked
+   -> this::HB_Schedule
+   -> this::ShowReport
+
+-- drpFiscalYear_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> String::Split
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+
+-- ShowReport
+   -> Page::get_IsPostBack
+   -> Object::GetType
+   "pdfView_"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- lnkTAXSchedule_Click
+
+-- .ctor
+   -> Page::.ctor

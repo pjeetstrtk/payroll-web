@@ -1,0 +1,37 @@
+=== RebPayRollWeb.frmSendEmailPaySlip
+
+-- Page_Load
+   -> Page::get_IsPostBack
+   -> Page::get_Request
+   -> HttpRequest::get_QueryString
+   "EMP_ID"
+   -> Page::get_Response
+   "900"
+   -> HttpResponse::Write
+   -> Page::get_Request
+   -> HttpRequest::get_QueryString
+   "PERIOD"
+   -> Page::get_Response
+   "900"
+   -> HttpResponse::Write
+   -> Page::get_Response
+   "900"
+   -> HttpResponse::Write
+   -> Page::get_Request
+   -> HttpRequest::get_QueryString
+   "EMP_ID"
+   -> Page::get_Request
+   -> HttpRequest::get_QueryString
+   "PERIOD"
+   -> this::payslip
+
+-- payslip
+   -> this::fncPrintPayslip
+   -> Page::get_Response
+   -> HttpContext::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> HttpResponse::Write
+
+-- .ctor
+   -> Page::.ctor

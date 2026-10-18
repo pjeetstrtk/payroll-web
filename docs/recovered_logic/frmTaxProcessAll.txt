@@ -1,0 +1,261 @@
+=== RebPayRollWeb.frmTaxProcessAll
+
+-- Page_Load
+   -> Page::get_Session
+   -> HttpSessionState::set_Timeout
+   -> Page::get_IsPostBack
+   -> Control::get_ViewState
+   "IsAdd"
+
+-- btnSearch_Click
+
+-- btnPrint_Click
+   -> CommandEventArgs::get_CommandArgument
+
+-- fncPrintPayslip
+   -> this::GetCurrentPeriod
+   "Select max(Period) from TBL_PAYTRAN_DETAILS where EMPLOYEEID='"
+   "'"
+   -> this::GetSingleData
+   -> String::Substring
+   -> String::Substring
+   "select SD.*, BB.BANK_DESCRIPTION, BB.BRANCH_DESCRIPTION from VW_SALARY_DETAILS SD inner join VW_BANK_BRANCH BB on SD.BANKBR_ID=BB.BANKBR_ID  where Period="
+   " and SD.EMPLOYEEID='"
+   "'"
+   " Employee Id: "
+   " Year: "
+   ", Month"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::.ctor
+   "0"
+   ", "
+   -> this::GetFirstDateOfMonth
+   " to "
+   -> this::GetLastDateOfMonth
+   -> this::ToPrePeriod
+   -> this::GetPrevMiddleDateOfMonth
+   " to "
+   -> this::GetMiddleDateOfMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Payslip For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_payrollDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_attendenceDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "1"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "0"
+   -> FormulaFieldDefinition::set_Text
+   "select * from TBL_PAYTRAN_LOAN where to_number(to_Char(LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(ENDING_DATE,'yyyymm'))>="
+   " AND PERIOD="
+   " ORDER BY STARTING_DATE DESC"
+   "select * from TBL_PAYTRAN_LOAN where to_number(to_Char(LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(ENDING_DATE,'yyyymm'))>="
+   " AND PERIOD="
+   " AND EMPLOYEEID  in ("
+   ") ORDER BY STARTING_DATE DESC"
+   -> this::GetTable
+   -> ReportDocument::SetDataSource
+   -> ReportDocument::get_Subreports
+   "RptPayslipAdvance.rpt"
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "PAYSLIP_"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   -> Object::GetType
+   "AlertCode"
+   "window.open('"
+   "','_blank');document.getElementById('myModal').style='display: none';"
+   -> ScriptManager::RegisterStartupScript
+
+-- btnPrint_Click1
+
+-- btnPrintDir_Click
+
+-- btnProcessAll_Click
+   -> this::fnProcessAll
+   "Processing completed"
+   -> Label::set_Text
+
+-- fnProcessAll
+   -> Label::set_Text
+   -> this::GetCurrentPeriod
+   "Select EMPLOYEEID from vw_employee_all  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL)) and EMPLOYEEID=1636"
+   -> this::GetTable
+   "EMPLOYEEID"
+   -> this::.ctor
+   -> this::GetEmployee
+   "lblAllstatus"
+   -> Control::FindControl
+   "EMPLOYEEID"
+   -> Label::set_Text
+   -> this::Process
+   " Emplyee Processed"
+   -> Label::set_Text
+
+-- Button2_Click
+   -> this::GetCurrentPeriod
+   -> this::fncPrintPayslip
+   -> Object::GetType
+   "pdfView"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- btnProcess_Click1
+
+-- btnProcessAllNew_Click
+   -> Page::get_Session
+   -> HttpSessionState::get_SyncRoot
+   -> Monitor::Enter
+   -> Page::get_Session
+   "pEmpID"
+   -> Page::get_Session
+   "complete"
+   -> Page::get_Session
+   "status"
+   -> Page::get_Session
+   "prc"
+   -> Monitor::Exit
+   -> ParameterizedThreadStart::.ctor
+   -> Thread::.ctor
+   -> Page::get_Session
+   -> Thread::Start
+   -> MultiView::SetActiveView
+   -> Timer::set_Enabled
+
+-- fncProcessAllEmp
+   -> Label::set_Text
+   -> this::GetCurrentPeriod
+   "Select EMPLOYEEID,NAME from vw_employee_all  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL)) and PRESENTPAYGRADE>0 order by EMPLOYEEID"
+   -> this::GetTable
+   -> WebControl::set_Width
+   "EMPLOYEEID"
+   "NAME"
+   -> HttpSessionState::get_SyncRoot
+   -> Monitor::Enter
+   "status"
+   "Running: "
+   " Of "
+   " Employee ID : "
+   " "
+   "prc"
+   -> this::CalcTax
+   -> Monitor::Exit
+   -> HttpSessionState::get_SyncRoot
+   -> Monitor::Enter
+   "complete"
+   -> Monitor::Exit
+
+-- fncOpenEmpInfo
+   "Select * from vw_employee_all where employeeid='"
+   "' "
+   -> this::GetTable
+   "EMPLOYEEID"
+   "LOCATIONID"
+   "Select * from TBL_LOCATION where LOCATIONID='"
+   "'"
+   -> this::GetTable
+   "MIN_TAX"
+   -> this::ToDouble
+   "PRESENTPAYGRADE"
+   "DIR_DIVCELL_ID"
+   "DESIGNATIONID"
+   "SEX"
+   "NOOFINCREMENTSPAID"
+   -> this::GetPayScaleBasic
+   "DATEOFFIRSTJOINING"
+   -> this::isDate
+   -> this::ToDateAsDate
+   "30-06-2021"
+   "01-July-2020"
+   -> DateTime::get_Year
+   -> DateTime::get_Month
+   -> DateTime::get_Year
+   -> DateTime::get_Month
+   -> this::FractionRound
+   "Select * from TBL_POLICY where PAYCODE='101' order by FIX_AMOUNT"
+   -> this::GetTable
+   "BASIC_FROM"
+   "BASIC_TO"
+   "Rate"
+   "F"
+   -> Math::Round
+   -> Math::Round
+   -> Math::Round
+   -> this::FractionRound
+   "F"
+   "Update TBL_EMP_LAST_SALARY set AMOUNT="
+   " Where PAYID='84' AND EMPLOYEEID ='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "INSERT INTO TBL_EMP_LAST_SALARY (   PAYYEAR, PAYMONTH, EMPLOYEEID,    PAYID, AMOUNT, AD,   PERIOD,ARREAR)  VALUES ( 10,10 ,'"
+   "' ,'84' ,"
+   ",'D' ,201805,'N' )"
+   -> this::ExecuteStatement_TXN
+
+-- fnProcessAll
+   "LAST_TAX_"
+   -> DateTime::get_Now
+   "yyMMdd"
+   "Drop Table "
+   -> this::ExecuteStatement_TXN
+   "Create Table "
+   " AS Select * from TBL_EMP_LAST_SALARY Where PAYID='84'"
+   -> this::ExecuteStatement_TXN
+   "Select EMPLOYEEID  from vw_employee_active where employeeid not in (Select EMPLOYEEID from TBL_EMP_LAST_SALARY Where PAYID='84' group by EMPLOYEEID)"
+   "Select EMPLOYEEID from TBL_EMP_LAST_SALARY Where PAYID='84' group by EMPLOYEEID"
+   -> this::GetTable
+   "lblAllstatus"
+   -> Control::FindControl
+   "EMPLOYEEID"
+   -> Label::set_Text
+   "EMPLOYEEID"
+   -> this::fncOpenEmpInfo
+
+-- timUpdate_Tick
+   -> Page::get_Session
+   "status"
+   -> Label::set_Text
+   -> Page::get_Session
+   "prc"
+   -> WebControl::set_Width
+   "%"
+   -> Label::set_Text
+   -> Page::get_Session
+   "complete"
+   -> None::GetValueOrDefault
+   -> None::get_HasValue
+   -> Timer::set_Enabled
+   -> MultiView::SetActiveView
+
+-- .ctor
+   -> Page::.ctor

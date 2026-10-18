@@ -1,0 +1,89 @@
+=== RebPayRollWeb.UI.frmEmpProfileEntryUI
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::GetEmpInfoes
+
+-- GetEmpInfoes
+   -> this::fncOpenConnection
+   "select EMPLOYEEID,NAME,DATEOFFIRSTJOINING,FATHERNAME,DESIGNATIONID,EMAIL,TIN,M_STAUS,BLOODGROUP,NID,MOB_NO,LASTDEGREE,DISTRICT_ID,PRESENTADDRESS,PERMANENTADDRESS from TBL_EMPLOYEEMASTER where EMPLOYEEID='"
+   -> Page::get_Session
+   "EMPLOYEEID"
+   "'"
+   -> this::GetTable
+   "FATHERNAME"
+   -> TextBox::set_Text
+   "PERMANENTADDRESS"
+   -> TextBox::set_Text
+   "PRESENTADDRESS"
+   -> TextBox::set_Text
+   "LASTDEGREE"
+   -> TextBox::set_Text
+   "EMAIL"
+   -> TextBox::set_Text
+   -> None::.ctor
+   -> tok0x2b000015
+   "NID"
+   -> TextBox::set_Text
+   "MOB_NO"
+   -> TextBox::set_Text
+   "TIN"
+   -> TextBox::set_Text
+
+-- btnClose_Click
+   -> Page::get_Response
+   "~/UI/frmEmployeeEntryUI.aspx"
+   -> HttpResponse::Redirect
+
+-- btnUpdate_Click
+   -> this::fncUpdate
+
+-- fncUpdate
+   -> TextBox::get_Text
+   -> ListControl::get_Text
+   -> String::Substring
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> ListControl::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   "update TBL_EMPLOYEEMASTER set FATHERNAME='"
+   "', M_STAUS='"
+   "', PRESENTADDRESS='"
+   "', PERMANENTADDRESS='"
+   "', EMAIL='"
+   "', LASTDEGREE='"
+   "',  TIN='"
+   "', BLOODGROUP='"
+   "',NID='"
+   "',MOB_NO='"
+   "' where EMPLOYEEID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Update Successfully"
+   -> Label::set_Text
+
+-- .ctor
+   -> Page::.ctor
+
+-- <GetEmpInfoes>b__0
+   "M_STAUS"
+   -> String::StartsWith
+
+-- .cctor
+   "D - Divorced"
+   "M - Married"
+   "N - Not Married"
+   "W - Widowed"
+   "A+"
+   "A-"
+   "B+"
+   "B-"
+   "O+"
+   "O-"
+   "AB+"
+   "AB-"

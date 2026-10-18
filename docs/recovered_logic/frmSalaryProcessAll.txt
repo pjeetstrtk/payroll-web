@@ -1,0 +1,174 @@
+=== RebPayRollWeb.frmSalaryProcessAll
+
+-- Page_Load
+   -> Page::get_Session
+   -> HttpSessionState::set_Timeout
+   -> Page::get_IsPostBack
+   -> Control::get_ViewState
+   "IsAdd"
+
+-- btnSearch_Click
+
+-- btnPrint_Click
+   -> CommandEventArgs::get_CommandArgument
+
+-- btnPrint_Click1
+
+-- btnPrintDir_Click
+
+-- btnProcessAll_Click
+
+-- Button2_Click
+   -> this::GetCurrentPeriod
+   -> this::fncPrintPayslip
+   -> Object::GetType
+   "pdfView"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- btnProcess_Click1
+
+-- btnProcessAllNew_Click
+   -> Page::get_Session
+   -> HttpSessionState::get_SyncRoot
+   -> Monitor::Enter
+   -> Page::get_Session
+   "pEmpID"
+   -> Page::get_Session
+   "complete"
+   -> Page::get_Session
+   "status"
+   -> Page::get_Session
+   "prc"
+   -> Monitor::Exit
+   -> ParameterizedThreadStart::.ctor
+   -> Thread::.ctor
+   -> Page::get_Session
+   -> Thread::Start
+   -> MultiView::SetActiveView
+   -> Timer::set_Enabled
+
+-- fncProcessAllEmp
+   -> this::GetCurrentPeriod
+   "Select EMPLOYEEID,NAME from vw_employee_all  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL))  order by EMPLOYEEID"
+   -> this::GetTable
+   -> WebControl::set_Width
+   "EMPLOYEEID"
+   "NAME"
+   -> HttpSessionState::get_SyncRoot
+   -> Monitor::Enter
+   "status"
+   "Running: "
+   " Of "
+   " Employee ID : "
+   " "
+   "prc"
+   -> this::.ctor
+   -> this::GetEmployee
+   "status"
+   "Error : "
+   " Employee "
+   " "
+   -> this::Process
+   "status"
+   "Error : "
+   " Employee "
+   " "
+   " <br/>"
+   -> Monitor::Exit
+   -> this::GetNotProcessed
+   "EMPLOYEEID"
+   "NAME"
+   -> HttpSessionState::get_SyncRoot
+   -> Monitor::Enter
+   "status"
+   "Running Employee ID : "
+   " "
+   -> this::.ctor
+   -> this::GetEmployee
+   "status"
+   "Error : Employee "
+   " "
+   -> this::Process
+   "status"
+   "Error :  Employee "
+   " "
+   " <br/>"
+   -> Monitor::Exit
+   -> HttpSessionState::get_SyncRoot
+   -> Monitor::Enter
+   "complete"
+   -> Monitor::Exit
+
+-- timUpdate_Tick
+   -> Page::get_Session
+   "status"
+   -> Label::set_Text
+   -> Page::get_Session
+   "prc"
+   -> WebControl::set_Width
+   "%"
+   -> Label::set_Text
+   -> Page::get_Session
+   "complete"
+   -> None::GetValueOrDefault
+   -> None::get_HasValue
+   -> Timer::set_Enabled
+   -> MultiView::SetActiveView
+
+-- btnDueEmp_Click
+   -> this::GetNotProcessed
+   "Error In Getting Records"
+   -> Label::set_Text
+   "No more Employee To Process"
+   -> Label::set_Text
+   -> Page::get_Session
+   -> HttpSessionState::get_SyncRoot
+   -> Monitor::Enter
+   -> Page::get_Session
+   "pEmpID"
+   -> Page::get_Session
+   "complete"
+   -> Page::get_Session
+   "status"
+   -> Page::get_Session
+   "prc"
+   -> Monitor::Exit
+   -> ParameterizedThreadStart::.ctor
+   -> Thread::.ctor
+   -> Page::get_Session
+   -> Thread::Start
+   -> MultiView::SetActiveView
+   -> Timer::set_Enabled
+
+-- fncProcessDueEmp
+   -> this::GetCurrentPeriod
+   -> this::GetNotProcessed
+   -> WebControl::set_Width
+   "EMPLOYEEID"
+   "NAME"
+   -> HttpSessionState::get_SyncRoot
+   -> Monitor::Enter
+   "status"
+   "Running Employee ID : "
+   " "
+   -> this::.ctor
+   -> this::GetEmployee
+   "status"
+   "Error : Employee "
+   " "
+   -> this::Process
+   "status"
+   "Error :  Employee "
+   " "
+   " <br/>"
+   -> Monitor::Exit
+   -> HttpSessionState::get_SyncRoot
+   -> Monitor::Enter
+   "complete"
+   -> Monitor::Exit
+
+-- .ctor
+   -> Page::.ctor

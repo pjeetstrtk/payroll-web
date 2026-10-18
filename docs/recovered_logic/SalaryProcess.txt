@@ -1,0 +1,641 @@
+=== RebPayRollWeb.SalaryProcess
+
+-- .ctor
+   -> Object::.ctor
+   -> String::Substring
+   -> String::Substring
+   -> this::PeriodLastDate
+   -> this::ToDate
+   -> DateTime::get_Day
+
+-- GetEmployee
+   " SELECT E.*,C.CADRE_DESCRIPTION, D.DSG_DESCRIPTION,D.HOURLY_DIST,D.CLASS,D.MANAGEMENTID,  M.MGMT_DESCRIPTION,DC.DIV_CEL,DC.DIRECTORATEID,DC.DIVISIONCELLID ,DC.DIR_DESCRIPTION,DC.DIVCEL_DESCRIPTION  FROM TBL_EMPLOYEEMASTER E,TBL_DESIGNATION D,  TBL_MANAGEMENT M ,TBL_CADRE C ,VW_DIVISION_CELL DC  WHERE E.CADREID=C.CADREID AND E.DESIGNATIONID=D.DESIGNATIONID  AND D.MANAGEMENTID=M.MANAGEMENTID AND E.DIR_DIVCELL_ID=DC.DIR_DIVCELL_ID and E.EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   -> this::fncCheckDataTable
+   "EMPLOYEEID"
+   "NAME"
+   "PRESENTPAYGRADE"
+   "ACCOMMODATION"
+   "SUSPENDSTATUS"
+   "LOCATIONID"
+   "RELIGION"
+   "NAME"
+   "DSG_DESCRIPTION"
+   "CPFGPFSTATUS"
+   "CHARGESTATUS"
+   "NOOFINCREMENTSPAID_OLD"
+   "MANAGEMENTID"
+   "DIRECTORATEID"
+   "EMPLOYEETYPEID"
+   "NEXTINCREMENTDUEDATE"
+   -> this::ToDate
+   "BANKBR_ID"
+   "DIR_DIVCELL_ID"
+   "ACCOUNTNUMBER"
+   "CADREID"
+   "PRESENTADDRESS"
+   "MOB_NO"
+   "EMAIL"
+   "NID"
+   "TIN"
+   "CLASS"
+   "DESIGNATIONID"
+   "NOOFINCREMENTSPAID"
+   "CHILD_1_DOB"
+   "CHILD_2_DOB"
+   -> this::isDate
+   -> this::ToDateAsDate
+   -> TimeSpan::get_TotalDays
+   -> this::isDate
+   -> this::ToDateAsDate
+   -> TimeSpan::get_TotalDays
+   "DATEOFFIRSTJOINING"
+   -> this::ToDateAsDate
+   "01/Jan/3040"
+   "0344"
+   "RETIREENDCONTRACTDATE"
+   -> this::isDate
+   "RETIREENDCONTRACTDATE"
+   "select * from TBL_PROMOTIONS where Employee_ID='"
+   "' AND EFF_PERIOD="
+   -> this::GetTable
+   "PROMOTE_DATE"
+   -> this::ToDateAsDate
+   -> this::set_PromotionDate
+   "OLD_GRADE"
+   -> this::set_PrevGrade
+   "OLD_INCRM"
+   -> this::set_PrevIncr
+   -> this::get_PromotionDate
+   -> TimeSpan::get_Days
+   -> DateTime::get_Month
+   -> DateTime::get_Month
+   -> DateTime::get_Year
+   -> DateTime::get_Year
+   -> TimeSpan::get_Days
+   -> DateTime::get_Month
+   -> DateTime::get_Month
+   -> DateTime::get_Year
+   -> DateTime::get_Year
+   -> DateTime::get_Day
+   -> DateTime::get_Day
+
+-- Process
+   -> this::ToDouble
+   "DELETE FROM TBL_PAYTRAN_DETAILS WHERE PERIOD="
+   " AND EMPLOYEEID ='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "DELETE FROM TBL_PAYTRAN_MASTER  WHERE PERIOD="
+   " AND EMPLOYEEID ='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Select EMPLOYEEID from TBL_NOT_PAID_EMP_BY_YMD WHERE PERIOD="
+   " AND EMPLOYEEID ='"
+   "'"
+   -> this::GetSingleData
+   "Select E.*,P.* from TBL_EMP_LAST_SALARY E,TBL_PAYCODE P where E.PAYID=P.PAYID AND E.EMPLOYEEID='"
+   "' order by EMPLOYEEID"
+   -> this::GetTable
+   -> this::fncCheckDataTable
+   "Select J.* from J_LOAN_APP J where period=-1"
+   -> this::GetTable
+   -> this::fncCheckDataTable
+   "yyyyMM"
+   "SELECT * FROM SPECIALPAY_SEPERATE_TRAN where period="
+   " AND EMPLOYEEID='"
+   "'  AND ((WITHPAYSLIP='Y') OR (AD='D'))"
+   -> this::GetTable
+   "SELECT * FROM TBL_UTXDETAILS  where period="
+   " AND EMPLOYEEID='"
+   "'    order by payyear desc,paymonth desc"
+   -> this::GetTable
+   "select AH.*,PGL.ADV_INT_CODE,GL_13_20 from TBL_ADVANCE_HEADER AH,TBL_PAYCODE PGL where AH.PAYID=PGL.PAYID AND to_number(to_Char(AH.LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(AH.ENDING_DATE,'yyyymm'))>="
+   " AND EMPLOYEEID='"
+   "'   ORDER BY AH.EMPLOYEEID"
+   -> this::GetTable
+   "SELECT T.LOAN_REF, round(sum(case when ISPRINCIPLE='Y' THEN T.AMOUNT ELSE 0 END),2) T_PRNC, round(sum(case when T.ISPRINCIPLE='N' THEN T.AMOUNT ELSE 0 END),2) T_INT FROM TBL_ADVANCE_TRAN T, TBL_ADVANCE_HEADER H where T.LOAN_REF=H.LOAN_REF AND ((T.period<"
+   ") OR (T.period<="
+   " AND t.OTHERMEANS='C')) AND H.EMPLOYEEID='"
+   "' GROUP BY T.LOAN_REF order by T.LOAN_REF"
+   -> this::GetTable
+   "select AC.LOAN_REF, round(sum(AC.amount),4)  as TINT_DUE from TBL_ADVANCE_INTACCUMM  AC, TBL_ADVANCE_HEADER H Where AC.LOAN_REF=H.LOAN_REF  AND H.EMPLOYEEID='"
+   "' group by AC.LOAN_REF"
+   -> this::GetTable
+   "Select * from tbl_policy"
+   -> this::GetTable
+   "Select * from TBL_PAYCODE "
+   -> this::GetTable
+   -> this::GetGradeBasic
+   "Grade Basic Error"
+   -> this::GetOverTime_EL_LWP
+   "Allowance And Deduction Error"
+   -> this::GetBasic
+   "Could Not Find Basic"
+   -> this::GetHouseRent
+   "House Rent Error"
+   -> this::GetUpperPositionCharge
+   "Change Position Error"
+   -> this::GetCPFGPF
+   "GPF/CPF Error"
+   -> this::GetGroupInsurance
+   "Group Insurance Error"
+   -> this::GetOtherSpecialAllowances
+   "Special Allowance Error"
+   -> this::GetConfiguredAllowances
+   "Allowance Error"
+   -> this::GetPolicySettingAmount
+   "Policy Error"
+   -> this::GetFestBonusAmount
+   "Festical Error"
+   -> this::GetLoanAndAdvance
+   "Loan And Advance Error"
+   -> this::UpdateDatabase
+   "Salary Finalize Error "
+
+-- GetGradeBasic
+   "PAYID='01'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "AMOUNT"
+   "Select BASIC from TBL_PAYSCALE_2015 WHERE PAY_GRADE="
+   " AND INCREMENT_NUMBER="
+   -> this::GetSingleData
+   -> this::fncCloseConnection
+
+-- GetOverTime_EL_LWP
+   "SELECT * FROM TBL_UTXMASTER  where Period="
+   " AND EMPLOYEEID='"
+   "'   order by payyear desc,paymonth desc"
+   -> this::GetTable
+   "OTDAYS"
+   "OTHRSRATE"
+   "OTDAYSRATE"
+   "OTHRS"
+   "ELDAYS"
+   "LWP"
+   -> Math::Round
+   "AD"
+   "A"
+   "AMOUNT"
+   "JV_GLCODE"
+   "PAYID"
+   "29"
+   "AD"
+   "A"
+   "AMOUNT"
+   "PAYID"
+   "30"
+
+-- GetBasic
+   "2"
+   "2"
+   -> Math::Round
+   -> this::get_PrevGrade
+   -> this::get_PrevIncr
+   -> this::get_PromotionDate
+   -> DateTime::get_Day
+   "Select BASIC from TBL_PAYSCALE_2015 WHERE PAY_GRADE="
+   -> this::get_PrevGrade
+   " AND INCREMENT_NUMBER="
+   -> this::get_PrevIncr
+   -> this::GetSingleData
+   -> this::set_PrevBasic
+   -> this::get_PrevBasic
+   -> this::ToDouble
+   -> this::get_PromotionDate
+   -> DateTime::AddDays
+   -> DateTime::get_Day
+   "0.0000"
+   -> this::fncCheckDataTable
+   "AD"
+   "A"
+   "AMOUNT"
+   "PAYID"
+   "01"
+
+-- GetHouseRent
+   "Y"
+   "(PAYCODE='02') AND (LOCATION='"
+   "') AND  (BASIC_FROM<="
+   " AND BASIC_TO>="
+   ")"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "RATE"
+   "2"
+   "MIN_AMOUNT"
+   -> this::ToDouble
+   -> this::get_PrevGrade
+   -> this::get_PrevIncr
+   -> this::get_PromotionDate
+   -> DateTime::get_Day
+   "(PAYCODE='02') AND (LOCATION='"
+   "') AND  (BASIC_FROM<="
+   -> this::get_PrevBasic
+   " AND BASIC_TO>="
+   -> this::get_PrevBasic
+   ")"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "RATE"
+   -> this::ToDouble
+   "MIN_AMOUNT"
+   -> this::ToDouble
+   -> this::get_PrevBasic
+   -> this::ToDouble
+   -> this::get_PromotionDate
+   -> DateTime::AddDays
+   -> DateTime::get_Day
+   "MIN_AMOUNT"
+   -> Math::Round
+   -> Math::Round
+   "MIN_AMOUNT"
+   "AD"
+   "A"
+   "AMOUNT"
+   "PAYID"
+   "02"
+
+-- GetUpperPositionCharge
+   "2"
+   "AD"
+   "A"
+   "AMOUNT"
+   "PAYID"
+   "39"
+
+-- GetCPFGPF
+   "Select * from TBL_CPF_GPF_PCT where EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   "1"
+   "PAYID='55'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "PAYID='10'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "CPF_GPF_PCT"
+   -> this::FractionRound
+   "AD"
+   "D"
+   "AMOUNT"
+   "PAYID"
+   "10"
+   "2"
+   "4"
+   "EMPLOYEEID='"
+   "' AND PAYID='43'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "EMPLOYEEID='"
+   "' AND PAYID='42'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "CPF_GPF_PCT"
+   -> this::FractionRound
+   "AD"
+   "D"
+   "AMOUNT"
+   "PAYID"
+   "42"
+
+-- GetGroupInsurance
+   "4"
+   "PAYID ='45' "
+   -> DataTable::Select
+   -> tok0x2b000002
+   "JV_GLCODE"
+   "AD"
+   "D"
+   "AMOUNT"
+   "0.00"
+   "REMARKS"
+   "PAY_TYPE"
+   "PAYID"
+   "06"
+
+-- GetOtherSpecialAllowances
+   -> this::fncCheckDataTable
+   "AD"
+   "AD"
+   "AMOUNT"
+   "AMOUNT"
+   "REMARKS"
+   "UTX"
+   "PAYID"
+   "PAYID"
+   "ARREAR"
+   "ISOTHERPAY"
+
+-- GetConfiguredAllowances
+   "PAYID NOT IN ('01')"
+   -> DataTable::Select
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   "AMOUNT"
+   "PAYID"
+   "05"
+   "3"
+   "4"
+   "74"
+   "JV_GLCODE"
+   "JV_GLCODE"
+   "AD"
+   "AD"
+   "AMOUNT"
+   "0.00"
+   "REMARKS"
+   "REMARKS"
+   "PAY_TYPE"
+   "PAY_TYPE"
+   "PAYID"
+
+-- GetPolicySettingAmount
+   "ALL_AMT >0 "
+   -> DataTable::Select
+   "PAYID"
+   "11"
+   "EMPLOYEEID='"
+   "' AND PAYID ='44' "
+   -> DataTable::Select
+   -> tok0x2b000002
+   "03"
+   "A"
+   "09"
+   "3"
+   "4"
+   "09"
+   "4"
+   "04"
+   "3"
+   "4"
+   "04"
+   "4"
+   "98"
+   "04"
+   "98"
+   "08"
+   "H"
+   "11"
+   "H"
+   "ALL_AMT"
+   "08"
+   "3"
+   "4"
+   "2"
+   "JV_GLCODE"
+   "GL_13_20"
+   "AD"
+   "AD"
+   "AMOUNT"
+   "0.00"
+   "REMARKS"
+   "PAY_TYPE"
+   "PAYID"
+
+-- GetFestBonusAmount
+   "AD"
+   "AD"
+   "AMOUNT"
+   "AMOUNT"
+   -> this::ToDouble
+   "REMARKS"
+   "PARTICULARS"
+   "RULE_NO"
+   "999"
+   "PAYID"
+   "PAYID"
+   "ARREAR"
+   "N"
+
+-- UpdateDatabase
+   "RULE_NO"
+   "LOAN_REF_NO"
+   "PAYID"
+   "N"
+   "ARREAR"
+   "Y"
+   "Y"
+   "AD"
+   "AMOUNT"
+   "75"
+   -> this::FractionRound
+   "INSERT INTO TBL_PAYTRAN_DETAILS(PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AMOUNT, AD, ARREAR, RULE_NO, REMARKS, JV_GLCODE, JV_RULE_NO, LOAN_REF_NO, PAY_TYPE, SRC, PERIOD) "
+   " VALUES('"
+   "', '"
+   "', '"
+   "','"
+   "', "
+   ", '"
+   "', '"
+   "', '"
+   "RULE_NO"
+   "','"
+   "REMARKS"
+   "', '"
+   "', '','"
+   "','"
+   "PAY_TYPE"
+   "', 'N', "
+   ")"
+   -> this::ExecuteStatement_TXN
+   "INSERT INTO TBL_PAYTRAN_DETAILS(PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AMOUNT, AD, ARREAR, RULE_NO, REMARKS, JV_GLCODE, JV_RULE_NO, LOAN_REF_NO, PAY_TYPE, SRC, PERIOD) "
+   " VALUES('"
+   "', '"
+   "', '"
+   "','"
+   "', "
+   ", '"
+   "', '"
+   "', '','"
+   "REMARKS"
+   "', '"
+   "', '','"
+   "','"
+   "PAY_TYPE"
+   "', 'N', "
+   ")"
+   -> this::ExecuteStatement_TXN
+   " EMP ID : "
+   " NAME : "
+   " Error : "
+   " "
+   "DELETE FROM TBL_ADVANCE_TRAN WHERE LOAN_REF='"
+   "' AND PERIOD="
+   " AND OTHERMEANS NOT in('A','C')"
+   -> this::ExecuteStatement_TXN
+   " Employee : "
+   "  "
+   " "
+   "DELETE FROM TBL_ADVANCE_INTACCUMM WHERE PERIOD="
+   " AND LOAN_REF='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   " Employee : "
+   "  "
+   " "
+   "PERIOD"
+   -> Math::Round
+   "INSERT INTO TBL_ADVANCE_INTACCUMM VALUES('"
+   "',"
+   ","
+   ","
+   ")"
+   -> this::ExecuteStatement_TXN
+   " Employee : "
+   "  "
+   " "
+   "Y"
+   "PAY_TYPE"
+   "P"
+   "N"
+   "INSERT INTO  TBL_ADVANCE_TRAN(LOAN_REF, TRANDATE, AMOUNT, ISPRINCIPLE, PERIOD,OTHERMEANS)"
+   " VALUES('"
+   "', "
+   ",  "
+   ", '"
+   "',"
+   ",'N')"
+   -> this::ExecuteStatement_TXN
+   " Employee : "
+   "  "
+   " "
+   "01"
+   "A"
+   -> DbConnection::Close
+   -> this::FractionRound
+   -> this::fncOpenConnection
+   "INSERT INTO TBL_PAYTRAN_MASTER(EMPLOYEEID, PAYYEAR, PAYMONTH, MONTH_STARTBASIC, NAME, LOCATIONID, SUSPENDSTATUS, EBSUSPENDSTATUS, INCREMENTSTATUS, ACCOMMODATION, EMPLOYEETYPEID, REVENUEPROJECTID, DESIGNATIONID, CADREID, CHARGESTATUS, OVERTIMEDAILYRATE, OVERTIMEHOURLYRATE, PRESENTPAYGRADE, NOOFINCREMENTSPAID, NEXTINCREMENTDUEDATE, BANKBR_ID, DIR_DIVCELL_ID, ACCOUNTNUMBER, JV_BANK_GLCODE, BILL_TYPE, ADDRESS, PERIOD,PHONE, MANAGEMENTID, EMAIL, NID, TIN,JV_GRADE)"
+   " VALUES('"
+   "', '"
+   "','"
+   "', "
+   ", '"
+   "','"
+   "','"
+   "', 0, 1,'"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "', 0, 0, "
+   ", "
+   ", "
+   ", '"
+   "','"
+   "', '"
+   "', '1411-01-000-000-00-0', 1, '"
+   "',"
+   ",'"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "')"
+   -> this::ExecuteStatement_TXN
+   "D:\PAYROLL_"
+   ".txt"
+   " "
+   -> File::WriteAllText
+   "DELETE FROM TBL_PAYTRAN_LOAN WHERE PERIOD="
+   " AND EMPLOYEEID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "  INSERT INTO TBL_PAYTRAN_LOAN   SELECT V.*,"
+   " FROM VW_ADV_LOAN_SUMMERY V WHERE V.EMPLOYEEID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+
+-- GetLoanAndAdvance
+   -> this::fncCheckDataTable
+   -> this::fncCheckDataTable
+   -> this::fncCheckDataTable
+   "LOAN_REF"
+   "053715-130515"
+   "PAYID"
+   "ADV_INT_CODE"
+   "GL_13_20"
+   "P_AMOUNT"
+   "STARTING_DATE"
+   -> this::ToDateAsDate
+   "yyyyMM"
+   "P_AMOUNTPAID"
+   "I_ACCUMMULATED"
+   "I_AMOUNTPAID"
+   "RATE_INTEREST"
+   -> this::fncCheckDataTable
+   "LOAN_REF='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "TINT_DUE"
+   -> Math::Round
+   -> Math::Round
+   "AMOUNT"
+   "RATE_INTEREST"
+   "LOAN_REF='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "T_PRNC"
+   "T_INT"
+   -> DateTime::get_Day
+   "LOANDATE"
+   -> this::ToDateAsDate
+   "ENDING_DATE"
+   -> this::ToDateAsDate
+   "yyyyMM"
+   -> TimeSpan::get_TotalDays
+   -> Math::Round
+   -> DateTime::get_Day
+   "yyyyMM"
+   -> DateTime::get_Day
+   -> Math::Round
+   -> DateTime::get_Day
+   -> Math::Round
+   -> Math::Round
+   -> Math::Round
+   "LOAN_REF_NO"
+   "JV_GLCODE"
+   "AD"
+   "D"
+   "AMOUNT"
+   "REMARKS"
+   "Loan Deduction of loan#"
+   "PAY_TYPE"
+   "P"
+   "PAYID"
+   "PERIOD"
+   "RULE_NO"
+   "AMOUNT"
+   "REMARKS"
+   "Loan Int. Deduction of loan#"
+   "PAY_TYPE"
+   "I"
+   "PAYID"
+   "RULE_NO"
+
+-- get_PromotionDate
+
+-- set_PromotionDate
+
+-- get_PrevGrade
+
+-- set_PrevGrade
+
+-- get_PrevIncr
+
+-- set_PrevIncr
+
+-- get_PrevBasic
+
+-- set_PrevBasic
+
+-- fncCheckDataTable

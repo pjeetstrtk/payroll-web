@@ -1,0 +1,335 @@
+=== RebPayRollWeb.frmLoanAndAdvance
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   -> Label::set_Text
+   "Salary Month "
+   -> Label::get_Text
+   -> this::PeriodToMonth
+   -> Label::set_Text
+   "select PAYID, PAYNAME as PN,(PAYID||'-'||PAYNAME) as PAYNAME2 From TBL_PAYCODE where ADV_TYPE='A' order by PAYNAME"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+
+-- btnSearch_Click
+   -> this::fncSearchEmp
+
+-- fncSearchEmp
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> this::fncReset
+   -> this::fncOpenConnection
+   -> TextBox::get_Text
+   "select * from VW_EMPLOYEE_ALL where EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   "NOOFINCREMENTSPAID"
+   -> Label::set_Text
+   "PRESENTPAYGRADE"
+   -> this::ToDouble
+   -> Label::get_Text
+   -> this::GetPayScaleBasic
+   -> Control::set_Visible
+   "EMPLOYEEID"
+   -> Label::set_Text
+   "DESIGNATIONID"
+   "NAME"
+   " ["
+   "DSG_DESCRIPTION"
+   " ]"
+   -> Label::set_Text
+   -> String::PadLeft
+   -> Label::set_Text
+   "DIR_DIVCELL_ID"
+   -> Label::set_Text
+   "MANAGEMENTID"
+   -> Label::set_Text
+   -> this::fncLoanList
+   -> Control::set_Visible
+
+-- fncLoadSelEmp
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> this::fncLoanInfo
+
+-- fncLoanInfo
+   -> this::fncReset
+   -> TextBox::set_Text
+   -> Control::set_Visible
+   -> this::fncOpenConnection
+   "SELECT * FROM VW_ADV_LOAN_SUMMERY  WHERE LOAN_REF='"
+   "'"
+   -> this::GetTable
+   "Not Found"
+   -> Label::set_Text
+   "PAYID"
+   -> this::GetIndexFromDropList
+   -> ListControl::set_SelectedIndex
+   "LOANDATE"
+   -> TextBox::set_Text
+   "STARTING_DATE"
+   -> TextBox::set_Text
+   "ENDING_DATE"
+   -> TextBox::set_Text
+   "P_AMOUNT"
+   "0.00"
+   -> TextBox::set_Text
+   "RATE_INTEREST"
+   -> TextBox::set_Text
+   "P_NOOFINSTALLMENTS"
+   -> TextBox::set_Text
+   "AMOUNT"
+   "0.00"
+   -> TextBox::set_Text
+   "I_ACCUMMULATED"
+   "P_AMOUNTPAID"
+   "0.00"
+   -> TextBox::set_Text
+   "T_PRN"
+   "0.00"
+   -> TextBox::set_Text
+   "T_PRN_NOS"
+   " Salary"
+   -> Label::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> TextBox::set_Text
+   "T_ACCUM"
+   "0.00"
+   -> TextBox::set_Text
+   "0.00"
+   -> TextBox::set_Text
+   "I_AMOUNTPAID"
+   "0.00"
+   -> TextBox::set_Text
+   "I_NOOFINSTALLMENTS"
+   -> TextBox::set_Text
+   "T_INT"
+   "0.00"
+   -> TextBox::set_Text
+   "T_INT_NOS"
+   " Salary"
+   -> Label::set_Text
+   -> this::fncCalcNetDue
+   -> Label::get_Text
+   -> Control::set_Visible
+   "select * from TBL_ADVANCE_TRAN where LOAN_REF='"
+   "' order by TRANDATE desc"
+   -> this::GetTable
+   "PERIOD"
+   -> Label::get_Text
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   "select * from TBL_ADVANCE_INTACCUMM where LOAN_REF='"
+   "' order by TRANDATE desc"
+   -> this::GetTable
+   -> Control::set_Visible
+   "PERIOD"
+   -> Label::get_Text
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- fncCalcNetDue
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   "0.00"
+   -> Label::set_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   "0.00"
+   -> Label::set_Text
+   "0.00"
+   -> Label::set_Text
+   "0.00"
+   -> Label::set_Text
+   -> Color::get_DarkRed
+   -> WebControl::set_ForeColor
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+
+-- fncReset
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> Label::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> Label::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> Label::set_Text
+
+-- btnAddNew_Click
+   -> this::fncReset
+   "Save"
+   -> Button::set_Text
+   -> Control::set_Visible
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+   -> this::fncCalcNetDue
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedValue
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> this::ToDate
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> Label::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> Label::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> this::ToDate
+   -> TextBox::get_Text
+   -> this::ToDate
+   -> Label::get_Text
+   -> Label::get_Text
+   -> this::PeriodLastDate
+   "dd/MM/yyyy"
+   -> this::ToDate
+   -> TextBox::set_Text
+   -> TextBox::get_Text
+   "update TBL_ADVANCE_HEADER set PAYID='"
+   "',LOANDATE="
+   ",P_AMOUNT='"
+   "',RATE_INTEREST='"
+   "', P_NOOFINSTALLMENTS='"
+   "', AMOUNT="
+   ",P_AMOUNTPAID="
+   ", STARTING_DATE="
+   ",ENDING_DATE="
+   ",I_AMOUNTPAID="
+   ",I_ACCUMMULATED="
+   ",I_NOOFINSTALLMENTS="
+   " where LOAN_REF='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   -> Label::set_Text
+   "Update Successfully"
+   -> Label::set_Text
+   "-"
+   -> TextBox::get_Text
+   -> this::ToDateAsDate
+   "yyMMdd"
+   "insert into TBL_ADVANCE_HEADER (LOAN_REF, EMPLOYEEID, PAYID, LOANDATE, P_AMOUNT, RATE_INTEREST,   P_AMOUNTPAID, I_AMOUNTPAID,  P_NOOFINSTALLMENTS,  AMOUNT,   LOAN_CLOSING_DATE, STARTING_DATE,ENDING_DATE,I_NOOFINSTALLMENTS)  values ('"
+   "', '"
+   "', '"
+   "', "
+   ", '"
+   "', '"
+   "',   '"
+   "', '"
+   "', '"
+   "',  "
+   ", "
+   ", "
+   ","
+   ","
+   " )"
+   -> this::ExecuteStatement_TXN
+   -> Label::set_Text
+   -> Control::set_Visible
+   -> this::fncSearchEmp
+   "Update Successfully"
+   -> Label::set_Text
+   -> this::fncCalcNetDue
+
+-- fncShowOverTime
+
+-- fncCalcTotal
+
+-- fncLoanList
+   -> TextBox::get_Text
+   -> TextBox::set_Text
+   "select A.* From VW_ADV_LOAN_SUMMERY A where A.EMPLOYEEID='"
+   "' order by A.LOANDATE desc "
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- gvLoanList_SelectedIndexChanged
+   -> this::fncLoadSelEmp
+
+-- lnkDeleteLastTrans_Click
+   -> TextBox::get_Text
+   "Delete From TBL_ADVANCE_TRAN where LOAN_REF='"
+   -> TextBox::get_Text
+   "' AND period="
+   -> Label::get_Text
+   -> this::ExecuteStatement_TXN
+   "Error"
+   -> Label::set_Text
+   "Delete From TBL_ADVANCE_INTACCUMM where LOAN_REF='"
+   -> TextBox::get_Text
+   "' AND period="
+   -> Label::get_Text
+   -> this::ExecuteStatement_TXN
+   "Error"
+   -> Label::set_Text
+   "Deleted"
+   -> Label::set_Text
+   "DELETE FROM TBL_PAYTRAN_DETAILS WHERE PERIOD="
+   -> Label::get_Text
+   " AND EMPLOYEEID ='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "DELETE FROM TBL_PAYTRAN_MASTER  WHERE PERIOD="
+   -> Label::get_Text
+   " AND EMPLOYEEID ='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   -> TextBox::get_Text
+   -> this::fncLoanInfo
+
+-- lnkShowDetails_Click
+   -> Control::get_Visible
+   -> Control::set_Visible
+   -> Control::Focus
+
+-- btnCashAdd_Click
+   -> Page::get_Response
+   "frmLoanDetails.aspx?loanid="
+   -> TextBox::get_Text
+   -> HttpResponse::Redirect
+
+-- .ctor
+   -> Page::.ctor

@@ -1,0 +1,43 @@
+=== RebPayRollWeb.frmHB_LoanCert
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> TextBox::get_Text
+   -> this::GetCurrentPeriod
+   -> TextBox::set_Text
+
+-- fncViewHBLoanCert
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> this::HB_Certificate
+   -> Object::GetType
+   "pdfView"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- Button1_Click
+
+-- BB_Click
+
+-- btnPrint_Click
+   -> TextBox::get_Text
+   -> this::fncViewHBLoanCert
+
+-- btnEmpEdit_Click
+   -> CommandEventArgs::get_CommandArgument
+   -> Page::get_Response
+   "frmEmployeeEditUI.aspx?EMPID="
+   -> HttpResponse::Redirect
+
+-- btnView_Click
+   -> CommandEventArgs::get_CommandArgument
+   -> Page::get_Response
+   "frmEmployeeViewUI.aspx?EMPID="
+   -> HttpResponse::Redirect
+
+-- grdEmpList_PageIndexChanged
+
+-- .ctor
+   -> Page::.ctor

@@ -1,0 +1,19 @@
+=== RebPayRollWeb.DropDownValues
+
+-- get_ItemValue
+
+-- set_ItemValue
+
+-- get_ItemText
+
+-- set_ItemText
+
+-- get_ItemCode
+
+-- set_ItemCode
+
+-- .ctor
+   -> Object::.ctor
+
+-- .ctor
+   -> Object::.ctor

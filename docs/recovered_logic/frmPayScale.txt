@@ -1,0 +1,18 @@
+=== RebPayRollWeb.frmPayScale
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> String::PadLeft
+
+-- lstPayScale_SelectedIndexChanged
+   -> ListControl::get_SelectedItem
+   -> ListItem::get_Text
+   "select * from TBL_PAYSCALE_2015 where PAY_GRADE="
+   " order by INCREMENT_NUMBER"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- .ctor
+   -> Page::.ctor

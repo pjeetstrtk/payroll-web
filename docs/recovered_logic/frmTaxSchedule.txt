@@ -1,0 +1,62 @@
+=== RebPayRollWeb.frmTaxSchedule
+
+-- Page_Load
+   -> Page::get_IsPostBack
+   -> this::GetCurrentPeriod
+   -> TextBox::set_Text
+   "select DIRECTORATEID, (DIRECTORATEID||' | '||DIR_DESCRIPTION) as DIR_DESCRIPTION from TBL_DIRECTORATE order by DIR_DESCRIPTION asc"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "All"
+   -> ListItemCollection::Insert
+   "July"
+   "June"
+   -> DateTime::get_Now
+   -> DateTime::get_Year
+   -> this::GetCurrentPeriod
+   -> String::Substring
+   -> String::Substring
+   "07"
+   -> String::Substring
+   "06"
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   "07"
+   "06"
+   "-"
+   " - "
+   "-"
+   "-"
+   -> ListItem::.ctor
+
+-- lnkHBScheduleInt_Click
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> this::TAX_Schedule
+   -> this::ShowReport
+
+-- lnkHBSchedule_Click
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> TextBox::get_Text
+   -> this::TAX_Statement
+   -> this::ShowReport
+
+-- ShowReport
+   -> Page::get_IsPostBack
+   -> Object::GetType
+   "pdfView_"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- lnkTAXSchedule_Click
+
+-- drpFiscalYear_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> String::Split
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+
+-- .ctor
+   -> Page::.ctor

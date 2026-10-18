@@ -1,0 +1,70 @@
+=== RebPayRollWeb.frmEmployeeEndContractList
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::fncSearchEmployee
+
+-- fncSearchEmployee
+   -> this::fncOpenConnection
+   "Select CURR_PERIOD from TBL_COMPANY_INFO"
+   -> this::GetSingleData
+   -> TextBox::set_Text
+   "SELECT * FROM VW_EMPLOYEE_ALL  where (to_char(RETIREENDCONTRACTDATE,'yyyymm')="
+   " ) "
+   -> SqlDataSource::set_SelectCommand
+   -> Control::DataBind
+   -> TextBox::set_Text
+
+-- btnSearch_Click
+   -> this::fncSearch
+
+-- fncSearch
+   -> TextBox::get_Text
+   "SELECT * FROM VW_EMPLOYEE_ALL  where (to_char(RETIREENDCONTRACTDATE,'yyyymm')="
+   " ) "
+   -> SqlDataSource::set_SelectCommand
+   -> Control::DataBind
+   -> TextBox::set_Text
+
+-- SqlDataSource1_Selected
+   -> SqlDataSourceStatusEventArgs::get_AffectedRows
+   " Employees"
+   -> Label::set_Text
+
+-- btnPrint_Click
+   -> ConfigurationManager::get_ConnectionStrings
+   "ConnectionString"
+   -> ConnectionStringSettings::get_ConnectionString
+   -> OracleConnection::.ctor
+   -> DbConnection::Open
+   -> TextBox::get_Text
+   -> OracleDataAdapter::.ctor
+   -> DataTable::.ctor
+   -> DbDataAdapter::Fill
+   -> ReportDocument::.ctor
+   -> Page::get_Server
+   "~/Reports/RptListOfEmployeeEndConJoinThisMonth.rpt"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::Load
+   -> TextBox::get_Text
+   -> this::PeriodToMonth
+   "List Of EMployees Having End Contract In The Month Of ["
+   "]"
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_str_Title"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   -> Page::get_Server
+   "~/pdfreports/BiWeeklyReport.pdf"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   -> Page::get_Response
+   "<script>window.open('pdfreports/BiWeeklyReport.pdf','_blank')</script>"
+   -> HttpResponse::Write
+
+-- .ctor
+   -> Page::.ctor

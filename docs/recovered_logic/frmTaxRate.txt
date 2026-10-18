@@ -1,0 +1,83 @@
+=== RebPayRollWeb.frmTaxRate
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::showRate
+
+-- showRate
+   "select * from TBL_POLICY where PAYCODE=101 and EFF_PERIOD=(select max(EFF_PERIOD) from TBL_POLICY) order by FIX_AMOUNT"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- gvbranchInfo_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> Label::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> Label::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> Label::get_Text
+   "6"
+   "0"
+   -> TextBox::set_Text
+   -> Control::set_Visible
+   -> Control::set_Visible
+   "Update"
+   -> Button::set_Text
+   -> Control::set_Visible
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+   -> GridView::get_SelectedIndex
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   "Rate Is Not OK"
+   -> Label::set_Text
+   "Amount Is Not OK"
+   -> Label::set_Text
+   -> Label::get_Text
+   -> this::ToDouble
+   "Policy Code Not Found"
+   -> Label::set_Text
+   "update TBL_POLICY set RATE='"
+   "',BASIC_FROM='"
+   "' ,BASIC_TO='"
+   "'  where POLICY_NUM='"
+   -> Label::get_Text
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Updated Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> GridView::set_SelectedIndex
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::set_Text
+
+-- .ctor
+   -> Page::.ctor

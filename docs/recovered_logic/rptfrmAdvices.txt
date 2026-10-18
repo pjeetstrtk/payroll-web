@@ -1,0 +1,162 @@
+=== RebPayRollWeb.rptfrmAdvices
+
+-- Page_Load
+   -> Page::get_IsPostBack
+   "select DIRECTORATEID, DIRECTORATEID as DIR_DESCRIPTION from TBL_DIRECTORATE order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   "select DIRECTORATEID, DIRECTORATEID||' '||DIR_DESCRIPTION as DIR_DESCRIPTION from TBL_DIRECTORATE order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   -> TextBox::set_Text
+
+-- drpDIRECTORATEID_SelectedIndexChanged
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+   "select DIR_DIVCELL_ID, DIR_DIVCELL_ID as DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL where DIRECTORATEID='"
+   -> ListControl::get_SelectedValue
+   "' order by DIR_DIVCELL_ID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   "select DIR_DIVCELL_ID, DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL where DIRECTORATEID='"
+   -> ListControl::get_SelectedValue
+   "' order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   -> ListControl::set_SelectedIndex
+
+-- drpDIR_DESCRIPTION_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+   "select DIR_DIVCELL_ID, DIR_DIVCELL_ID as DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL where DIRECTORATEID='"
+   -> ListControl::get_SelectedValue
+   "' order by DIR_DIVCELL_ID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   "select DIR_DIVCELL_ID, DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL where DIRECTORATEID='"
+   -> ListControl::get_SelectedValue
+   "' order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+
+-- drpDIR_DIVCELL_ID_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+
+-- drpDIVCEL_DESCRIPTION_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+
+-- GetParam
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+
+-- ShowReport
+   -> Page::get_IsPostBack
+   -> Object::GetType
+   "pdfView_"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- btnBankAdvice_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedIndex
+   -> CheckBox::get_Checked
+   -> this::BankAdvice
+   -> this::ShowReport
+
+-- btnBankAdviceClass31_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   "3,4"
+   -> CheckBox::get_Checked
+   -> this::BankAdvice
+   -> this::ShowReport
+
+-- btnBankAdviceClass12_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   "1,2"
+   -> CheckBox::get_Checked
+   -> this::BankAdvice
+   -> this::ShowReport
+
+-- btnBonusAdvice_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedIndex
+   -> CheckBox::get_Checked
+   -> this::BankBonusAdvice
+   -> this::ShowReport
+
+-- btnKPIAdvice_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedIndex
+   -> CheckBox::get_Checked
+   -> this::BankBonusAdvice
+   -> this::ShowReport
+
+-- btnDirectorateAdvice_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   -> this::DirectorateAdvice
+   -> this::ShowReport
+
+-- btnBonusDirAdvice_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   -> this::BonusDirectorateAdvice
+   -> this::ShowReport
+
+-- btnKPIDirAdvice_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   -> this::BonusDirectorateAdvice
+   -> this::ShowReport
+
+-- btnNewYearAdvice_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedIndex
+   -> CheckBox::get_Checked
+   -> this::BankBonusAdvice
+   -> this::ShowReport
+
+-- btnNewYearDirAdvice_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   -> this::BonusDirectorateAdvice
+   -> this::ShowReport
+
+-- .ctor
+   -> Page::.ctor

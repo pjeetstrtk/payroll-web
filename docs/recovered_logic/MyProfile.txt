@@ -1,0 +1,142 @@
+=== RebPayRollWeb.MyProfile
+
+-- Page_Load
+   -> Page::get_Session
+   "ActivePage"
+   "DASH"
+   -> Page::get_Session
+   "USERID"
+   -> Page::get_Response
+   "Login.aspx"
+   -> HttpResponse::Redirect
+   -> Page::get_Session
+   "USERID"
+   -> Page::get_Response
+   "Login.aspx"
+   -> HttpResponse::Redirect
+   -> this::fncOpenEmpInfo
+
+-- fncOpenEmpInfo
+   "Select * from VW_EMPLOYEE_ALL where EMPLOYEEID='"
+   -> Page::get_Session
+   "USERID"
+   "'"
+   -> this::GetTable
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   -> Label::set_Text
+   -> Label::get_Text
+   -> this::PeriodToMonth
+   -> Label::set_Text
+   "EMPLOYEEID"
+   -> Label::set_Text
+   "PRESENTPAYGRADE"
+   " With "
+   "NOOFINCREMENTSPAID"
+   " Increment"
+   -> Label::set_Text
+   "NEXTINCREMENTDUEDATE"
+   "NEXTINCREMENTDUEDATE"
+   -> String::Substring
+   "INCREMENTSTATUS"
+   "1"
+   "(Auto)"
+   -> Label::set_Text
+   "JUNE_15_BASIC"
+   -> Label::set_Text
+   "SEX"
+   "M"
+   "Female"
+   "Male"
+   -> Label::set_Text
+   "select RLG_NAME from TBL_RELIGION where RLG_ID='"
+   "RELIGION"
+   "'"
+   -> this::GetSingleData
+   -> Label::set_Text
+   "DATEOFBIRTH"
+   "DATEOFBIRTH"
+   -> String::Substring
+   -> Label::set_Text
+   "M_STAUS"
+   "M"
+   "Married"
+   -> Label::set_Text
+   "M_STAUS"
+   "N"
+   "Not Married"
+   -> Label::set_Text
+   "M_STAUS"
+   "D"
+   "Divorced"
+   -> Label::set_Text
+   "M_STAUS"
+   "W"
+   "Widowed"
+   -> Label::set_Text
+   "BLOODGROUP"
+   -> Label::set_Text
+   "NID"
+   -> Label::set_Text
+   "TIN"
+   -> Label::set_Text
+   "DIVCEL_DESCRIPTION"
+   -> Label::set_Text
+   "DATEOFFIRSTJOINING"
+   -> String::Substring
+   -> Label::set_Text
+   "RETIREENDCONTRACTDATE"
+   "RETIREENDCONTRACTDATE"
+   -> String::Substring
+   -> Label::set_Text
+   "JOININGDATETOPOST"
+   -> String::Substring
+   -> Label::set_Text
+   "A/C :  "
+   "ACCOUNTNUMBER"
+   "  [ "
+   "BANK_DESCRIPTION"
+   "-"
+   "BRANCH_DESCRIPTION"
+   " ]"
+   -> Label::set_Text
+   "SELECT P.PAYID,PD.PAYNAME, P.AD ,SUM(CASE WHEN P.AD='A' THEN P.AMOUNT ELSE 0 END) AS ALLOWANCE,SUM(CASE WHEN P.AD='D' THEN P.AMOUNT ELSE 0 END) AS DEDUCTION  FROM tbl_paytran_details P,tbl_PAYCODE PD WHERE P.PAYID=PD.PAYID AND P.period="
+   -> Label::get_Text
+   " AND P.EMPLOYEEID='"
+   -> Label::get_Text
+   "' GROUP BY P.AD,P.PAYID,PD.PAYNAME ORDER BY P.AD,P.PAYID"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   "ALLOWANCE"
+   -> this::ToDouble
+   "DEDUCTION"
+   -> this::ToDouble
+   "0.00"
+   -> Label::set_Text
+   "SELECT LOANDATE,LOAN_REF,PAYNAME,P_AMOUNT,(NVL(P_AMOUNT,0)-NVL(P_AMOUNTPAID,0)-  NVL(T_PRN,0)) AS PDUE,(NVL(T_ACCUM,0)-NVL(I_AMOUNTPAID,0)+NVL(I_ACCUMMULATED,0)-  NVL(T_INT,0)) AS IDUE,(NVL(P_AMOUNT,0)-NVL(P_AMOUNTPAID,0)-  NVL(T_PRN,0)) +(NVL(T_ACCUM,0)-NVL(I_AMOUNTPAID,0)+NVL(I_ACCUMMULATED,0)-  NVL(T_INT,0))  AS NETDUE  FROM VW_ADV_LOAN_SUMMERY WHERE EMPLOYEEID='"
+   -> Label::get_Text
+   "' AND (NVL(P_AMOUNT,0)-NVL(P_AMOUNTPAID,0)-  NVL(T_PRN,0)) +(NVL(T_ACCUM,0)-NVL(I_AMOUNTPAID,0)+NVL(I_ACCUMMULATED,0)-  NVL(T_INT,0)) >0 "
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   "PDUE"
+   -> this::ToDouble
+   "IDUE"
+   -> this::ToDouble
+   "0.00"
+   " of "
+   " Loans"
+   -> Label::set_Text
+
+-- Button1_Click
+
+-- grdSalary_RowDataBound
+
+-- btnPayslip_Click
+   -> Label::get_Text
+   -> Label::get_Text
+   -> this::fncPrintPayslip
+
+-- .ctor
+   -> Page::.ctor

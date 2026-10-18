@@ -1,0 +1,422 @@
+=== RebPayRollWeb.BL.PaySlip
+
+-- EmployeePaidThisMonth
+   -> this::GetCurrentPeriod
+   "select EMPLOYEEID, NAME, DIRECTORATEID, DIR_DESCRIPTION, DIVISIONCELLID, DIVCEL_DESCRIPTION from VW_SALARY_SUM where PERIOD='"
+   "' "
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " order by EMPLOYEEID"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::.ctor
+   -> ReportDocument::SetDataSource
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> String::Substring
+   ", "
+   -> String::Substring
+   "PAID_EMP"
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- BonusSlip
+   -> this::GetCurrentPeriod
+   "select SD.*, BB.BANK_DESCRIPTION, BB.BRANCH_DESCRIPTION from VW_KPI_BONUS_DETAILS SD inner join VW_BANK_BRANCH BB on SD.BANKBR_ID=BB.BANKBR_ID  where PERIOD="
+   " AND SD.PAYID in('87','94') "
+   "select SD.*, BB.BANK_DESCRIPTION, BB.BRANCH_DESCRIPTION from VW_BONUS_DETAILS SD inner join VW_BANK_BRANCH BB on SD.BANKBR_ID=BB.BANKBR_ID  where PERIOD="
+   " AND SD.PAYID not in('87','94') "
+   ","
+   "','"
+   -> String::Replace
+   " and SD.EMPLOYEEID IN ('"
+   "')"
+   -> String::Replace
+   " and SD.DIRECTORATEID='"
+   "'"
+   "_"
+   " and SD.DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " order by SD.DIR_DIVCELL_ID"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   -> this::.ctor
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Bangla New Year Allowance Slip For the Month of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "NEWYEAR_BONUS_SLIP_"
+   "Noboborsho Bonus"
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'APA Bonus Slip For the Month of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "APA_SLIP_"
+   "APA Bonus Slip"
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Bonus Slip For the Month of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "FST_BONUS_SLIP_"
+   "Bonus Slip"
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> this::PeriodToMonth
+   -> this::GetFirstDateOfMonth
+   " to "
+   -> this::GetLastDateOfMonth
+   -> this::ToPrePeriod
+   -> this::GetPrevMiddleDateOfMonth
+   " to "
+   -> this::GetMiddleDateOfMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_payrollDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_attendenceDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   " For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- fncPrintPayslip
+   -> HttpContext::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   ","
+   "','"
+   -> String::Replace
+   " and SD.EMPLOYEEID IN ('"
+   "')"
+   -> String::Replace
+   " and SD.DIRECTORATEID='"
+   "'"
+   "_"
+   " and SD.DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " and SD.CLASS in ("
+   ")"
+   "_"
+   -> this::GetCurrentPeriod
+   -> String::Substring
+   -> String::Substring
+   "select SD.*, BB.BANK_DESCRIPTION, BB.BRANCH_DESCRIPTION, U.EMP_ID  AS ACCSIGN from VW_SALARY_DETAILS SD inner join VW_BANK_BRANCH BB on SD.BANKBR_ID=BB.BANKBR_ID inner join  TBL_DIRECTORATE_USER U on SD.DIRECTORATEID=U.DIR_ID  where Period="
+   "select SD.*, BB.BANK_DESCRIPTION, BB.BRANCH_DESCRIPTION, '00'  AS ACCSIGN   from VW_SALARY_DETAILS SD inner join VW_BANK_BRANCH BB on SD.BANKBR_ID=BB.BANKBR_ID  where Period="
+   " Year: "
+   ", Month"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::.ctor
+   "0"
+   ", "
+   -> this::GetFirstDateOfMonth
+   " to "
+   -> this::GetLastDateOfMonth
+   -> this::ToPrePeriod
+   -> this::GetPrevMiddleDateOfMonth
+   " to "
+   -> this::GetMiddleDateOfMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Payslip For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_payrollDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_attendenceDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "1"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "0"
+   -> FormulaFieldDefinition::set_Text
+   "select * from TBL_PAYTRAN_LOAN where to_number(to_Char(LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(ENDING_DATE,'yyyymm'))>="
+   " AND PERIOD="
+   " ORDER BY STARTING_DATE DESC"
+   -> this::GetTable
+   -> ReportDocument::SetDataSource
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> HttpContext::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> HttpContext::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vAccSign"
+   "'"
+   "/Images'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_Subreports
+   "RptPayslipAdvance.rpt"
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "PAYSLIP_"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> HttpContext::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- fncPrintPayslip1
+   -> this::GetCurrentPeriod
+   -> this::ToDouble
+   "Select max(Period) from TBL_PAYTRAN_DETAILS where EMPLOYEEID='"
+   "'"
+   -> this::GetSingleData
+   "'"
+   -> String::Replace
+   -> String::Split
+   "'"
+   "'"
+   -> tok0x2b000004
+   "','"
+   -> String::Join
+   -> String::Substring
+   -> String::Substring
+   "select SD.*, BB.BANK_DESCRIPTION, BB.BRANCH_DESCRIPTION, U.EMP_ID  AS ACCSIGN from VW_SALARY_DETAILS SD inner join VW_BANK_BRANCH BB on SD.BANKBR_ID=BB.BANKBR_ID inner join  TBL_DIRECTORATE_USER U on SD.DIRECTORATEID=U.DIR_ID  where Period="
+   "select SD.*, BB.BANK_DESCRIPTION, BB.BRANCH_DESCRIPTION, '00'  AS ACCSIGN   from VW_SALARY_DETAILS SD inner join VW_BANK_BRANCH BB on SD.BANKBR_ID=BB.BANKBR_ID  where Period="
+   " and SD.EMPLOYEEID in ("
+   ")"
+   " Employee Ids: "
+   " Year: "
+   ", Month"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::.ctor
+   "0"
+   ", "
+   -> this::GetFirstDateOfMonth
+   " to "
+   -> this::GetLastDateOfMonth
+   -> this::ToPrePeriod
+   -> this::GetPrevMiddleDateOfMonth
+   " to "
+   -> this::GetMiddleDateOfMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Payslip For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_payrollDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_attendenceDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "1"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "0"
+   -> FormulaFieldDefinition::set_Text
+   "select * from TBL_PAYTRAN_LOAN where to_number(to_Char(LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(ENDING_DATE,'yyyymm'))>="
+   " AND PERIOD="
+   " ORDER BY STARTING_DATE DESC"
+   "select * from TBL_PAYTRAN_LOAN where to_number(to_Char(LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(ENDING_DATE,'yyyymm'))>="
+   " AND PERIOD="
+   " AND EMPLOYEEID  in ("
+   ") ORDER BY STARTING_DATE DESC"
+   -> this::GetTable
+   -> ReportDocument::SetDataSource
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> HttpContext::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> HttpContext::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_Subreports
+   "RptPayslipAdvance.rpt"
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "PAYSLIP_"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> HttpContext::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- CPR_Report
+   "select  * from VW_SALARY_DETAILS where PERIOD="
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " order by DIR_DIVCELL_ID,EMPLOYEEID"
+   -> this::GetTable
+   -> this::.ctor
+   -> this::.ctor
+   -> ReportDocument::SetDataSource
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> HttpContext::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "pdfreports/"
+   "CPR_"
+   "N"
+   "G"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> HttpContext::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- .ctor
+   -> Object::.ctor

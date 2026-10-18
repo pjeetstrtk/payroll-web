@@ -1,0 +1,96 @@
+=== RebPayRollWeb.Account.Login
+
+-- Page_Load
+   "Register"
+   -> HyperLink::set_NavigateUrl
+   -> Page::get_Request
+   -> HttpRequest::get_QueryString
+   "ReturnUrl"
+   -> this::set_ReturnUrl
+   -> Page::get_Request
+   -> HttpRequest::get_QueryString
+   "ReturnUrl"
+   -> HttpUtility::UrlEncode
+   -> String::IsNullOrEmpty
+   -> HyperLink::get_NavigateUrl
+   "?ReturnUrl="
+   -> HyperLink::set_NavigateUrl
+
+-- .ctor
+   -> Page::.ctor
+=== RebPayRollWeb.Login
+
+-- Page_Load
+
+-- Login1_Authenticate
+
+-- DoLogin
+   -> Page::get_Session
+   -> HttpSessionState::Clear
+   -> Page::get_Session
+   "E_SLIP"
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   "Please Specify Username"
+   -> Label::set_Text
+   "Please Specify Password"
+   -> Label::set_Text
+   "Select U.EMP_ID,U.USER_NAME,U.USER_TYPE, U.IS_ACTIVE,SYSDATE AS SRV_DATE, E.NAME,E.DESIGNATIONID,E.DSG_DESCRIPTION FROM TBL_USER U LEFT JOIN  VW_EMPLOYEE_ALL E ON U.EMP_ID=E.EMPLOYEEID WHERE  U.EMP_ID='"
+   "' and USER_PASS='"
+   "'"
+   -> ConfigurationManager::get_ConnectionStrings
+   "ConnectionString"
+   -> OracleConnection::.ctor
+   -> DbConnection::Open
+   -> Label::set_Text
+   -> DataTable::.ctor
+   -> OracleDataAdapter::.ctor
+   -> DbDataAdapter::Fill
+   -> Label::set_Text
+   -> DbConnection::Close
+   "IS_ACTIVE"
+   "Y"
+   "User information is not correct"
+   -> Label::set_Text
+   -> DbConnection::Close
+   "USER_TYPE"
+   -> Page::get_Session
+   "USERID"
+   "EMP_ID"
+   -> Page::get_Session
+   "USERNAME"
+   "NAME"
+   -> Page::get_Session
+   "DSG_ID"
+   "DESIGNATIONID"
+   -> Page::get_Session
+   "DSG_NAME"
+   "DSG_DESCRIPTION"
+   -> Page::get_Session
+   "USER_TYPE"
+   "Select * from TBL_COMPANY_INFO"
+   -> OracleDataAdapter::.ctor
+   -> DataSet::.ctor
+   -> DataAdapter::Fill
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   -> DataSet::get_Tables
+   "CURR_PERIOD"
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   "USR"
+   -> Page::get_Response
+   "frmForm129.aspx"
+   -> HttpResponse::Redirect
+   -> Page::get_Session
+   "E_SLIP"
+   -> DataSet::get_Tables
+   "EMAIL"
+   -> Page::get_Response
+   "Default.aspx"
+   -> HttpResponse::Redirect
+   "Incorrect Password"
+   -> Label::set_Text
+
+-- .ctor
+   -> Page::.ctor

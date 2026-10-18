@@ -1,0 +1,52 @@
+=== RebPayRollWeb.rptfrmJV
+
+-- Page_Load
+   -> Page::get_IsPostBack
+   -> TextBox::set_Text
+
+-- ShowReport
+   -> Page::get_IsPostBack
+   -> Object::GetType
+   "pdfJVView_"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- btnJV_Click
+   -> TextBox::get_Text
+   -> CheckBox::get_Checked
+   -> this::JV
+   -> this::ShowReport
+
+-- btnJVByEmployee_Click
+   -> TextBox::get_Text
+   -> CheckBox::get_Checked
+   -> this::JV
+   -> this::ShowReport
+
+-- btnEmployeeCredit_Click
+   -> TextBox::get_Text
+   -> CheckBox::get_Checked
+   -> this::JV_Credit
+   -> this::ShowReport
+
+-- btnJVCheck_Click
+   -> TextBox::get_Text
+   -> CheckBox::get_Checked
+   -> this::JV_Check
+   -> this::ShowReport
+
+-- btnJVBonus_Click
+   -> TextBox::get_Text
+   -> CheckBox::get_Checked
+   -> this::JV_Bonus
+   -> this::ShowReport
+
+-- btnJVKPI_Click
+   -> TextBox::get_Text
+   -> CheckBox::get_Checked
+   -> this::JV_Bonus
+   -> this::ShowReport
+
+-- .ctor
+   -> Page::.ctor

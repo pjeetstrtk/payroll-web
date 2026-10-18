@@ -1,0 +1,250 @@
+=== RebPayRollWeb.BL.JournalVoucher
+
+-- JV
+   "SELECT SD.EMPLOYEEID,SD.PERIOD,SD.NAME AS EMP_NAME,PC.GL_CODE,SD.DIR_DIVCELL_ID,SD.DIV_CEL,  SD.DIVCEL_DESCRIPTION, SD.DIRECTORATEID,SD.DIR_DESCRIPTION,SD.DESIGNATIONID,SD.DSG_DESCRIPTION,   PC.PAY_NAME_GL, PC.PAYID,   round((CASE WHEN SD.AD='D' THEN AMOUNT ELSE 0 END),2) AS AMT_C,   round((CASE WHEN SD.AD='A' THEN AMOUNT ELSE 0 END),2) AS AMT_D   FROM VW_SALARY_DETAILS SD INNER JOIN vw_JV_GL_NAME PC ON SD.PAYID=PC.PAYID AND SD.NOOFINCREMENTSPAID_OLD=PC.GRADE   WHERE SD.PERIOD="
+   " "
+   " UNION ALL SELECT SD.EMPLOYEEID,SD.PERIOD,SD.NAME AS EMP_NAME,'1421-01-000-000-00-0' AS GL_CODE,SD.DIR_DIVCELL_ID,SD.DIV_CEL,  SD.DIVCEL_DESCRIPTION, SD.DIRECTORATEID,SD.DIR_DESCRIPTION,SD.DESIGNATIONID,SD.DSG_DESCRIPTION,   'REB Revenue     CA19072' AS PAY_NAME_GL, '00' AS PAYID,   round(SUM(CASE WHEN SD.AD='D' THEN -AMOUNT ELSE AMOUNT  END),2) AS AMT_C,   0 AS AMT_D   FROM VW_SALARY_DETAILS SD INNER JOIN vw_JV_GL_NAME PC ON SD.PAYID=PC.PAYID AND SD.NOOFINCREMENTSPAID_OLD=PC.GRADE   WHERE SD.PERIOD="
+   "   GROUP BY SD.EMPLOYEEID,SD.PERIOD,SD.NAME ,SD.DIR_DIVCELL_ID,SD.DIV_CEL,  SD.DIVCEL_DESCRIPTION, SD.DIRECTORATEID,SD.DIR_DESCRIPTION,SD.DESIGNATIONID,SD.DSG_DESCRIPTION    "
+   " UNION ALL SELECT '0' AS EMPLOYEEID,201701 as PERIOD,'' AS EMP_NAME,'1421-01-000-000-00-0' AS GL_CODE,'0' as DIR_DIVCELL_ID,'0' as DIV_CEL,  '' as DIVCEL_DESCRIPTION, '' as DIRECTORATEID,'' as DIR_DESCRIPTION,'' as DESIGNATIONID, ' ' as DSG_DESCRIPTION,   'REB Revenue     CA19072' AS PAY_NAME_GL, '00' AS PAYID, round(SUM(CASE WHEN SD.AD='D' THEN -AMOUNT ELSE AMOUNT  END),2)  AS AMT_C,   0 AS AMT_D   FROM VW_SALARY_DETAILS SD   WHERE SD.PERIOD="
+   " "
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   "JV"
+   -> this::.ctor
+   "JVEMP"
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vlogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   ".xlsx"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- JV_Credit
+   "SELECT SD.EMPLOYEEID,SD.PERIOD,SD.NAME AS EMP_NAME,PC.GL_CODE,SD.DIR_DIVCELL_ID,SD.DIV_CEL,  SD.DIVCEL_DESCRIPTION, SD.DIRECTORATEID,SD.DIR_DESCRIPTION,SD.DESIGNATIONID,SD.DSG_DESCRIPTION,   PC.PAY_NAME_GL, PC.PAYID,   round((CASE WHEN SD.AD='D' THEN AMOUNT ELSE 0 END),2) AS AMT_C,   round((CASE WHEN SD.AD='A' THEN AMOUNT ELSE 0 END),2) AS AMT_D   FROM VW_SALARY_DETAILS SD INNER JOIN vw_JV_GL_NAME PC ON SD.PAYID=PC.PAYID AND SD.NOOFINCREMENTSPAID_OLD=PC.GRADE   WHERE SD.PERIOD="
+   " AND SD.AD='D'"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vlogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "JVCREDIT_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   ".xlsx"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- JV_Check
+   "SELECT * FROM VW_SALARY_DETAILS SD LEFT JOIN (SELECT EMPLOYEEID || SD.PAYID EMPLOYEEIDPAYID  FROM VW_SALARY_DETAILS SD "
+   "INNER JOIN vw_JV_GL_NAME PC ON SD.PAYID=PC.PAYID AND SD.NOOFINCREMENTSPAID_OLD=PC.GRADE "
+   "WHERE SD.PERIOD="
+   ") JL ON  (SD.EMPLOYEEID || SD.PAYID)=JL.EMPLOYEEIDPAYID "
+   " WHERE SD.PERIOD="
+   " AND JL.EMPLOYEEIDPAYID IS NULL"
+   -> this::GetTable
+   -> this::PeriodToMonth
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "JVCHECK_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   ".xlsx"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- JV_Bonus
+   -> this::JVKPI
+   -> this::JV_Bonus_festival
+
+-- JV_Bonus_festival
+   -> this::GetCurrentPeriod
+   "SELECT SD.EMPLOYEEID,SD.PERIOD,SD.NAME AS EMP_NAME,PC.GL_CODE,SD.DIR_DIVCELL_ID,SD.DIV_CEL,  SD.DIVCEL_DESCRIPTION, SD.DIRECTORATEID,SD.DIR_DESCRIPTION,SD.DESIGNATIONID,SD.DSG_DESCRIPTION,   PC.PAY_NAME_GL, PC.PAYID,   round((CASE WHEN SD.AD='D' THEN AMOUNT ELSE 0 END),2) AS AMT_C,   round((CASE WHEN SD.AD='A' THEN AMOUNT ELSE 0 END),2) AS AMT_D   FROM VW_BONUS_DETAILS SD INNER JOIN TBL_PAYCODE_JV PC ON SD.PAYID=PC.PAYID AND SD.NOOFINCREMENTSPAID_OLD=PC.GRADE   WHERE SD.PERIOD="
+   " AND SD.PAYID not in('87','94')"
+   " UNION ALL SELECT SD.EMPLOYEEID,SD.PERIOD,SD.NAME AS EMP_NAME,'1421-01-000-000-00-0' AS GL_CODE,SD.DIR_DIVCELL_ID,SD.DIV_CEL,  SD.DIVCEL_DESCRIPTION, SD.DIRECTORATEID,SD.DIR_DESCRIPTION,SD.DESIGNATIONID,SD.DSG_DESCRIPTION,   'REB Revenue     CA19072' AS PAY_NAME_GL, '00' AS PAYID,   round(SUM(CASE WHEN SD.AD='D' THEN -AMOUNT ELSE AMOUNT  END),2) AS AMT_C,   0 AS AMT_D   FROM VW_BONUS_DETAILS SD INNER JOIN TBL_PAYCODE_JV PC ON SD.PAYID=PC.PAYID AND SD.NOOFINCREMENTSPAID_OLD=PC.GRADE   WHERE SD.PERIOD="
+   " AND SD.PAYID  not in('87','94')  GROUP BY SD.EMPLOYEEID,SD.PERIOD,SD.NAME ,SD.DIR_DIVCELL_ID,SD.DIV_CEL,  SD.DIVCEL_DESCRIPTION, SD.DIRECTORATEID,SD.DIR_DESCRIPTION,SD.DESIGNATIONID,SD.DSG_DESCRIPTION    "
+   " UNION ALL SELECT '0' AS EMPLOYEEID,201701 as PERIOD,'' AS EMP_NAME,'1421-01-000-000-00-0' AS GL_CODE,'0' as DIR_DIVCELL_ID,'0' as DIV_CEL,  '' as DIVCEL_DESCRIPTION, '' as DIRECTORATEID,'' as DIR_DESCRIPTION,'' as DESIGNATIONID, ' ' as DSG_DESCRIPTION,   'REB Revenue     CA19072' AS PAY_NAME_GL, '00' AS PAYID, round(SUM(CASE WHEN SD.AD='D' THEN -AMOUNT ELSE AMOUNT  END),2)  AS AMT_C,   0 AS AMT_D   FROM VW_BONUS_DETAILS SD   WHERE SD.PERIOD="
+   " AND SD.PAYID  not in('87','94')   "
+   "JV_NY"
+   "JV_KPI"
+   "JV_BONUS_"
+   " order by DIR_DIVCELL_ID,ACCOUNTNUMBER ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   "_EMP"
+   -> this::.ctor
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   ".xlsx"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- JVKPI
+   "JV_KPI_"
+   -> this::GetCurrentPeriod
+   "SELECT SD.EMPLOYEEID,SD.PERIOD,SD.NAME AS EMP_NAME,PC.GL_CODE,SD.DIR_DIVCELL_ID,SD.DIV_CEL,  SD.DIVCEL_DESCRIPTION, SD.DIRECTORATEID,SD.DIR_DESCRIPTION,SD.DESIGNATIONID,SD.DSG_DESCRIPTION,   PC.PAY_NAME_GL, PC.PAYID,   round((CASE WHEN SD.AD='D' THEN AMOUNT ELSE 0 END),2) AS AMT_C,   round((CASE WHEN SD.AD='A' THEN AMOUNT ELSE 0 END),2) AS AMT_D   FROM VW_BONUS_DETAILS SD INNER JOIN TBL_PAYCODE_JV PC ON SD.PAYID=PC.PAYID AND SD.NOOFINCREMENTSPAID_OLD=PC.GRADE   WHERE SD.PERIOD="
+   " AND SD.PAYID in('87','94') "
+   " UNION ALL SELECT '0' AS EMPLOYEEID,201701 as PERIOD,'' AS EMP_NAME,'1421-01-000-000-00-0' AS GL_CODE,'0' as DIR_DIVCELL_ID,'0' as DIV_CEL,  '' as DIVCEL_DESCRIPTION, '' as DIRECTORATEID,'' as DIR_DESCRIPTION,'' as DESIGNATIONID, ' ' as DSG_DESCRIPTION,   'REB Revenue     CA19072' AS PAY_NAME_GL, '00' AS PAYID, round(SUM(CASE WHEN SD.AD='D' THEN -AMOUNT ELSE AMOUNT  END),2)  AS AMT_C,   0 AS AMT_D   FROM VW_BONUS_DETAILS SD   WHERE SD.PERIOD="
+   " AND SD.PAYID in('87','94')   "
+   -> this::GetTable
+   "EMP_"
+   -> this::.ctor
+   -> this::.ctor
+   -> String::Substring
+   ", "
+   -> String::Substring
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   ".xlsx"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- .ctor
+   -> Object::.ctor

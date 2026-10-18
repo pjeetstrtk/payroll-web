@@ -1,0 +1,82 @@
+=== RebPayRollWeb.frmMonthClose
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::GetCurrentPeriod
+   -> TextBox::set_Text
+
+-- btnPrint_Click
+   -> this::frmClosing
+
+-- frmClosing
+   -> this::GetCurrentPeriod
+   "Select EMPLOYEEID,NAME,DSG_DESCRIPTION,DIR_DIVCELL_ID,INCREMENTSTATUS,PRESENTPAYGRADE,NEXTINCREMENTDUEDATE,NOOFINCREMENTSPAID from vw_employee_all  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL))  "
+   " AND EMPLOYEEID not in ( Select EMPLOYEEID from TBL_PAYTRAN_MASTER where PERIOD="
+   ")  AND EMPLOYEEID NOT IN (SELECT EMPLOYEEID FROM TBL_NOT_PAID_EMP_BY_YMD WHERE PERIOD="
+   ") order by DIR_DIVCELL_ID,EMPLOYEEID"
+   -> this::GetTable
+   "Not Processed : "
+   " Employee(s)"
+   -> Label::set_Text
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   "DELETE FROM TBL_EMP_LAST_SALARY"
+   -> this::ToNextPeriod
+   -> String::Substring
+   "06"
+   " AND PRESENTPAYGRADE>0"
+   -> this::GetTable
+   "Employee Not Found"
+   -> Label::set_Text
+   "select PAY_GRADE,MAX(INCREMENT_NUMBER) INC from TBL_PAYSCALE_2015 group by PAY_GRADE"
+   -> this::GetTable
+   "INCREMENTSTATUS"
+   -> Page::get_Session
+   "USERID"
+   "1"
+   "DELETE FROM TBL_INCREMENT WHERE EMPLOYEE_ID='"
+   "' AND PERIOD="
+   -> this::ExecuteStatement_TXN
+   "NEXTINCREMENTDUEDATE"
+   -> this::isDate
+   "NEXTINCREMENTDUEDATE"
+   -> this::ToDateAsDate
+   "yyyyMM"
+   "EMPLOYEEID"
+   "PRESENTPAYGRADE"
+   "NOOFINCREMENTSPAID"
+   "PAY_GRADE="
+   -> DataTable::Select
+   -> tok0x2b000002
+   "INC"
+   -> DateTime::AddYears
+   -> this::ToDate
+   -> this::ToDate
+   "INSERT INTO TBL_INCREMENT( PERIOD ,  EMPLOYEE_ID ,  INCR_DATE ,  INCR_BY ,  PREV_GRADE ,  PREV_INCR ,  PREV_INCR_DATE ,  NEW_GRADE ,  NEW_INCR,  NEW_INCR_DATE )"
+   " VALUES( "
+   ",  '"
+   "',  SYSDATE,  '"
+   "',  "
+   ",  "
+   ",  "
+   ",  "
+   ",  "
+   ",  "
+   "  )"
+   -> this::ExecuteStatement_TXN
+   "UPDATE TBL_EMPLOYEEMASTER E SET (E.NEXTINCREMENTDUEDATE,E.NOOFINCREMENTSPAID)=(SELECT NEW_INCR_DATE,NEW_INCR FROM TBL_INCREMENT I WHERE E.EMPLOYEEID=I.EMPLOYEE_ID AND PERIOD="
+   ") WHERE E.INCREMENTSTATUS=1 AND E.EMPLOYEEID IN (SELECT  EMPLOYEE_ID FROM TBL_INCREMENT WHERE PERIOD="
+   ")"
+   -> this::ExecuteStatement_TXN
+   "Update   TBL_COMPANY_INFO set  CURR_PERIOD="
+   " ,CLOSE_PERIOD="
+   -> this::ExecuteStatement_TXN
+   -> Label::set_Text
+   -> Page::get_Response
+   "Login.aspx"
+   -> HttpResponse::Redirect
+
+-- .ctor
+   -> Page::.ctor

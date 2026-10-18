@@ -1,0 +1,145 @@
+=== RebPayRollWeb.rptfrmPaySlips
+
+-- Page_Load
+   -> Page::get_IsPostBack
+   "select DIRECTORATEID, DIRECTORATEID as DIR_DESCRIPTION from TBL_DIRECTORATE order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   "select DIRECTORATEID, DIRECTORATEID||' '||DIR_DESCRIPTION as DIR_DESCRIPTION from TBL_DIRECTORATE order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   -> TextBox::set_Text
+
+-- drpDIRECTORATEID_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+   "select DIR_DIVCELL_ID, DIR_DIVCELL_ID as DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL where DIRECTORATEID='"
+   -> ListControl::get_SelectedValue
+   "' order by DIR_DIVCELL_ID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   "select DIR_DIVCELL_ID, DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL where DIRECTORATEID='"
+   -> ListControl::get_SelectedValue
+   "' order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+
+-- drpDIR_DESCRIPTION_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+   "select DIR_DIVCELL_ID, DIR_DIVCELL_ID as DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL where DIRECTORATEID='"
+   -> ListControl::get_SelectedValue
+   "' order by DIR_DIVCELL_ID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   "select DIR_DIVCELL_ID, DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL where DIRECTORATEID='"
+   -> ListControl::get_SelectedValue
+   "' order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+
+-- drpDIR_DIVCELL_ID_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+
+-- drpDIVCEL_DESCRIPTION_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+
+-- GetParam
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> TextBox::get_Text
+
+-- btnPayslip_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   -> this::fncPrintPayslip
+   -> this::ShowReport
+
+-- btnPayslipByClass12_Click
+   -> Page::get_Session
+   "E_SLIP"
+   "E"
+   -> TextBox::get_Text
+   "1,2"
+   -> this::fncPrintPayslip
+   -> this::ShowReport
+
+-- btnPayslipByClass34_Click
+   -> Page::get_Session
+   "E_SLIP"
+   "E"
+   -> TextBox::get_Text
+   "3,4"
+   -> this::fncPrintPayslip
+   -> this::ShowReport
+
+-- btnBonusSlip_Click
+   -> TextBox::get_Text
+   -> this::BonusSlip
+   -> this::ShowReport
+
+-- btnNewYearSlip_Click
+   -> TextBox::get_Text
+   -> this::BonusSlip
+   -> this::ShowReport
+
+-- btnKPISlip_Click
+   -> TextBox::get_Text
+   -> this::BonusSlip
+   -> this::ShowReport
+
+-- btnCprRepFinal_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   -> this::CPR_Report
+   -> this::ShowReport
+
+-- btnCprGrandTtl_Click
+   -> TextBox::get_Text
+   -> this::CPR_Report
+   -> this::ShowReport
+
+-- ShowReport
+   -> Page::get_IsPostBack
+   -> Object::GetType
+   "pdfView_"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- lnkPaidEmployee_Click
+   -> this::GetParam
+   -> TextBox::get_Text
+   -> this::EmployeePaidThisMonth
+   -> this::ShowReport
+
+-- .ctor
+   -> Page::.ctor

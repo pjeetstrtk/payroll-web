@@ -1,0 +1,159 @@
+=== RebPayRollWeb.frmEmployeeViewUI
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::fncOpenEmpInfo
+
+-- fncOpenEmpInfo
+   -> Control::set_Visible
+   -> this::fncOpenConnection
+   "Select * from VW_EMPLOYEE_ALL where EMPLOYEEID='"
+   -> Page::get_Request
+   -> HttpRequest::get_QueryString
+   "EMPID"
+   "'"
+   -> this::GetTable
+   -> this::fncReset
+   "EMPLOYEEID"
+   -> Label::set_Text
+   -> Control::set_Visible
+   "PRESENTPAYGRADE"
+   " With "
+   "NOOFINCREMENTSPAID"
+   " Increment"
+   -> Label::set_Text
+   "NEXTINCREMENTDUEDATE"
+   "NEXTINCREMENTDUEDATE"
+   -> String::Substring
+   "INCREMENTSTATUS"
+   "1"
+   "(Auto)"
+   -> Label::set_Text
+   "NAME"
+   " [ "
+   "DSG_DESCRIPTION"
+   " ]"
+   -> Label::set_Text
+   "SEX"
+   "M"
+   "Female"
+   "Male"
+   -> Label::set_Text
+   "select RLG_NAME from TBL_RELIGION where RLG_ID='"
+   "RELIGION"
+   "'"
+   -> this::GetSingleData
+   -> Label::set_Text
+   "DATEOFBIRTH"
+   "DATEOFBIRTH"
+   -> String::Substring
+   -> Label::set_Text
+   "M_STAUS"
+   "M"
+   "Married"
+   -> Label::set_Text
+   "M_STAUS"
+   "N"
+   "Not Married"
+   -> Label::set_Text
+   "M_STAUS"
+   "D"
+   "Divorced"
+   -> Label::set_Text
+   "M_STAUS"
+   "W"
+   "Widowed"
+   -> Label::set_Text
+   "BLOODGROUP"
+   -> Label::set_Text
+   "NID"
+   -> Label::set_Text
+   "TIN"
+   -> Label::set_Text
+   "select LOCATION_DESCRIPTION from TBL_LOCATION where LOCATIONID='"
+   "LOCATIONID"
+   "'"
+   -> this::GetSingleData
+   -> Label::set_Text
+   "select EMP_STATUS_DESC from TBL_EMP_STATUS where EMP_STATUS_ID='"
+   "SUSPENDSTATUS"
+   "'"
+   -> this::GetSingleData
+   -> Label::set_Text
+   "select ACC_STATUS from TBL_ACCOMMODATION where ACC_ID='"
+   "ACCOMMODATION"
+   "'"
+   -> this::GetSingleData
+   -> Label::set_Text
+   "DIVCEL_DESCRIPTION"
+   -> Label::set_Text
+   "DATEOFFIRSTJOINING"
+   -> Label::set_Text
+   -> Label::get_Text
+   -> this::isDate
+   "DATEOFFIRSTJOINING"
+   -> this::ToDateAsDate
+   -> DateTime::AddYears
+   "dd/MM/yyyy"
+   -> Label::set_Text
+   "RETIREENDCONTRACTDATE"
+   -> Label::set_Text
+   "JOININGDATETOPOST"
+   -> Label::set_Text
+   "CPFGPFSTATUS"
+   "1"
+   " CPF FUND "
+   -> Label::set_Text
+   "CPFGPFSTATUS"
+   "2"
+   " GPF FUND "
+   -> Label::set_Text
+   "  "
+   -> Label::set_Text
+   -> Label::set_Text
+   "A/C :  "
+   "ACCOUNTNUMBER"
+   "  [ "
+   "BANK_DESCRIPTION"
+   "-"
+   "BRANCH_DESCRIPTION"
+   " ]"
+   -> Label::set_Text
+
+-- fncReset
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+
+-- lnkEdit_Click
+   -> Page::get_Response
+   "frmEmployeeEditUI.aspx?EMPID="
+   -> Label::get_Text
+   -> HttpResponse::Redirect
+
+-- .ctor
+   -> Page::.ctor

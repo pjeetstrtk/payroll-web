@@ -1,0 +1,165 @@
+=== RebPayRollWeb.UI.frmEmpLoanAdvanceUI
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::fncOpenConnection
+   "select PAYID, PAYNAME From TBL_PAYCODE where ADV_TYPE='A' order by PAYNAME"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   -> this::GetEmpInfoes
+
+-- GetEmpInfoes
+   -> this::fncOpenConnection
+   "select EMPLOYEEID,NAME,DATEOFFIRSTJOINING,FATHERNAME,DESIGNATIONID,EMAIL,TIN,M_STAUS,BLOODGROUP,NID,MOB_NO,LASTDEGREE,DISTRICT_ID,PRESENTADDRESS,PERMANENTADDRESS from TBL_EMPLOYEEMASTER where EMPLOYEEID='"
+   -> Page::get_Session
+   "EMPLOYEEID"
+   "'"
+   -> this::GetTable
+   "EMPLOYEEID"
+   -> Label::set_Text
+   -> Page::get_Session
+   "NAME"
+   -> Label::set_Text
+   "select DSG_DESCRIPTION from TBL_DESIGNATION where DESIGNATIONID='"
+   "DESIGNATIONID"
+   "'"
+   -> this::GetSingleData
+   -> Label::set_Text
+   "EMPLOYEEID"
+   -> this::fncLoanAdvanceInfoes
+
+-- fncLoanAdvanceInfoes
+   -> this::fncOpenConnection
+   "select A.*, P.PAYNAME from TBL_ADVANCE_HEADER A inner join TBL_PAYCODE P on A.PAYID=P.PAYID where A.EMPLOYEEID='"
+   "' order by A.LOANDATE desc "
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- btnClose_Click
+   -> Page::get_Response
+   "~/UI/frmEmployeeEntryUI.aspx"
+   -> HttpResponse::Redirect
+
+-- gvLoanAdvance_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> this::fncOpenConnection
+   "select A.*, P.PAYNAME from TBL_ADVANCE_HEADER A inner join TBL_PAYCODE P on A.PAYID=P.PAYID where A.EMPLOYEEID='"
+   -> Label::get_Text
+   "' and A.LOAN_REF='"
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   "' order by A.LOANDATE desc "
+   -> this::GetTable
+   "LOAN_REF"
+   -> Label::set_Text
+   "LOANDATE"
+   -> Label::set_Text
+   "STARTING_DATE"
+   -> Label::set_Text
+   "ENDING_DATE"
+   -> Label::set_Text
+   "P_AMOUNT"
+   -> Label::set_Text
+   "RATE_INTEREST"
+   -> Label::set_Text
+   "P_NOOFINSTALLMENTS"
+   -> Label::set_Text
+   "P_NOOFINSTALLMENTSPAID"
+   -> Label::set_Text
+   "AMOUNT"
+   -> Label::set_Text
+   "I_NOOFINSTALLMENTSPAID"
+   -> Label::set_Text
+   "Update"
+   -> Button::set_Text
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Control::get_ViewState
+   "gr"
+   -> GridViewRow::get_RowIndex
+   -> Control::set_Visible
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+   -> Label::get_Text
+   -> ListControl::get_SelectedValue
+   -> Label::get_Text
+   -> Label::get_Text
+   -> this::ToDate
+   -> Label::get_Text
+   -> Label::get_Text
+   -> Label::get_Text
+   -> Label::get_Text
+   -> Label::get_Text
+   -> Label::get_Text
+   -> Label::get_Text
+   -> Label::get_Text
+   -> this::ToDate
+   -> Label::get_Text
+   -> this::ToDate
+   -> Control::get_ViewState
+   "IsAdd"
+   "-"
+   -> Label::get_Text
+   -> String::Substring
+   -> Label::get_Text
+   -> String::Substring
+   -> Label::get_Text
+   -> String::Substring
+   "select * from TBL_ADVANCE_HEADER where LOAN_REF='"
+   "'"
+   -> this::GetTable
+   "Loan Ref Id Already Exists"
+   -> Label::set_Text
+   -> Label::set_Text
+   "insert into TBL_ADVANCE_HEADER (LOAN_REF, EMPLOYEEID, PAYID, LOANDATE, P_AMOUNT, RATE_INTEREST, AMOUNT, P_NOOFINSTALLMENTS, P_NOOFINSTALLMENTSPAID,  I_NOOFINSTALLMENTS, I_NOOFINSTALLMENTSPAID, STARTING_DATE, ENDING_DATE)  values ('"
+   "', '"
+   "', '"
+   "', "
+   ", '"
+   "', '"
+   "', '"
+   "', '"
+   "', '"
+   "',  '"
+   "', '"
+   "', "
+   ", "
+   " )"
+   -> this::ExecuteStatement_TXN
+   "Insert Successfully"
+   -> Label::set_Text
+   -> this::GetEmpInfoes
+   "select * from TBL_ADVANCE_HEADER where LOAN_REF='"
+   "' and PAYID<>'"
+   "'"
+   -> this::GetTable
+   "Pay Id Already Exists"
+   -> Label::set_Text
+   -> Control::Focus
+   -> Label::set_Text
+   "update TBL_ADVANCE_HEADER set PAYID='"
+   "',LOANDATE="
+   ",P_AMOUNT='"
+   "',RATE_INTEREST='"
+   "',AMOUNT='"
+   "', P_NOOFINSTALLMENTS='"
+   "',P_NOOFINSTALLMENTSPAID='"
+   "',  I_NOOFINSTALLMENTS='"
+   "',I_NOOFINSTALLMENTSPAID='"
+   "',STARTING_DATE="
+   ",ENDING_DATE="
+   " where LOAN_REF='"
+   "' and EMPLOYEEID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Update Successfully"
+   -> Label::set_Text
+   -> this::GetEmpInfoes
+
+-- .ctor
+   -> Page::.ctor

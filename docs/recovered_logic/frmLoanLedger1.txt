@@ -1,0 +1,89 @@
+=== RebPayRollWeb.frmLoanLedger1
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   -> Label::set_Text
+   "Salary Month "
+   -> Label::get_Text
+   -> this::PeriodToMonth
+   -> Label::set_Text
+
+-- btnPrint_Click
+   -> TextBox::get_Text
+   -> CommandEventArgs::get_CommandArgument
+   -> this::fncLoanLedger
+   -> Object::GetType
+   "pdfView"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- btnSearch_Click
+   -> TextBox::get_Text
+   -> this::fncSearchEmp
+
+-- fncSearchEmp
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> this::fncOpenConnection
+   -> TextBox::get_Text
+   "select * from VW_EMPLOYEE_ALL where EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   "NOOFINCREMENTSPAID"
+   -> Label::set_Text
+   "PRESENTPAYGRADE"
+   -> this::ToDouble
+   -> Label::get_Text
+   -> this::GetPayScaleBasic
+   -> Control::set_Visible
+   "EMPLOYEEID"
+   -> Label::set_Text
+   "DESIGNATIONID"
+   "NAME"
+   " ["
+   "DSG_DESCRIPTION"
+   " ]"
+   -> Label::set_Text
+   -> String::PadLeft
+   -> Label::set_Text
+   "DIR_DIVCELL_ID"
+   -> Label::set_Text
+   "MANAGEMENTID"
+   -> Label::set_Text
+   -> this::fncLoanList
+   -> Control::set_Visible
+
+-- fncLoadSelEmp
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+
+-- btnAddNew_Click
+
+-- btnSave_Click
+
+-- fncShowOverTime
+
+-- fncCalcTotal
+
+-- fncLoanList
+   -> TextBox::get_Text
+   -> TextBox::set_Text
+   "select A.* From VW_ADV_LOAN_SUMMERY A where A.EMPLOYEEID='"
+   "' AND PAYID='15' order by A.LOANDATE desc "
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- gvLoanList_SelectedIndexChanged
+   -> this::fncLoadSelEmp
+
+-- .ctor
+   -> Page::.ctor

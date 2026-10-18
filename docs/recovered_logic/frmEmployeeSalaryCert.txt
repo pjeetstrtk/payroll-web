@@ -1,0 +1,85 @@
+=== RebPayRollWeb.frmEmployeeSalaryCert
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> TextBox::get_Text
+   -> this::GetCurrentPeriod
+   -> TextBox::set_Text
+
+-- fncViewSalaryCertificate
+   -> TextBox::get_Text
+   -> this::GetCurrentPeriod
+   -> String::Substring
+   -> String::Substring
+   "select SD.*, BB.BANK_DESCRIPTION, BB.BRANCH_DESCRIPTION from VW_SALARY_DETAILS SD inner join VW_BANK_BRANCH BB on SD.BANKBR_ID=BB.BANKBR_ID inner join TBL_PAYCODE P on SD.PAYID=P.PAYID  where Period="
+   " and SD.EMPLOYEEID='"
+   "' and SD.PAYID not in (29) and P.ADV_TYPE not in ('AI','A') and ((SD.payid in('06','11','42','84') AND SD.AD='D') or (SD.AD='A')) and (SD.ARREAR<>'Y')"
+   " Employee Id: "
+   " Year: "
+   ", Month"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   "Select Min(BASIC) || '-' || max(basic) MBASIC from    TBL_PAYSCALE_2015 where PAY_GRADE="
+   "PRESENTPAYGRADE"
+   -> this::GetSingleData
+   -> this::.ctor
+   "0"
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_payrollDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> this::GetTable
+   -> ReportDocument::SetDataSource
+   "EMP_SAL_CERT_"
+   -> this::fncGetPrintFileName
+   -> CheckBox::get_Checked
+   ".pdf"
+   ".xlsx"
+   "pdfreports/"
+   -> HttpContext::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> CheckBox::get_Checked
+   -> ReportDocument::ExportToDisk
+   -> ReportDocument::ExportToDisk
+   -> Object::GetType
+   "pdfView_"
+   -> Random::.ctor
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- Button1_Click
+
+-- BB_Click
+
+-- btnPrint_Click
+   -> TextBox::get_Text
+   -> this::fncViewSalaryCertificate
+
+-- btnEmpEdit_Click
+   -> CommandEventArgs::get_CommandArgument
+   -> Page::get_Response
+   "frmEmployeeEditUI.aspx?EMPID="
+   -> HttpResponse::Redirect
+
+-- btnView_Click
+   -> CommandEventArgs::get_CommandArgument
+   -> Page::get_Response
+   "frmEmployeeViewUI.aspx?EMPID="
+   -> HttpResponse::Redirect
+
+-- grdEmpList_PageIndexChanged
+
+-- .ctor
+   -> Page::.ctor

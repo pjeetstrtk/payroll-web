@@ -1,0 +1,266 @@
+=== RebPayRollWeb.frmSpecialAllowances
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> this::GetCurrentPeriod
+   -> Page::get_IsPostBack
+   -> Control::get_ViewState
+   "IsAdd"
+   -> this::fncOpenConnection
+   "select PAYID, PAYID AS PAYNAME From TBL_PAYCODE where AD='A' or AD='D' order by PAYID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "select PAYID, PAYNAME From TBL_PAYCODE where AD='A' or AD='D' order by PAYID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   -> Label::set_Text
+   -> Label::get_Text
+   -> TextBox::set_Text
+   "Salary Month "
+   -> Label::get_Text
+   -> this::PeriodToMonth
+   -> Label::set_Text
+
+-- btnSearch_Click
+   -> this::fncSearchEmp
+
+-- fncSearchEmp
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> this::fncReset
+   -> this::fncOpenConnection
+   -> TextBox::get_Text
+   "select * from VW_EMPLOYEE_ALL where EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   "NOOFINCREMENTSPAID"
+   -> Label::set_Text
+   "PRESENTPAYGRADE"
+   -> this::ToDouble
+   -> Label::get_Text
+   -> this::GetPayScaleBasic
+   -> Control::set_Visible
+   "EMPLOYEEID"
+   -> Label::set_Text
+   "DESIGNATIONID"
+   "NAME"
+   " ["
+   "DSG_DESCRIPTION"
+   " ]"
+   -> Label::set_Text
+   -> String::PadLeft
+   -> Label::set_Text
+   "DIR_DIVCELL_ID"
+   "select DSG_DESCRIPTION from TBL_DESIGNATION where DESIGNATIONID='"
+   "DESIGNATIONID"
+   "'"
+   -> this::GetSingleData
+   -> Label::set_Text
+   -> Label::set_Text
+   "MANAGEMENTID"
+   -> Label::set_Text
+   -> this::fncDisplayOverTime
+   -> this::fncOpenRelatedEmployee
+   -> Control::set_Visible
+
+-- gvOverTime_SelectedIndexChanged
+   -> this::fncLoadSelEmp
+
+-- fncLoadSelEmp
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> this::fncSearchEmp
+
+-- fncDisplayOverTime
+   -> this::fncReset
+   -> this::fncOpenConnection
+   -> Control::set_Visible
+   "select UT.*,PAYNAME from TBL_UTXDETAILS UT,TBL_PAYCODE P where UT.PAYID=P.PAYID AND EMPLOYEEID='"
+   "' and PERIOD='"
+   -> Label::get_Text
+   "' "
+   " AND UT.PAYID='"
+   "'"
+   -> this::GetTable
+   "PAYID"
+   -> this::GetIndexFromDropList
+   -> ListControl::set_SelectedIndex
+   -> this::fncChangePayName
+   "AMOUNT"
+   -> TextBox::set_Text
+   "PERIOD_END"
+   -> TextBox::set_Text
+   "AD"
+   "A"
+   -> CheckBox::set_Checked
+   -> CheckBox::set_Checked
+   "ISOTHERPAY"
+   "Y"
+   -> CheckBox::set_Checked
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- fncReset
+   -> ListControl::set_SelectedIndex
+   -> ListControl::set_SelectedIndex
+   -> TextBox::set_Text
+   -> Label::get_Text
+   -> TextBox::set_Text
+   -> CheckBox::set_Checked
+   -> Label::set_Text
+
+-- fncSave
+   -> Label::get_Text
+   -> ListControl::get_SelectedValue
+   -> TextBox::get_Text
+   "N"
+   -> CheckBox::get_Checked
+   "A"
+   -> CheckBox::get_Checked
+   "D"
+   -> CheckBox::get_Checked
+   "Y"
+   -> Control::get_ViewState
+   "IsAdd"
+   -> DateTime::get_Now
+   -> DateTime::get_Year
+   -> DateTime::get_Now
+   -> DateTime::get_Month
+   -> Label::get_Text
+   -> TextBox::get_Text
+   "select * from TBL_UTXDETAILS where EMPLOYEEID='"
+   -> Label::get_Text
+   "' and PERIOD='"
+   "' AND PAYID='"
+   "'"
+   -> this::GetTable
+   "INSERT INTO TBL_UTXDETAILS (PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AD, AMOUNT, ISOTHERPAY, PERIOD, PERIOD_END)  VALUES ('"
+   "' ,'"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "')"
+   -> this::ExecuteStatement_TXN
+   "Inserted Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> this::fncSpecialDataBind
+   "update TBL_UTXDETAILS set AD='"
+   "',AMOUNT='"
+   "',ISOTHERPAY='"
+   "',PERIOD_END='"
+   "'where EMPLOYEEID='"
+   -> Label::get_Text
+   "' and PERIOD='"
+   -> Label::get_Text
+   "' AND PAYID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Updated Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> this::fncSpecialDataBind
+
+-- btnAddNew_Click
+   -> this::fncReset
+   "Save"
+   -> LinkButton::set_Text
+   -> Control::get_ViewState
+   "IsAdd"
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncShowOverTime
+
+-- fncOpenRelatedEmployee
+   -> Label::set_Text
+   "Select * from vw_employee_all  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   -> Label::get_Text
+   " ) or (RETIREENDCONTRACTDATE IS NULL)) "
+   " AND    DIR_DIVCELL_ID='"
+   "' AND EMPLOYEEID<>'"
+   -> TextBox::get_Text
+   "' ORDER BY EMPLOYEEID "
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- fncSpecialDataBind
+   "select UT.*,PAYNAME from TBL_UTXDETAILS UT,TBL_PAYCODE P where UT.PAYID=P.PAYID AND EMPLOYEEID='"
+   -> TextBox::get_Text
+   "' and PERIOD='"
+   "' "
+   -> this::GetTable
+   -> Control::set_Visible
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   -> TextBox::set_Text
+
+-- btnDelete_Click
+   -> ListControl::get_SelectedValue
+   "Delete FROM  TBL_UTXDETAILS where EMPLOYEEID='"
+   -> Label::get_Text
+   "' and PERIOD='"
+   -> Label::get_Text
+   "' AND PAYID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   -> Control::set_Visible
+   "Deleted ......"
+   -> Label::set_Text
+   -> this::fncSpecialDataBind
+
+-- drpPAYID_SelectedIndexChanged
+   -> this::fncChangePayName
+
+-- fncChangePayName
+   "select PAYNAME from TBL_PAYCODE where PAYID='"
+   -> ListControl::get_SelectedValue
+   "'"
+   -> this::GetSingleData
+   -> ListItemCollection::FindByText
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> this::fncSetAllowanceType
+   -> ListControl::set_SelectedIndex
+
+-- drpPAYNAME_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> this::fncSetAllowanceType
+   -> ListControl::set_SelectedIndex
+
+-- fncSetAllowanceType
+   -> ListControl::get_Text
+   "Select AD from TBL_PAYCODE where PAYID='"
+   "'"
+   -> this::GetSingleData
+   "A"
+   -> CheckBox::set_Checked
+   "D"
+   -> CheckBox::set_Checked
+
+-- grvEmployee_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::get_Text
+   -> this::fncDisplayOverTime
+
+-- .ctor
+   -> Page::.ctor

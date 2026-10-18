@@ -1,0 +1,311 @@
+=== RebPayRollWeb.frmIncomeTaxCertificateUI
+
+-- Page_Load
+   -> Page::get_IsPostBack
+   "July"
+   "June"
+   -> DateTime::get_Now
+   -> DateTime::get_Year
+   -> this::GetCurrentPeriod
+   -> String::Substring
+   -> String::Substring
+   "07"
+   -> String::Substring
+   "06"
+   "07"
+   "06"
+   "-"
+   " - "
+   "-"
+   "-"
+   -> ListItem::.ctor
+   "select DIRECTORATEID, DIRECTORATEID as DIR_DESCRIPTION from TBL_DIRECTORATE order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   "select DIRECTORATEID, DIRECTORATEID||' '||DIR_DESCRIPTION as DIR_DESCRIPTION from TBL_DIRECTORATE order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   -> this::fncShowChalan
+
+-- drpDIRECTORATEID_SelectedIndexChanged
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+   -> ListControl::set_SelectedIndex
+
+-- drpDIR_DESCRIPTION_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+
+-- chkAllEmp_CheckedChanged
+   -> CheckBox::get_Checked
+   -> TextBox::set_Text
+   -> WebControl::set_Enabled
+   -> WebControl::set_Enabled
+
+-- txtEMPLOYEEID_TextChanged
+
+-- fncUpdateChalan
+   -> TextBox::get_Text
+   "'"
+   -> String::Replace
+   """
+   -> String::Replace
+   "Select Chalan from TBL_TAX_CHALAN where FYEAR='"
+   -> ListControl::get_Text
+   "'"
+   -> this::GetTable
+   "Update TBL_TAX_CHALAN set MEMO_NO='"
+   -> TextBox::get_Text
+   "',MEMO_DATE="
+   -> TextBox::get_Text
+   -> this::ToDate
+   ", CHALAN='"
+   "' where FYEAR='"
+   -> ListControl::get_Text
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Insert into TBL_TAX_CHALAN VALUES( '"
+   -> ListControl::get_Text
+   "','"
+   "','"
+   -> TextBox::get_Text
+   "',"
+   -> TextBox::get_Text
+   -> this::ToDate
+   ")"
+   -> this::ExecuteStatement_TXN
+
+-- ShowCertificates
+   -> TextBox::get_Text
+   "'"
+   -> String::Replace
+   """
+   -> String::Replace
+   "0"
+   -> ListControl::get_SelectedValue
+   -> String::Split
+   -> String::Split
+   -> TextBox::get_Text
+   -> this::fncOpenConnection
+   "SELECT e.EMPLOYEEID, e.NAME,DESIGNATIONID,e.DSG_DESCRIPTION,CADREID,e.CADRE_DESCRIPTION,e.DIR_DIVCELL_ID,e.MANAGEMENTID,e.MGMT_DESCRIPTION,DIRECTORATEID,e.DIR_DESCRIPTION,e.DIV_CEL,e.DIVISIONCELLID,e.DIVCEL_DESCRIPTION,e.SEX,e.TIN  FROM VW_EMPLOYEE_ALL e "
+   "where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL)) "
+   " AND EMPLOYEEID ='"
+   "'"
+   -> ListControl::get_SelectedIndex
+   " AND e.DIRECTORATEID='"
+   -> ListControl::get_Text
+   "'"
+   -> this::GetTable
+   "select employeeid, period, SUM(case when AD='A' then -AMOUNT else AMOUNT end )as T_PRN FROM TBL_PAYTRAN_DETAILS WHERE payid='84' AND period>="
+   " AND period<="
+   " GROUP BY employeeid, period order by employeeid, period"
+   -> this::GetTable
+   -> this::.ctor
+   "EMPLOYEEID"
+   "0149"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "TIN"
+   "SEX"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "PERIOD"
+   -> String::Substring
+   -> None::.ctor
+   "07"
+   "08"
+   "09"
+   "10"
+   "11"
+   "12"
+   "01"
+   "02"
+   "03"
+   "04"
+   "05"
+   "06"
+   -> None::TryGetValue
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "EMPLOYEEID"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "PAYID"
+   "PAYNAME"
+   "OPENNIG_AMT"
+   "ADJ_AMT"
+   "TOTAL_AMT"
+   "JUL_AMT"
+   "AUG_AMT"
+   "SEP_AMT"
+   "OCT_AMT"
+   "NOV_AMT"
+   "DEC_AMT"
+   "JAN_AMT"
+   "FEB_AMT"
+   "MAR_AMT"
+   "APR_AMT"
+   "MAY_AMT"
+   "JUN_AMT"
+   "FY_TOTAL"
+   "BAL_AMT"
+   "OTHER_AMT1"
+   "OTHER_AMT2"
+   "REMARKS1"
+   "REMARKS2"
+   "OTHERID"
+   -> this::.ctor
+   -> ReportDocument::SetDataSource
+   -> String::Substring
+   " - "
+   -> String::Substring
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Income Tax Statement For The  Financial Year "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vChalanDate"
+   "'-'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vMemoDate"
+   "'"
+   -> TextBox::get_Text
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vMemoNo"
+   "'"
+   -> TextBox::get_Text
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vChalanNo"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vUpToDate"
+   "'30/06/"
+   -> String::Substring
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "pdfreports/"
+   "TAX_CERT_"
+   -> ListControl::get_Text
+   "_"
+   -> TextBox::get_Text
+   "_"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   -> Page::get_IsPostBack
+   -> Object::GetType
+   "TAX_CERT_111999"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- btnPreview_Click
+   -> this::fncUpdateChalan
+
+-- drpFiscalYear_SelectedIndexChanged
+   -> this::fncShowChalan
+
+-- fncShowChalan
+   -> ListControl::get_SelectedValue
+   -> ListControl::get_SelectedValue
+   "select * from TBL_TAX_CHALAN where FYEAR='"
+   "'"
+   -> this::GetTable
+   "MEMO_NO"
+   -> TextBox::set_Text
+   "MEMO_DATE"
+   -> this::ToDateAsDate
+   "dd/MM/yyyy"
+   -> TextBox::set_Text
+   "CHALAN"
+   -> TextBox::set_Text
+
+-- drpDIRECTORATEID_SelectedIndexChanged1
+
+-- lnkPrint_Click
+   -> this::ShowCertificates
+
+-- .ctor
+   -> Page::.ctor

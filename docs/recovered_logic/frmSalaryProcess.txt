@@ -1,0 +1,293 @@
+=== RebPayRollWeb.frmSalaryProcess
+
+-- Page_Load
+   -> Page::get_Session
+   -> HttpSessionState::set_Timeout
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::fncOpenConnection
+   -> Page::get_Session
+   "E_SLIP"
+   "E"
+   -> Page::get_Response
+   "~/frmSalaryProcessDIRUser.aspx"
+   -> HttpResponse::Redirect
+   "select DIR_DIVCELL_ID, DIR_DIVCELL_ID||' '||DIVCEL_DESCRIPTION as DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   -> Control::get_ViewState
+   "IsAdd"
+   -> this::fncCheckGPF
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   -> Label::set_Text
+   -> Label::get_Text
+   -> this::PeriodToMonth
+   -> Label::set_Text
+   -> this::GetNotProcessed
+   " Eployees Unprocessed"
+   -> Label::set_Text
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- fncCheckGPF
+   -> this::GetCurrentPeriod
+   "01-"
+   -> this::PeriodToMonth
+   "INSERT INTO TBL_CPF_GPF_PCT  SELECT EMPLOYEEID,.05, '"
+   "', 'Y', 42 FROM   (SELECT employeeid,JOININGDATETOPOST,CPFGPFSTATUS,SUSPENDSTATUS FROM tbl_employeemaster WHERE  ((TO_CHAR(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) OR (RETIREENDCONTRACTDATE IS NULL))   AND  employeeid NOT IN (SELECT EMPLOYEEID FROM  TBL_CPF_GPF_PCT WHERE EMPLOYEEID<>' ') AND JOININGDATETOPOST IS NOT NULL)  m WHERE (ADD_MONTHS(TO_DATE('"
+   "','dd-MM-yyyy'),-24)-JOININGDATETOPOST)>0 AND  CPFGPFSTATUS='0'"
+   -> this::ExecuteStatement_TXN
+   "UPDATE tbl_employeemaster SET  CPFGPFSTATUS ='2' WHERE EMPLOYEEID IN (SELECT EMPLOYEEID FROM  TBL_CPF_GPF_PCT WHERE TRUNC(FROM_DATE)='"
+   "' AND PAYID=42)"
+   -> this::ExecuteStatement_TXN
+   -> Label::set_Text
+
+-- btnSearch_Click
+   -> this::fncSearchEmp
+
+-- fncSearchEmp
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> this::fncOpenConnection
+   -> ListControl::get_SelectedValue
+   "select * from vw_salary_sum  where PERIOD="
+   -> Label::get_Text
+   " AND DIR_DIVCELL_ID='"
+   "'"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- SqlDataSource1_Selected
+   -> SqlDataSourceStatusEventArgs::get_AffectedRows
+   -> SqlDataSourceStatusEventArgs::get_AffectedRows
+   " Processed"
+   -> Label::set_Text
+   "Re-Process"
+   -> LinkButton::set_Text
+   "Process"
+   -> LinkButton::set_Text
+   "Process This Month Salary"
+   -> Label::set_Text
+
+-- gvOtherAllowance_RowDataBound
+   -> GridViewRowEventArgs::get_Row
+   -> GridViewRow::get_RowType
+   -> GridViewRowEventArgs::get_Row
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> this::ToDouble
+   -> GridViewRowEventArgs::get_Row
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> this::ToDouble
+   -> GridViewRowEventArgs::get_Row
+   "lblTotal"
+   -> Control::FindControl
+   -> Label::set_Text
+
+-- btnProcess_Click
+   -> ListControl::get_SelectedValue
+   -> this::GetCurrentPeriod
+   "Select EMPLOYEEID from vw_employee_all  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL)) AND DIR_DIVCELL_ID='"
+   "'"
+   -> this::GetTable
+   "EMPLOYEEID"
+   -> Label::get_Text
+   -> this::.ctor
+   -> this::GetEmployee
+   -> this::Process
+   " Processed"
+   -> Label::set_Text
+   -> this::fncSearchEmp
+
+-- btnPrint_Click
+   -> CommandEventArgs::get_CommandArgument
+   -> Label::get_Text
+   -> this::fncPrintPayslip
+   -> Object::GetType
+   "pdfView"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- fncPrintPayslip
+   -> this::GetCurrentPeriod
+   "Select max(Period) from TBL_PAYTRAN_DETAILS where EMPLOYEEID='"
+   "'"
+   -> this::GetSingleData
+   -> String::Substring
+   -> String::Substring
+   "select SD.*, BB.BANK_DESCRIPTION, BB.BRANCH_DESCRIPTION from VW_SALARY_DETAILS SD inner join VW_BANK_BRANCH BB on SD.BANKBR_ID=BB.BANKBR_ID  where Period="
+   " and SD.EMPLOYEEID='"
+   "'"
+   " Employee Id: "
+   " Year: "
+   ", Month"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::.ctor
+   "0"
+   ", "
+   -> this::GetFirstDateOfMonth
+   " to "
+   -> this::GetLastDateOfMonth
+   -> this::ToPrePeriod
+   -> this::GetPrevMiddleDateOfMonth
+   " to "
+   -> this::GetMiddleDateOfMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Payslip For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_payrollDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_attendenceDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "1"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "0"
+   -> FormulaFieldDefinition::set_Text
+   "select * from TBL_PAYTRAN_LOAN where to_number(to_Char(LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(ENDING_DATE,'yyyymm'))>="
+   " AND PERIOD="
+   " ORDER BY STARTING_DATE DESC"
+   "select * from TBL_PAYTRAN_LOAN where to_number(to_Char(LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(ENDING_DATE,'yyyymm'))>="
+   " AND PERIOD="
+   " AND EMPLOYEEID  in ("
+   ") ORDER BY STARTING_DATE DESC"
+   -> this::GetTable
+   -> ReportDocument::SetDataSource
+   -> ReportDocument::get_Subreports
+   "RptPayslipAdvance.rpt"
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "PAYSLIP_"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   -> Object::GetType
+   "AlertCode"
+   "window.open('"
+   "','_blank');document.getElementById('myModal').style='display: none';"
+   -> ScriptManager::RegisterStartupScript
+
+-- btnPrint_Click1
+
+-- btnPrintSingle_Click
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   ","
+   "','"
+   -> String::Replace
+   "'"
+   "'"
+   -> Label::get_Text
+   -> TextBox::get_Text
+   -> this::fncPrintPayslip
+   -> Object::GetType
+   "pdfView"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- btnProcessSingle_Click
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   ","
+   "','"
+   -> String::Replace
+   "'"
+   "'"
+   -> this::GetCurrentPeriod
+   "DELETE FROM TBL_PAYTRAN_DETAILS WHERE PERIOD="
+   " AND EMPLOYEEID in ("
+   ")"
+   -> this::ExecuteStatement_TXN
+   "DELETE FROM TBL_PAYTRAN_MASTER  WHERE PERIOD="
+   " AND EMPLOYEEID in  ("
+   ")"
+   -> this::ExecuteStatement_TXN
+   "Select EMPLOYEEID from vw_employee_all  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL))  AND EMPLOYEEID in ("
+   ")"
+   -> this::GetTable
+   "EMPLOYEEID"
+   -> this::.ctor
+   -> this::GetEmployee
+   -> this::Process
+
+-- btnPrintDir_Click
+   -> Label::get_Text
+   -> ListControl::get_SelectedValue
+   -> this::fncPrintPayslip
+   -> Object::GetType
+   "pdfView"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- btnProcessAll_Click
+   -> this::fnProcessAll
+   "Processing completed"
+   -> Label::set_Text
+
+-- fnProcessAll
+   -> Label::set_Text
+   -> this::GetCurrentPeriod
+   "Select EMPLOYEEID from vw_employee_all  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL)) "
+   -> this::GetTable
+   "EMPLOYEEID"
+   -> this::.ctor
+   -> this::GetEmployee
+   "lblAllstatus"
+   -> Control::FindControl
+   "EMPLOYEEID"
+   -> Label::set_Text
+   -> this::Process
+   " Emplyee Processed"
+   -> Label::set_Text
+
+-- Button2_Click
+   -> this::GetCurrentPeriod
+   -> this::fncPrintPayslip
+   -> Object::GetType
+   "pdfView"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- btnProcess_Click1
+
+-- btnProcessAllNew_Click
+   -> Page::get_Response
+   "frmSalaryProcessAll.aspx"
+   -> HttpResponse::Redirect
+
+-- .ctor
+   -> Page::.ctor

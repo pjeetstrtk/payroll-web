@@ -1,0 +1,442 @@
+=== RebPayRollWeb.frmKPIBonus
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::fncOpenConnection
+   -> this::fncReset
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   -> Label::set_Text
+   -> Label::get_Text
+   -> TextBox::set_Text
+   " For Month Of "
+   -> Label::get_Text
+   -> this::PeriodToMonth
+   -> Label::set_Text
+   -> this::fncBind
+
+-- fncBind
+   "SELECT FM.*,F.PAYID,F.FST_NAME FROM TBL_FESTIVAL_MONTH FM,TBL_FESTIVAL F where FM.FST_ID=F.FST_ID AND FM.FST_ID=7 AND FM.FST_PERIOD="
+   -> Label::get_Text
+   -> this::GetTable
+   "BASIC_MONTH"
+   -> TextBox::set_Text
+   "BASIC_PRC"
+   -> TextBox::set_Text
+   "BASIC_DAY"
+   -> TextBox::set_Text
+   "KPI_DONATION"
+   -> TextBox::set_Text
+   -> Control::set_Visible
+   -> this::fncBindDetails
+
+-- fncBindDetails
+   "SELECT E.EMPLOYEEID,E.NAME,E.DSG_DESCRIPTION,E.PRESENTPAYGRADE,E.CLASS,E.MANAGEMENTID,BONUS,DONATION FROM vw_employee_all E,(SELECT EMPLOYEEID, SUM(CASE WHEN PAYID=87 THEN AMOUNT ELSE 0 END) AS BONUS, SUM(CASE WHEN PAYID=94 THEN AMOUNT ELSE 0 END) AS DONATION FROM SPECIALPAY_SEPERATE_TRAN WHERE PERIOD="
+   -> Label::get_Text
+   "  AND FST_ID=7 GROUP BY EMPLOYEEID) B  WHERE E.EMPLOYEEID=B.EMPLOYEEID ORDER BY EMPLOYEEID  "
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- btnAddNew_Click
+   -> this::fncReset
+
+-- fncReset
+   -> TextBox::set_Text
+   "Save"
+   -> LinkButton::set_Text
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Label::set_Text
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncP
+   "7"
+   -> TextBox::get_Text
+   -> this::GetCurrentPeriod
+   "DELETE FROM SPECIALPAY_SEPERATE_TRAN  WHERE PERIOD = "
+   "  AND FST_ID="
+   -> this::ExecuteStatement_TXN
+   -> Label::set_Text
+   " order by EMPLOYEEID"
+   -> this::GetTable
+   -> DataTable::Select
+   -> DataTable::.ctor
+   -> tok0x2b000016
+   -> DataTable::get_DefaultView
+   "EMPLOYEEID"
+   -> DataView::set_Sort
+   -> DataTable::get_DefaultView
+   -> DataView::ToTable
+   -> DataTable::Select
+   "Select E.*,P.* from TBL_EMP_LAST_SALARY E,TBL_PAYCODE P where E.PAYID=P.PAYID order by EMPLOYEEID"
+   -> this::GetTable
+   -> TextBox::get_Text
+   -> String::Substring
+   -> String::Substring
+   -> TextBox::get_Text
+   -> TextBox::set_Text
+   "Select EMPLOYEEID,AMOUNT FROM TBL_PAYTRAN_DETAILS WHERE PAYID='01' and period="
+   -> TextBox::get_Text
+   -> this::GetTable
+   -> TextBox::get_Text
+   -> String::Substring
+   "NOOFINCREMENTSPAID"
+   "EMPLOYEEID"
+   "NAME"
+   "DSG_DESCRIPTION"
+   "PRESENTPAYGRADE"
+   "JOININGDATETOPOST"
+   -> this::ToDateAsDate
+   "CLASS"
+   "7"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "AMOUNT"
+   "8"
+   "1"
+   "2"
+   "07"
+   "8"
+   -> Random::.ctor
+   "INSERT INTO SPECIALPAY_SEPERATE_TRAN(PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AD, AMOUNT, PARTICULARS, WITHPAYSLIP, IS_CLOSED, SPECIAL_PAY, PERIOD, FST_ID) "
+   " VALUES("
+   ","
+   ",'"
+   "', "
+   ",'A', "
+   "0.00"
+   ",'KPI', 'N', 'N', 'N', "
+   ", "
+   ")"
+   -> this::ExecuteStatement_TXN
+   "7"
+   -> this::FractionRound
+   -> this::FractionRound
+   "INSERT INTO SPECIALPAY_SEPERATE_TRAN(PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AD, AMOUNT, PARTICULARS, WITHPAYSLIP, IS_CLOSED, SPECIAL_PAY, PERIOD, FST_ID) "
+   " VALUES("
+   ","
+   ",'"
+   "',  94 ,'D', "
+   "0.00"
+   ",'KPI', 'N', 'N', 'N', "
+   ", "
+   ")"
+   -> this::ExecuteStatement_TXN
+
+-- fncSave
+   -> Label::set_Text
+   "7"
+   -> Label::get_Text
+   -> TextBox::get_Text
+   "N"
+   "SELECT FM.*,F.FST_NAME ,F.RELIGION,F.PAYID FROM TBL_FESTIVAL_MONTH FM,TBL_FESTIVAL F where FM.FST_ID=F.FST_ID AND FM.FST_PERIOD='"
+   "' AND FM.FST_ID='"
+   "'"
+   -> this::GetTable
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   "RELIGION"
+   -> Label::set_Text
+   "FST_NAME"
+   "PAYID"
+   -> Label::set_Text
+   "PAYID"
+   "INSERT INTO TBL_FESTIVAL_MONTH (FST_ID, FST_PERIOD, BASIC_PRC,BASIC_MONTH,BASIC_DAY,KPI_DONATION,WITH_SALARY) VALUES ('"
+   "' ,'"
+   "' ,'"
+   "','"
+   "','"
+   "','"
+   "','"
+   "')"
+   -> this::ExecuteStatement_TXN
+   "Error On Updating"
+   -> Label::set_Text
+   -> Color::get_Red
+   -> WebControl::set_ForeColor
+   "Inserted Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> Thread::Sleep
+   "SELECT * FROM TBL_FESTIVAL F where FST_ID='"
+   "'"
+   -> this::GetTable
+   "RELIGION"
+   "FST_NAME"
+   "PAYID"
+   -> Label::set_Text
+   -> this::fncProcessPaySlip
+   -> Thread::Sleep
+   -> this::fncBind
+   -> this::fncBindDetails
+   -> Control::set_Visible
+   "update TBL_FESTIVAL_MONTH set BASIC_PRC='"
+   "', BASIC_MONTH="
+   ",BASIC_DAY="
+   ",KPI_DONATION="
+   " where FST_PERIOD='"
+   "' AND FST_ID="
+   -> this::ExecuteStatement_TXN
+   "Error On Updating"
+   -> Label::set_Text
+   -> Color::get_Red
+   -> WebControl::set_ForeColor
+   "Updated Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> this::fncBind
+   -> this::fncProcessPaySlip
+   -> Thread::Sleep
+   -> this::fncBindDetails
+   -> Control::set_Visible
+
+-- gvCadreInfo_RowDataBound
+
+-- btnEdit_Click
+
+-- btnUpdate_Click
+
+-- btnSearch_Click
+   -> this::fncSearchEmp
+
+-- fncSearchEmp
+   -> Control::set_Visible
+   -> Label::set_Text
+   -> TextBox::get_Text
+   "select * from VW_EMPLOYEE_ALL where EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   "NOOFINCREMENTSPAID"
+   -> Label::set_Text
+   -> Control::set_Visible
+   "PRESENTPAYGRADE"
+   -> this::ToDouble
+   -> Label::get_Text
+   -> this::GetPayScaleBasic
+   "EMPLOYEEID"
+   -> Label::set_Text
+   "DESIGNATIONID"
+   "NAME"
+   " ["
+   "DSG_DESCRIPTION"
+   " ]"
+   -> Label::set_Text
+   -> String::PadLeft
+   -> Label::set_Text
+   "DIR_DIVCELL_ID"
+   -> Label::set_Text
+   "SELECT  SUM(CASE WHEN PAYID=87 THEN AMOUNT ELSE 0 END) AS BONUS, SUM(CASE WHEN PAYID=94 THEN AMOUNT ELSE 0 END) AS DONATION FROM SPECIALPAY_SEPERATE_TRAN WHERE PERIOD="
+   -> Label::get_Text
+   "  AND FST_ID=7  AND EMPLOYEEID='"
+   -> TextBox::get_Text
+   "'"
+   -> this::GetTable
+   "BONUS"
+   -> TextBox::set_Text
+   "DONATION"
+   -> TextBox::set_Text
+   "Bonus Information Not Found"
+   -> Label::set_Text
+   "Please Input Valid Employee ID"
+   -> Label::set_Text
+
+-- btnDelete_Command
+   -> Control::set_Visible
+   -> CommandEventArgs::get_CommandArgument
+   "DELETE FROM SPECIALPAY_SEPERATE_TRAN  WHERE PERIOD ="
+   -> Label::get_Text
+   " AND FST_ID=7"
+   -> this::ExecuteStatement_TXN
+   "Error On Deleting"
+   -> Label::set_Text
+   -> Color::get_Pink
+   -> WebControl::set_ForeColor
+   "Delete FROM TBL_FESTIVAL_MONTH  where FST_ID="
+   " AND FST_PERIOD="
+   -> Label::get_Text
+   -> this::ExecuteStatement_TXN
+   "Error On Deleting"
+   -> Label::set_Text
+   -> Color::get_Red
+   -> WebControl::set_ForeColor
+   -> this::fncReset
+
+-- fncProcessPaySlip
+   -> Control::set_Visible
+   -> TextBox::get_Text
+   "Select * from TBL_PAYSCALE_2015 order by PAY_GRADE,INCREMENT_NUMBER"
+   -> this::GetTable
+   "7"
+   "DELETE FROM SPECIALPAY_SEPERATE_TRAN  WHERE PERIOD = "
+   -> Label::get_Text
+   "  AND FST_ID=7"
+   -> this::ExecuteStatement_TXN
+   "Error"
+   -> Label::set_Text
+   "N"
+   "Select * from VW_EMPLOYEE_ALL WHERE ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   -> Label::get_Text
+   " ) or (RETIREENDCONTRACTDATE IS NULL))"
+   -> this::GetTable
+   "Select E.*,P.* from TBL_EMP_LAST_SALARY E,TBL_PAYCODE P where E.PAYID=P.PAYID order by EMPLOYEEID"
+   -> this::GetTable
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> Label::get_Text
+   -> String::Substring
+   -> String::Substring
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   "Select EMPLOYEEID,AMOUNT FROM TBL_PAYTRAN_DETAILS WHERE PAYID='01' and period="
+   -> TextBox::get_Text
+   -> this::GetTable
+   -> TextBox::get_Text
+   -> String::Substring
+   "NOOFINCREMENTSPAID"
+   "EMPLOYEEID"
+   "NAME"
+   "DSG_DESCRIPTION"
+   "PRESENTPAYGRADE"
+   "JOININGDATETOPOST"
+   -> this::ToDateAsDate
+   "CLASS"
+   "0"
+   "1"
+   "PAY_GRADE="
+   " AND INCREMENT_NUMBER="
+   -> DataTable::Select
+   -> tok0x2b000002
+   "BASIC"
+   "EMPLOYEEID='"
+   "' AND PAYID='01'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "AMOUNT"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "AMOUNT"
+   -> this::FractionRound
+   "7"
+   "87"
+   "INSERT INTO SPECIALPAY_SEPERATE_TRAN(PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AD, AMOUNT, PARTICULARS, WITHPAYSLIP, IS_CLOSED, SPECIAL_PAY, PERIOD, FST_ID) "
+   " VALUES("
+   ","
+   ",'"
+   "', "
+   ",'A', "
+   "0.00"
+   ",'KPI DONATION', '"
+   "', 'N', 'N', "
+   ", "
+   ")"
+   -> this::ExecuteStatement_TXN
+   -> this::FractionRound
+   "94"
+   "INSERT INTO SPECIALPAY_SEPERATE_TRAN(PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AD, AMOUNT, PARTICULARS, WITHPAYSLIP, IS_CLOSED, SPECIAL_PAY, PERIOD, FST_ID) "
+   " VALUES("
+   ","
+   ",'"
+   "',  94 ,'D', "
+   "0.00"
+   ",'DONATION', 'N', 'N', 'N', "
+   ", 7)"
+   -> this::ExecuteStatement_TXN
+   " Employee ["
+   " Bonus]  Total : "
+   "0.00"
+   -> Label::set_Text
+
+-- fncChangeProgressValue
+   "lblWait"
+   -> Control::FindControl
+   -> Label::set_Text
+
+-- btnEdit_Command
+
+-- btnUpdateEmp_Click
+   -> Label::set_Text
+   -> TextBox::get_Text
+   -> this::ToDouble
+   "Please Input Valid Amount"
+   -> Label::set_Text
+   "Delete FROM SPECIALPAY_SEPERATE_TRAN  WHERE PERIOD ="
+   -> Label::get_Text
+   " AND EMPLOYEEID='"
+   -> TextBox::get_Text
+   "' AND FST_ID=7"
+   -> this::GetTable
+   -> Label::get_Text
+   -> String::Substring
+   -> String::Substring
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> this::ToDouble
+   "N"
+   "87"
+   "7"
+   "KPI BONUS"
+   "INSERT INTO SPECIALPAY_SEPERATE_TRAN(PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AD, AMOUNT, PARTICULARS, WITHPAYSLIP, IS_CLOSED, SPECIAL_PAY, PERIOD, FST_ID) "
+   " VALUES("
+   ","
+   ",'"
+   -> TextBox::get_Text
+   "', '"
+   "','A', "
+   "0.00"
+   ",'"
+   "', '"
+   "', 'N', 'N', "
+   ", "
+   ")"
+   -> this::ExecuteStatement_TXN
+   "Error.."
+   -> Label::set_Text
+   "94"
+   "KPI DONATION"
+   "INSERT INTO SPECIALPAY_SEPERATE_TRAN(PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AD, AMOUNT, PARTICULARS, WITHPAYSLIP, IS_CLOSED, SPECIAL_PAY, PERIOD, FST_ID) "
+   " VALUES("
+   ","
+   ",'"
+   -> TextBox::get_Text
+   "', '"
+   "','D', "
+   ",'"
+   "', '"
+   "', 'N', 'N', "
+   ", "
+   ")"
+   -> this::ExecuteStatement_TXN
+   "Insert Successfully"
+   -> Label::set_Text
+   -> this::fncBindDetails
+
+-- grdEmpBonus_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> this::fncSearchEmp
+
+-- drpFST_ID_SelectedIndexChanged
+   -> Control::set_Visible
+
+-- .ctor
+   -> Page::.ctor

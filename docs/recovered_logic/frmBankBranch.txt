@@ -1,0 +1,135 @@
+=== RebPayRollWeb.frmBankBranch
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   "Select BANKID, BANK_DESCRIPTION From TBL_BANK order by BANKID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "Select Bank"
+   -> ListItemCollection::Insert
+   -> this::fncReset
+
+-- cboBANKBR_ID_SelectedIndexChanged
+   -> this::fncGridBind
+
+-- fncGridBind
+   "Select * from VW_BANK_BRANCH where BANKID='"
+   -> ListControl::get_SelectedValue
+   "' "
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- gvCadreInfo_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   "Update"
+   -> Button::set_Text
+   -> WebControl::set_Enabled
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Control::get_ViewState
+   "rw"
+   -> GridViewRow::get_RowIndex
+   -> Control::set_Visible
+
+-- btnAddNew_Click
+   -> this::fncReset
+
+-- fncReset
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   "Save"
+   -> Button::set_Text
+   -> WebControl::set_Enabled
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedValue
+   -> Control::get_ViewState
+   "IsAdd"
+   "Maximum Brach  ID is 999"
+   -> Label::set_Text
+   -> Control::Focus
+   "select * from TBL_BRANCH where BRANCHID='"
+   "' AND BANKID='"
+   "'"
+   -> this::GetTable
+   "Id Already Exists"
+   -> Label::set_Text
+   -> Control::Focus
+   -> Label::set_Text
+   "select * from TBL_BRANCH where BRANCH_DESCRIPTION='"
+   "' AND BANKID='"
+   "'"
+   -> this::GetTable
+   " Branch Already Exists"
+   -> Label::set_Text
+   -> Control::Focus
+   -> Label::set_Text
+   "INSERT INTO TBL_BRANCH (BANKID,BRANCHID, BRANCH_DESCRIPTION,BANKBR_ID) VALUES ('"
+   "','"
+   "' ,'"
+   "','"
+   "-"
+   "')"
+   -> this::ExecuteStatement_TXN
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> this::fncGridBind
+   -> this::fncReset
+   "Inserted Successfully"
+   -> Label::set_Text
+   "select * from TBL_BRANCH where BRANCH_DESCRIPTION='"
+   "' and BRANCHID<>'"
+   "' AND BANKID='"
+   "'"
+   -> this::GetTable
+   "Branch Already Exists"
+   -> Label::set_Text
+   -> Control::Focus
+   -> Label::set_Text
+   "update TBL_LOCATION set LOCATION_DESCRIPTION='"
+   "' where LOCATIONID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Updated Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> this::fncGridBind
+
+-- gvCadreInfo_RowDataBound
+
+-- delete
+   -> Control::get_NamingContainer
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   "Delete From TBL_CADRE where CADREID="
+   -> this::ExecuteStatement_TXN
+   "Deleted Successfully"
+   -> Label::set_Text
+   -> this::fncReset
+
+-- btnDelete_Click
+   -> this::delete
+
+-- btnUpdate_Click
+
+-- .ctor
+   -> Page::.ctor

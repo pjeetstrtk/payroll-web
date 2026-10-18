@@ -1,0 +1,109 @@
+=== RebPayRollWeb.frmDashboard
+
+-- Page_Load
+   -> this::GetCurrentPeriod
+   -> Page::get_Session
+   "USERID"
+   -> this::fncLoadSalary
+
+-- fncLoadSalary
+   "SELECT PERIOD, SUM(CASE WHEN AD='A' THEN AMOUNT ELSE 0 END) AS Alowances,SUM(CASE WHEN AD='D' THEN AMOUNT ELSE 0 END) DEDUCTIONS  , SUM(AMOUNT) AS TOTAL FROM VW_SALARY_DETAILS WHERE EMPLOYEEID='"
+   "' AND period="
+   " GROUP BY PERIOD"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   "SELECT PAYID, PAYNAME , sum (CASE WHEN AD='A' THEN AMOUNT ELSE 0 END) AS Alowances, sum(CASE WHEN AD='D' THEN AMOUNT  ELSE 0 END) AS Deductions FROM VW_SALARY_DETAILS  WHERE EMPLOYEEID='"
+   "' AND period="
+   " GROUP BY PAYID, PAYNAME ,AD ORDER BY AD,PAYID"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   "SELECT PERIOD,A.EMPLOYEEID,E.NAME,E.DSG_DESCRIPTION DESIGNATION,A.LWP,A.EARN_LEAVE EL,A.OVERTIME_D,A.OVERTIME_H OVERTIME FROM TBL_EMPLOYE_ATT A,VW_EMPLOYEE_ALL E  WHERE A.Submit_to='"
+   "' AND period="
+   "  AND A.ATTN_TYPE='A' AND A.EMPLOYEEID=E.EMPLOYEEID AND  A.APPR_STATUS=1"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   "SELECT PERIOD,A.EMPLOYEEID,E.NAME,E.DSG_DESCRIPTION DESIGNATION,A.LWP,A.EARN_LEAVE EL,A.OVERTIME_D,A.OVERTIME_H OVERTIME,APPROVE_DATE FROM TBL_EMPLOYE_ATT A,VW_EMPLOYEE_ALL E  WHERE A.APPROVE_BY='"
+   "' AND period="
+   "  AND A.ATTN_TYPE='A' AND A.EMPLOYEEID=E.EMPLOYEEID AND  A.APPR_STATUS=9"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- Unnamed_Click
+
+-- Unnamed_Click1
+
+-- btnApprove_Click
+   -> CommandEventArgs::get_CommandArgument
+   "SELECT A.LWP,A.EARN_LEAVE ,A.OVERTIME_D,A.OVERTIME_H  FROM TBL_EMPLOYE_ATT A  WHERE EMPLOYEEID='"
+   "' AND A.Submit_to='"
+   "' AND period="
+   "  AND A.ATTN_TYPE='A'   AND A.APPR_STATUS=1"
+   -> this::GetTable
+   "select EMPLOYEEID from TBL_UTXMASTER where  EMPLOYEEID='"
+   "' AND period="
+   -> this::GetTable
+   -> this::GetOverTimeRate
+   "0"
+   "LWP"
+   -> this::ToDouble
+   "OVERTIME_H"
+   -> this::ToDouble
+   "EARN_LEAVE"
+   -> this::ToDouble
+   -> this::fncOpenConnection
+   -> OracleConnection::BeginTransaction
+   "Update TBL_EMPLOYE_ATT set APPR_STATUS=9,APPROVE_BY='"
+   "',APPROVE_DATE=SYSDATE WHERE EMPLOYEEID='"
+   "' AND period="
+   "  AND ATTN_TYPE='A'  "
+   -> this::ExecuteStatement
+   -> DbTransaction::Rollback
+   -> this::fncCloseConnection
+   "Update TBL_UTXMASTER  set ELDAYS="
+   ",OTHRS="
+   ",LWP="
+   " WHERE EMPLOYEEID='"
+   "' AND period="
+   " "
+   -> this::ExecuteStatement
+   -> DbTransaction::Rollback
+   -> this::fncCloseConnection
+   -> String::Substring
+   -> String::Substring
+   "INSERT INTO TBL_UTXMASTER (PAYYEAR, PAYMONTH, EMPLOYEEID, PRESENTBASIC, ELDAYS, OTHRS, OTHRSRATE, OTDAYS, OTDAYSRATE, LWP, PERIOD)  VALUES ('"
+   "' ,'"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "')"
+   -> this::ExecuteStatement
+   -> DbTransaction::Rollback
+   -> this::fncCloseConnection
+   -> DbTransaction::Commit
+   -> this::fncCloseConnection
+   -> this::fncLoadSalary
+
+-- btnView_Click
+
+-- btnPayslip_Click
+   -> this::fncPrintPayslip
+   -> Object::GetType
+   "pdfView"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- grdApproval_RowCommand
+
+-- .ctor
+   -> Page::.ctor

@@ -1,0 +1,94 @@
+=== RebPayRollWeb.frmJV_Account
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::showRate
+
+-- showRate
+   "select * from TBL_COA_REB  order by ACCNUMBER"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- gvbranchInfo_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   "Update"
+   -> Button::set_Text
+   -> WebControl::set_Enabled
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Control::get_ViewState
+   "rw"
+   -> GridViewRow::get_RowIndex
+   -> Control::set_Visible
+   -> Control::set_Visible
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+   -> GridView::get_SelectedIndex
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   "GL CODE Needed"
+   -> Label::set_Text
+   "Account Name Needed"
+   -> Label::set_Text
+   "Account Number Needed"
+   -> Label::set_Text
+   -> Control::get_ViewState
+   "IsAdd"
+   "Insert Into TBL_COA_REB (ACCNUMBER,ACC_NAME,GL_CODE) Values('"
+   "', '"
+   "' ,'"
+   "')"
+   "update TBL_COA_REB set ACCNUMBER='"
+   "', ACC_NAME='"
+   "' where  GL_CODE='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Updated Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> Control::get_ViewState
+   "IsAdd"
+   -> GridView::set_SelectedIndex
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::set_Text
+   -> this::showRate
+
+-- btnAddNew_Click
+   -> this::fncReset
+
+-- fncReset
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> WebControl::set_Enabled
+   "Save"
+   -> Button::set_Text
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Label::set_Text
+
+-- gvbranchInfo_Sorting
+
+-- .ctor
+   -> Page::.ctor

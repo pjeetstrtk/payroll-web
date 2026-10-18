@@ -1,0 +1,54 @@
+=== RebPayRollWeb.frmDirectorateUser
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   "Select EMP_ID, USER_NAME From TBL_USER where IS_ACTIVE='Y' and USER_TYPE in('MNG','ADM') order by USER_NAME"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "Select User"
+   -> ListItemCollection::Insert
+
+-- cboUsers_SelectedIndexChanged
+   -> this::fncGridBind
+
+-- fncGridBind
+   "Select * from (SELECT D.*,EMP_ID  FROM TBL_DIRECTORATE D LEFT JOIN TBL_DIRECTORATE_USER  U ON D.DIRECTORATEID=U.DIR_ID WHERE  (U.EMP_ID='"
+   -> ListControl::get_SelectedValue
+   "' OR U.EMP_ID  IS NULL ) AND DIRECTORATEID<>'000') ORDER BY EMP_ID , DIRECTORATEID"
+   -> this::GetTable
+   -> ListItemCollection::Clear
+   "  &nbsp;&nbsp;&nbsp;["
+   "] "
+   -> ListItem::.ctor
+   -> ListItem::set_Selected
+   " Directorate"
+   -> Label::set_Text
+
+-- LoadCheckListStr
+   -> ListItemCollection::Clear
+   -> None::.ctor
+   -> this::.ctor
+   -> BaseDataBoundControl::set_DataSource
+   "ItemCode"
+   -> ListControl::set_DataValueField
+   "ItemText"
+   -> ListControl::set_DataTextField
+   -> Control::DataBind
+
+-- btnAddNew_Click
+
+-- btnUpdate_Click
+   -> ListItem::get_Selected
+   "Insert into TBL_DIRECTORATE_USER (EMP_ID,DIR_ID) VALUES('"
+   -> ListControl::get_SelectedValue
+   "','"
+   -> ListItem::get_Value
+   "')"
+   -> this::ExecuteStatement_TXN
+   -> this::fncGridBind
+
+-- btnUpdate_Click1
+
+-- .ctor
+   -> Page::.ctor

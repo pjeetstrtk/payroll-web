@@ -1,0 +1,271 @@
+=== RebPayRollWeb.UI.frmOverTimeEntryUI
+
+-- Page_Load
+   -> Page::get_IsPostBack
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   -> Label::set_Text
+   "Salary Month "
+   -> Label::get_Text
+   -> this::PeriodToMonth
+   -> Label::set_Text
+   -> WebControl::get_Attributes
+   "onkeyup"
+   "calcTotal()"
+   -> WebControl::get_Attributes
+   "onkeyup"
+   "calcTotal()"
+   -> WebControl::get_Attributes
+   "onkeyup"
+   "calcTotal()"
+   -> WebControl::get_Attributes
+   "onkeyup"
+   "calcTotal()"
+
+-- btnSearch_Click
+   -> this::fncSearchEmp
+
+-- fncSearchEmp
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> this::fncReset
+   -> this::fncOpenConnection
+   -> TextBox::get_Text
+   "select * from VW_EMPLOYEE_ALL where EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   "NOOFINCREMENTSPAID"
+   -> Label::set_Text
+   "PRESENTPAYGRADE"
+   -> this::ToDouble
+   -> Label::get_Text
+   -> this::GetPayScaleBasic
+   -> Control::set_Visible
+   "EMPLOYEEID"
+   -> Label::set_Text
+   "DESIGNATIONID"
+   "NAME"
+   -> Label::set_Text
+   -> String::PadLeft
+   -> Label::set_Text
+   "DIR_DIVCELL_ID"
+   "select DSG_DESCRIPTION from TBL_DESIGNATION where DESIGNATIONID='"
+   "DESIGNATIONID"
+   "'"
+   -> this::GetSingleData
+   -> Label::set_Text
+   -> Label::set_Text
+   "MANAGEMENTID"
+   -> Label::set_Text
+   "MANAGEMENTID"
+   "3"
+   "4"
+   "60.00"
+   -> TextBox::set_Text
+   "50.00"
+   -> TextBox::set_Text
+   -> Math::Round
+   -> TextBox::set_Text
+   "0"
+   -> TextBox::set_Text
+   "60.00"
+   -> TextBox::set_Text
+   "50.00"
+   -> TextBox::set_Text
+   -> Math::Round
+   -> TextBox::set_Text
+   "66"
+   "68"
+   "69"
+   "50"
+   -> TextBox::set_Text
+   -> this::fncDisplayOverTime
+   -> this::fncOpenRelatedEmployee
+   -> Control::set_Visible
+
+-- gvOverTime_SelectedIndexChanged
+   -> this::fncLoadSelEmp
+
+-- fncLoadSelEmp
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> this::fncSearchEmp
+
+-- fncDisplayOverTime
+   -> Control::set_Visible
+   -> this::fncOpenConnection
+   "select * from TBL_UTXMASTER where EMPLOYEEID='"
+   "' and PERIOD='"
+   -> Label::get_Text
+   "'"
+   -> this::GetTable
+   -> this::fncReset
+   "OTDAYS"
+   -> TextBox::set_Text
+   "OTDAYSRATE"
+   -> TextBox::set_Text
+   "OTHRS"
+   -> TextBox::set_Text
+   "OTHRSRATE"
+   -> TextBox::set_Text
+   "ELDAYS"
+   -> TextBox::set_Text
+   "LWP"
+   -> TextBox::set_Text
+   -> this::fncCalcTotal
+   -> Control::set_Visible
+
+-- fncReset
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> Label::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+
+-- btnAddNew_Click
+   -> this::fncReset
+   "Save"
+   -> Button::set_Text
+   -> Control::get_ViewState
+   "IsAdd"
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+   -> Label::set_Text
+   -> this::fncCalcTotal
+   -> Label::get_Text
+   -> Label::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   "0"
+   "0"
+   "OverTime or EL or LWP Information Is Not Correct"
+   -> Label::set_Text
+   -> Color::get_Red
+   -> WebControl::set_ForeColor
+   "1999"
+   "01"
+   "select * from TBL_UTXMASTER where EMPLOYEEID='"
+   -> Label::get_Text
+   "' and PERIOD='"
+   "'"
+   -> this::GetTable
+   "INSERT INTO TBL_UTXMASTER (PAYYEAR, PAYMONTH, EMPLOYEEID, PRESENTBASIC, ELDAYS, OTHRS, OTHRSRATE, OTDAYS, OTDAYSRATE, LWP, PERIOD)  VALUES ('"
+   "' ,'"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   -> Label::get_Text
+   "')"
+   -> this::ExecuteStatement_TXN
+   "Inserted Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   "update TBL_UTXMASTER set ELDAYS='"
+   "',OTHRS='"
+   "',OTHRSRATE='"
+   "',OTDAYS='"
+   "',OTDAYSRATE='"
+   "',LWP='"
+   "' where EMPLOYEEID='"
+   -> Label::get_Text
+   "' and PERIOD='"
+   -> Label::get_Text
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Updated Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+
+-- fncShowOverTime
+   "SELECT * FROM TBL_UTXMASTER  where PERIOD='"
+   "' AND EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   "OTHRS"
+   -> TextBox::set_Text
+   "OTHRSRATE"
+   -> TextBox::set_Text
+   "OTDAYS"
+   -> TextBox::set_Text
+   "OTDAYSRATE"
+   -> TextBox::set_Text
+   "LWP"
+   -> TextBox::set_Text
+   "ELDAYS"
+   -> TextBox::set_Text
+
+-- fncCalcTotal
+   -> Label::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   "0.00"
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   "0.00"
+   -> TextBox::set_Text
+   "0.00"
+   -> TextBox::set_Text
+
+-- fncOpenRelatedEmployee
+   -> Label::set_Text
+   "Select * from vw_employee_all  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   -> Label::get_Text
+   " ) or (RETIREENDCONTRACTDATE IS NULL)) "
+   " AND    DIR_DIVCELL_ID='"
+   "' ORDER BY EMPLOYEEID "
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- btnDelete_Click
+   "Delete FROM TBL_UTXMASTER  where PERIOD='"
+   -> Label::get_Text
+   "' AND EMPLOYEEID='"
+   -> TextBox::get_Text
+   "'"
+   -> this::ExecuteStatement_TXN
+   -> Control::set_Visible
+   "Deleted ......"
+   -> Label::set_Text
+
+-- .ctor
+   -> Page::.ctor

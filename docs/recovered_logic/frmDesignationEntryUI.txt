@@ -1,0 +1,144 @@
+=== RebPayRollWeb.UI.frmDesignationEntryUI
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::fncDesigInfoList
+   -> this::fncOpenConnection
+   "select MANAGEMENTID, MGMT_DESCRIPTION from TBL_MANAGEMENT order by MANAGEMENTID"
+   -> this::GetTable
+   -> this::LoadDropDown
+   "Select Management"
+   -> ListItemCollection::Insert
+   "Select Class"
+   -> ListItemCollection::Insert
+   "1"
+   -> ListItemCollection::Insert
+   "2"
+   -> ListItemCollection::Insert
+   "3"
+   -> ListItemCollection::Insert
+   "4"
+   -> ListItemCollection::Insert
+   "Select Hourly Dist"
+   -> ListItemCollection::Insert
+   "Y"
+   -> ListItemCollection::Insert
+   "N"
+   -> ListItemCollection::Insert
+   -> Label::set_Text
+
+-- fncDesigInfoList
+   -> Control::DataBind
+   -> Control::set_Visible
+
+-- gvDesigInfo_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> this::GetIndexFromDropList
+   -> ListControl::set_SelectedIndex
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> this::GetIndexFromDropList
+   -> ListControl::set_SelectedIndex
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> this::GetIndexFromDropList
+   -> ListControl::set_SelectedIndex
+   "Update"
+   -> Button::set_Text
+   -> WebControl::set_Enabled
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Control::get_ViewState
+   "rw"
+   -> GridViewRow::get_RowIndex
+   -> Control::set_Visible
+
+-- btnAddNew_Click
+   -> this::fncReset
+
+-- fncReset
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> ListControl::set_SelectedIndex
+   -> ListControl::set_SelectedIndex
+   -> ListControl::set_SelectedIndex
+   "Save"
+   -> Button::set_Text
+   -> WebControl::set_Enabled
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Label::set_Text
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedValue
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedValue
+   -> ListControl::get_SelectedValue
+   -> Control::get_ViewState
+   "IsAdd"
+   "select * from TBL_DESIGNATION where DESIGNATIONID='"
+   "'"
+   -> this::GetTable
+   "Designation Id Already Exists"
+   -> Label::set_Text
+   -> Color::get_Red
+   -> WebControl::set_ForeColor
+   -> Control::Focus
+   "select * from TBL_DESIGNATION where DSG_DESCRIPTION='"
+   "'"
+   -> this::GetTable
+   "Designation Description Already Exists"
+   -> Label::set_Text
+   -> Color::get_Red
+   -> WebControl::set_ForeColor
+   -> Control::Focus
+   "INSERT INTO TBL_DESIGNATION (DESIGNATIONID, MANAGEMENTID, DSG_DESCRIPTION, CLASS, HOURLY_DIST) VALUES ('"
+   "' ,'"
+   "','"
+   "','"
+   "','"
+   "')"
+   -> this::ExecuteStatement_TXN
+   "Inserted Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> this::fncDesigInfoList
+   -> this::fncReset
+   "select * from TBL_DESIGNATION where DSG_DESCRIPTION='"
+   "' and DESIGNATIONID<>'"
+   "'"
+   -> this::GetTable
+   "Designation Description Already Exists"
+   -> Label::set_Text
+   -> Color::get_Red
+   -> WebControl::set_ForeColor
+   -> Control::Focus
+   "update TBL_DESIGNATION set MANAGEMENTID='"
+   "',DSG_DESCRIPTION='"
+   "',CLASS='"
+   "',HOURLY_DIST='"
+   "' where DESIGNATIONID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Updated Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> this::fncDesigInfoList
+
+-- .ctor
+   -> Page::.ctor

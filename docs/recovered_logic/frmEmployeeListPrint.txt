@@ -1,0 +1,130 @@
+=== RebPayRollWeb.frmEmployeeListPrint
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::fncOpenConnection
+   "select RLG_ID, RLG_NAME from TBL_RELIGION order by RLG_ID"
+   -> this::GetTable
+   "select DIR_DIVCELL_ID, DIR_DIVCELL_ID||' '||DIVCEL_DESCRIPTION as DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "All Div Cell "
+   -> ListItemCollection::Insert
+   -> this::fncSearchEmployee
+
+-- fncSearchEmployee
+   -> this::fncOpenConnection
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   "SELECT * FROM VW_EMPLOYEE_ALL  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL))"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   -> TextBox::set_Text
+
+-- Button1_Click
+   -> ConfigurationManager::get_ConnectionStrings
+   "ConnectionString"
+   -> ConnectionStringSettings::get_ConnectionString
+   -> OracleConnection::.ctor
+   -> DbConnection::Open
+   "Select * from tbl_bank"
+   -> OracleDataAdapter::.ctor
+   -> DataTable::.ctor
+   -> DbDataAdapter::Fill
+   -> ReportDocument::.ctor
+   -> Page::get_Server
+   "rpt2.rpt"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::Load
+   -> ReportDocument::SetDataSource
+   -> Page::get_Server
+   "~/pdfreports/BiWeeklyReport.pdf"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   "<script language='javascript'>window.open('D:/BiWeeklyReport.pdf');</script>"
+   -> Page::get_Response
+   -> HttpResponse::Write
+   -> Page::get_Response
+   "<script>window.open('pdfreports/BiWeeklyReport.pdf','_blank')</script>"
+   -> HttpResponse::Write
+
+-- btnSearch_Click
+   -> this::fncSearch
+
+-- fncSearch
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   "(1=1)"
+   -> this::fncOpenConnection
+   "Select CURR_PERIOD from TBL_COMPANY_INFO"
+   -> this::GetSingleData
+   "(((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL)))"
+   "SELECT * FROM VW_EMPLOYEE_ALL Where "
+   -> TextBox::set_Text
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- BB_Click
+
+-- SqlDataSource1_Selected
+   -> SqlDataSourceStatusEventArgs::get_AffectedRows
+   " Employees"
+   -> Label::set_Text
+
+-- btnPrint_Click
+   -> ConfigurationManager::get_ConnectionStrings
+   "ConnectionString"
+   -> ConnectionStringSettings::get_ConnectionString
+   -> OracleConnection::.ctor
+   -> DbConnection::Open
+   -> TextBox::get_Text
+   -> OracleDataAdapter::.ctor
+   -> DataTable::.ctor
+   -> DbDataAdapter::Fill
+   -> this::.ctor
+   "pdfreports/EMPLIST_"
+   -> DateTime::get_Now
+   -> DateTime::get_Ticks
+   ".pdf"
+   -> ReportDocument::SetDataSource
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   -> Page::get_Response
+   "<script>window.open('"
+   "','_blank')</script>"
+   -> HttpResponse::Write
+
+-- btnEmpEdit_Click
+   -> CommandEventArgs::get_CommandArgument
+   -> Page::get_Response
+   "frmEmployeeEditUI.aspx?EMPID="
+   -> HttpResponse::Redirect
+
+-- btnView_Click
+   -> CommandEventArgs::get_CommandArgument
+   -> Page::get_Response
+   "frmEmployeeViewUI.aspx?EMPID="
+   -> HttpResponse::Redirect
+
+-- grdEmpList_PageIndexChanged
+
+-- grdEmpList_PageIndexChanging
+   -> GridViewPageEventArgs::get_NewPageIndex
+   -> GridView::set_PageIndex
+   -> this::fncBind
+
+-- fncBind
+   -> TextBox::get_Text
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- .ctor
+   -> Page::.ctor

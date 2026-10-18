@@ -1,0 +1,205 @@
+=== RebPayRollWeb.frmEmployeeSalarySettings
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::fncOpenConnection
+   "select PAYID, PAYID AS PAYNAME From TBL_PAYCODE where AD='A' or AD='D' order by PAYID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "select PAYID, PAYID||'-'||PAYNAME AS PAYNAME From TBL_PAYCODE where AD='A' or AD='D' order by PAYID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   -> Control::get_ViewState
+   "IsAdd"
+
+-- btnSearch_Click
+   -> this::fncSearchEmp
+
+-- fncSearchEmp
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> this::fncOpenConnection
+   "select EMPLOYEEID,NAME,DATEOFFIRSTJOINING,FATHERNAME,DESIGNATIONID,PRESENTPAYGRADE,EMAIL,TIN,M_STAUS,BLOODGROUP,NID,MOB_NO,LASTDEGREE,DISTRICT_ID,PRESENTADDRESS,PERMANENTADDRESS from TBL_EMPLOYEEMASTER where EMPLOYEEID='"
+   -> TextBox::get_Text
+   "'"
+   -> this::GetTable
+   -> Control::set_Visible
+   "EMPLOYEEID"
+   -> Label::set_Text
+   "NAME"
+   -> Label::set_Text
+   "PRESENTPAYGRADE"
+   -> Label::set_Text
+   "select DSG_DESCRIPTION from TBL_DESIGNATION where DESIGNATIONID='"
+   "DESIGNATIONID"
+   "'"
+   -> this::GetSingleData
+   -> Label::set_Text
+   -> this::fncLoadAllowanceDeduction
+   -> WebControl::set_Enabled
+
+-- fncLoadAllowanceDeduction
+   -> this::fncOpenConnection
+   "select ls.PAYID,pc.PAYNAME,ls.AMOUNT,ls.AD from TBL_EMP_LAST_SALARY ls inner join TBL_PAYCODE pc on ls.PAYID=pc.PAYID where ls.EMPLOYEEID='"
+   -> TextBox::get_Text
+   "' and ls.AD='A' order by PAYNAME"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   "select ls.PAYID,pc.PAYNAME,ls.AMOUNT,ls.AD from TBL_EMP_LAST_SALARY ls inner join TBL_PAYCODE pc on ls.PAYID=pc.PAYID where ls.EMPLOYEEID='"
+   -> TextBox::get_Text
+   "' and ls.AD='D' order by PAYNAME"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- gvAllowance_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> this::GetIndexFromDropList
+   -> ListControl::set_SelectedIndex
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Control::get_ViewState
+   "rw"
+   -> GridViewRow::get_RowIndex
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> Control::set_Visible
+   "Update Allowance"
+   -> LinkButton::set_Text
+   -> Control::set_Visible
+
+-- drpPAYID_SelectedIndexChanged
+   "select PAYID||'-'||PAYNAME as PAYNAME from TBL_PAYCODE where PAYID='"
+   -> ListControl::get_SelectedValue
+   "'"
+   -> this::GetSingleData
+   -> ListItemCollection::FindByText
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+
+-- drpPAYNAME_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+
+-- btnAddNew_Click
+   -> this::fncReset
+
+-- fncReset
+   -> ListControl::set_SelectedIndex
+   -> TextBox::set_Text
+   -> Label::set_Text
+   -> Control::get_ViewState
+   "IsAdd"
+   -> WebControl::set_Enabled
+   "Add Allowance"
+   -> LinkButton::set_Text
+   -> WebControl::set_Enabled
+   "Add Deduction"
+   -> LinkButton::set_Text
+   -> Control::set_Visible
+
+-- btnUpdate_Click
+   "A"
+   -> this::fncUpdate
+
+-- fncUpdate
+   "2017"
+   "09"
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedItem
+   -> TextBox::get_Text
+   "N"
+   -> Control::get_ViewState
+   "IsAdd"
+   "select * from TBL_EMP_LAST_SALARY where EMPLOYEEID='"
+   "' and PAYID='"
+   "'"
+   -> this::GetTable
+   "Pay Id Exists For This Employee"
+   -> Label::set_Text
+   "INSERT INTO TBL_EMP_LAST_SALARY (PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AMOUNT, AD, ARREAR)  VALUES ('"
+   "' ,'"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "')"
+   -> this::ExecuteStatement_TXN
+   "Inserted Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> Control::set_Visible
+   -> this::fncLoadAllowanceDeduction
+   "update TBL_EMP_LAST_SALARY set PAYYEAR='"
+   "',PAYMONTH='"
+   "',AMOUNT='"
+   "' where EMPLOYEEID='"
+   "' and PAYID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Updated Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> Control::set_Visible
+   -> this::fncLoadAllowanceDeduction
+
+-- btnUpdateDeduction_Click
+   "D"
+   -> this::fncUpdate
+
+-- btnDeleteAlw_Command
+   -> CommandEventArgs::get_CommandArgument
+   -> TextBox::get_Text
+   "Delete From TBL_EMP_LAST_SALARY where EMPLOYEEID='"
+   "' and PAYID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   -> Object::GetType
+   "AlertCode"
+   "alert('Error In Deleting')"
+   -> ScriptManager::RegisterStartupScript
+   -> this::fncLoadAllowanceDeduction
+
+-- gvDeduction_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> this::GetIndexFromDropList
+   -> ListControl::set_SelectedIndex
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Control::get_ViewState
+   "rw"
+   -> GridViewRow::get_RowIndex
+   -> Control::set_Visible
+   -> Control::set_Visible
+   "Update Deduction"
+   -> LinkButton::set_Text
+   -> Control::set_Visible
+
+-- lnkTaxCalc_Click
+   -> TextBox::get_Text
+   -> this::CalcTax
+   " &nbsp;No TAX"
+   -> Label::set_Text
+   -> this::fncSearchEmp
+
+-- .ctor
+   -> Page::.ctor

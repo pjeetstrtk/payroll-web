@@ -1,0 +1,107 @@
+=== RebPayRollWeb.frmLoanDetails
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_Request
+   -> HttpRequest::get_QueryString
+   "loanid"
+   "select * from TBL_ADVANCE_HEADER where LOAN_REF='"
+   "' "
+   -> this::GetTable
+   -> Label::set_Text
+   "STARTING_DATE"
+   " To "
+   "ENDING_DATE"
+   -> Label::set_Text
+   -> this::GetAdvanceTransInfoes
+
+-- lnkDelete_Command
+
+-- lnkDeleteInt_Command
+
+-- GetAdvanceTransInfoes
+   "select * from TBL_ADVANCE_TRAN where LOAN_REF='"
+   "' AND OTHERMEANS Not in('A','C') order by TRANDATE desc"
+   -> this::GetTable
+   "PERIOD"
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   -> this::fncCashPaymentDetails
+   "select * from TBL_ADVANCE_INTACCUMM where LOAN_REF='"
+   "' order by TRANDATE desc"
+   -> this::GetTable
+   "PERIOD"
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- fncCashpayment
+   -> this::GetCurrentPeriod
+   -> Label::get_Text
+   -> TextBox::get_Text
+   -> this::isDate
+   "Date Is Not OK"
+   -> Label::set_Text
+   -> ListControl::get_SelectedIndex
+   "Please Select Type"
+   -> Label::set_Text
+   -> TextBox::get_Text
+   "Y"
+   "C"
+   -> ListControl::get_SelectedIndex
+   "Y"
+   "C"
+   "N"
+   "C"
+   "Y"
+   "A"
+   "N"
+   "A"
+   "INSERT INTO  TBL_ADVANCE_TRAN(LOAN_REF, TRANDATE, AMOUNT, ISPRINCIPLE, PERIOD,OTHERMEANS,REMARKS)"
+   " VALUES('"
+   "', "
+   -> TextBox::get_Text
+   -> this::ToDate
+   ",  "
+   ", '"
+   "',"
+   ",'"
+   "','"
+   -> TextBox::get_Text
+   "')"
+   -> this::ExecuteStatement_TXN
+   -> Label::set_Text
+   -> this::fncCashPaymentDetails
+   "Updated"
+   -> Label::set_Text
+
+-- btnAdd_Click
+   -> this::fncCashpayment
+
+-- fncCashPaymentDetails
+   "select * from TBL_ADVANCE_TRAN where LOAN_REF='"
+   "' AND OTHERMEANS in('A','C') order by TRANDATE desc"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- lbldeleteLast_Click
+   -> this::GetCurrentPeriod
+   "Select Max(TRANDATE) from TBL_ADVANCE_TRAN where LOAN_REF='"
+   -> Label::get_Text
+   "' and OTHERMEANS in('A','C') and Period="
+   -> this::GetSingleData
+   "No Transaction Found"
+   -> Label::set_Text
+   "delete from TBL_ADVANCE_TRAN where LOAN_REF='"
+   -> Label::get_Text
+   "' and OTHERMEANS in('A','C') and Period="
+   " and TRANDATE="
+   -> this::ToDate
+   -> this::ExecuteStatement_TXN
+   -> Label::get_Text
+   -> this::fncCashPaymentDetails
+   "Only This Working Period Transaction Can Be Deleted"
+   -> Label::set_Text
+
+-- .ctor
+   -> Page::.ctor

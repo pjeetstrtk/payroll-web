@@ -1,0 +1,73 @@
+=== RebPayRollWeb.frmChangePass
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> Page::get_Session
+   "USERID"
+   -> Label::set_Text
+   -> Page::get_Session
+   "USERNAME"
+   -> Label::set_Text
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+   -> TextBox::get_Text
+   -> Label::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   "Select USER_PASS From TBL_USER where EMP_ID='"
+   "'"
+   -> this::GetSingleData
+   "Current Password Not Found"
+   -> Label::set_Text
+   "Old Password doesn't Match"
+   -> Label::set_Text
+   -> Control::Focus
+   -> TextBox::get_Text
+   -> this::ValidatePassword
+   -> Label::set_Text
+   -> Control::Focus
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   "Password Mismatch"
+   -> Label::set_Text
+   -> Control::Focus
+   "update TBL_USER set USER_PASS='"
+   "' where EMP_ID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Password Changed Successfully"
+   -> Label::set_Text
+   "Unable To Set Password  "
+   -> Label::set_Text
+
+-- ValidatePassword
+   -> String::IsNullOrWhiteSpace
+   "Password should not be empty"
+   -> Exception::.ctor
+   "[0-9]+"
+   -> Regex::.ctor
+   "[A-Z]+"
+   -> Regex::.ctor
+   ".{5,15}"
+   -> Regex::.ctor
+   "[a-z]+"
+   -> Regex::.ctor
+   "[!@#$%^&*()_+=\[{\]};:<>|./?,-]"
+   -> Regex::.ctor
+   -> Regex::IsMatch
+   "Password should contain At least one lower case letter"
+   -> Regex::IsMatch
+   "Password should contain At least one upper case letter"
+   -> Regex::IsMatch
+   "Password should not be less than 5 or greater than 15 characters"
+   -> Regex::IsMatch
+   "Password should contain At least one numeric value"
+   -> Regex::IsMatch
+   "Password should contain At least one special case characters"
+
+-- .ctor
+   -> Page::.ctor

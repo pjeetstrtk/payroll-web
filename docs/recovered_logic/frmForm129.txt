@@ -1,0 +1,743 @@
+=== RebPayRollWeb.frmForm129
+
+-- Page_Load
+   -> this::GetCurrentPeriod
+   -> this::ToPrePeriod
+   -> DateTime::get_Now
+   -> DateTime::get_Year
+   -> DateTime::get_Now
+   -> DateTime::get_Month
+   -> String::Substring
+   -> String::Substring
+   -> DateTime::DaysInMonth
+   -> String::Substring
+   -> String::Substring
+   -> DateTime::DaysInMonth
+   "16-"
+   -> this::PeriodToMonth
+   " To 15-"
+   -> this::PeriodToMonth
+   -> Label::set_Text
+   "01-"
+   -> this::PeriodToMonth
+   " To "
+   "-"
+   -> this::PeriodToMonth
+   -> Label::set_Text
+   -> Page::get_Session
+   "USERID"
+   -> Page::get_IsPostBack
+   -> this::fncEmpInfo
+   "select EMPLOYEEID,'['||EMPLOYEEID||']'||NAME EMP from TBL_EMPLOYEEMASTER WHERE DIR_DIVCELL_ID = '645-0' and EMPLOYEEID<>'"
+   "'"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   -> this::fncShowAttendtance
+
+-- fncShowAttendtance
+   "select * from TBL_EMPLOYE_ATT where EMPLOYEEID='"
+   "' AND PERIOD="
+   " AND ATTN_TYPE='A'"
+   -> this::GetTable
+   "select * from TBL_EMPLOYE_ATT where EMPLOYEEID='"
+   "' AND PERIOD="
+   " AND ATTN_TYPE='OD'"
+   -> this::GetTable
+   "select * from TBL_EMPLOYE_ATT where EMPLOYEEID='"
+   "' AND PERIOD="
+   " AND ATTN_TYPE='OH'"
+   -> this::GetTable
+   "REMARKS"
+   -> TextBox::set_Text
+   "Submit_to"
+   -> this::GetIndexFromDropList
+   -> ListControl::set_SelectedIndex
+   "APPR_STATUS"
+   "9"
+   "APPROVED"
+   -> Label::set_Text
+
+-- fncEmpInfo
+   "select * from VW_EMPLOYEE_ALL where EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   "NOOFINCREMENTSPAID"
+   -> Label::set_Text
+   "PRESENTPAYGRADE"
+   -> this::ToDouble
+   -> Label::get_Text
+   -> this::GetPayScaleBasic
+   "EMPLOYEEID"
+   -> Label::set_Text
+   "DESIGNATIONID"
+   "NAME"
+   -> Label::set_Text
+   "DSG_DESCRIPTION"
+   -> Label::set_Text
+   -> String::PadLeft
+   -> Label::set_Text
+   "DIR_DIVCELL_ID"
+   -> Label::set_Text
+   "MANAGEMENTID"
+   -> Label::set_Text
+
+-- btnSubmit_Click
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   "1"
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_1"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_2"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_3"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_4"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_5"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_6"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_7"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_8"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_9"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_10"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_11"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_12"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_13"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_14"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_15"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_16"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_17"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_18"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_19"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_20"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_21"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_22"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_23"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_24"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_25"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_26"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_27"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_28"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_29"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_30"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "F_31"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_1"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_2"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_3"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_4"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_5"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_6"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_7"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_8"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_9"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_10"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_11"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_12"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_13"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_14"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_15"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_16"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_17"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_18"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_19"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_20"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_21"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_22"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_23"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_24"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_25"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_26"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_27"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_28"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_29"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_30"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTD_F_31"
+   -> NameValueCollection::GetValues
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> this::ChecBox2Data
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_1"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_2"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_3"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_4"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_5"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_6"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_7"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_8"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_9"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_10"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_11"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_12"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_13"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_14"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_15"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_16"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_17"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_18"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_19"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_20"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_21"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_22"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_23"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_24"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_25"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_26"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_27"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_28"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_29"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_30"
+   -> NameValueCollection::GetValues
+   -> Page::get_Request
+   -> HttpRequest::get_Form
+   "OTH_F_31"
+   -> NameValueCollection::GetValues
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   -> this::ToDouble
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   "O"
+   -> TextBox::get_Text
+   "delete from TBL_EMPLOYE_ATT where EMPLOYEEID='"
+   "' AND PERIOD="
+   -> this::ExecuteStatement_TXN
+   -> ListControl::get_SelectedValue
+   "INSERT INTO TBL_EMPLOYE_ATT (    PERIOD, EMPLOYEEID, ATTN_TYPE,    TOTAL_DAYS, WORKING_DAYS, LWP,     EARN_LEAVE, OVERTIME_H, OVERTIME_D,    F_1, F_2, F_3,    F_4, F_5, F_6,    F_7, F_8, F_9,    F_10, F_11, F_12,    F_13, F_14, F_15,    F_16, F_17, F_18,    F_19, F_20, F_21,    F_22, F_23, F_24,    F_25, F_26, F_27,    F_28, F_29, F_30,    F_31,  CREATE_BY, CREATE_DATE,    UPDATE_BY, UPDATE_DATE, APPR_STATUS,    APPROVE_BY, APPROVE_DATE, APPROVE_BY2,    APPROVE_DATE2,Submit_To,remarks)  VALUES (   "
+   ",'"
+   "', 'A',"
+   ", 0, "
+   ",  "
+   ","
+   ","
+   ", '"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "', SYSDATE,    NULL, NULL, '1',   NULL, NULL, NULL, NULL,'"
+   "','"
+   "') "
+   -> this::fncOpenConnection
+   -> OracleConnection::BeginTransaction
+   -> this::ExecuteStatement
+   "Error On Update "
+   -> Label::set_Text
+   -> DbTransaction::Rollback
+   "INSERT INTO TBL_EMPLOYE_ATT (    PERIOD, EMPLOYEEID, ATTN_TYPE,    TOTAL_DAYS, WORKING_DAYS, LWP,     EARN_LEAVE, OVERTIME_H, OVERTIME_D,    F_1, F_2, F_3,    F_4, F_5, F_6,    F_7, F_8, F_9,    F_10, F_11, F_12,    F_13, F_14, F_15,    F_16, F_17, F_18,    F_19, F_20, F_21,    F_22, F_23, F_24,    F_25, F_26, F_27,    F_28, F_29, F_30,    F_31,  CREATE_BY, CREATE_DATE,    UPDATE_BY, UPDATE_DATE, APPR_STATUS,    APPROVE_BY, APPROVE_DATE, APPROVE_BY2,    APPROVE_DATE2,Submit_To,Remarks)  VALUES (   "
+   ",'"
+   "', 'OD',"
+   ", 0, "
+   ",  "
+   ","
+   ","
+   ", '"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "', SYSDATE,    NULL, NULL, '1',   NULL, NULL, NULL, NULL,'"
+   "','"
+   "') "
+   -> this::ExecuteStatement
+   "Error On Update "
+   -> Label::set_Text
+   -> DbTransaction::Rollback
+   "INSERT INTO TBL_EMPLOYE_ATT (    PERIOD, EMPLOYEEID, ATTN_TYPE,    TOTAL_DAYS, WORKING_DAYS, LWP,     EARN_LEAVE, OVERTIME_H, OVERTIME_D,    F_1, F_2, F_3,    F_4, F_5, F_6,    F_7, F_8, F_9,    F_10, F_11, F_12,    F_13, F_14, F_15,    F_16, F_17, F_18,    F_19, F_20, F_21,    F_22, F_23, F_24,    F_25, F_26, F_27,    F_28, F_29, F_30,    F_31,  CREATE_BY, CREATE_DATE,    UPDATE_BY, UPDATE_DATE, APPR_STATUS,    APPROVE_BY, APPROVE_DATE, APPROVE_BY2,    APPROVE_DATE2,Submit_To)  VALUES (   "
+   ",'"
+   "', 'OH',"
+   ", 0, "
+   ",  "
+   ","
+   ","
+   ", '"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "', SYSDATE,    NULL, NULL, '1',   NULL, NULL, NULL, NULL,'"
+   "') "
+   -> this::ExecuteStatement
+   "Error On Update "
+   -> Label::set_Text
+   -> DbTransaction::Rollback
+   -> DbTransaction::Commit
+   -> this::fncShowAttendtance
+
+-- btnForword_Click
+   -> ListControl::get_SelectedValue
+   "Update TBL_EMPLOYE_ATT set submit_to='"
+   "',Update_date=SYSDATE where EMPLOYEEID='"
+   "' and Period="
+   " And ATTN_TYPE='A'"
+   -> this::ExecuteStatement_TXN
+   "Successfully Forwarded To "
+   -> ListControl::get_Text
+   -> Label::set_Text
+   "Error On Forwarding "
+   -> Label::set_Text
+   -> this::fncShowAttendtance
+
+-- .ctor
+   -> Page::.ctor

@@ -1,0 +1,309 @@
+=== RebPayRollWeb.BL.Advices
+
+-- BankAdvice
+   "select * from VW_SALARY_SUM where PERIOD="
+   " "
+   " and MANAGEMENTID in("
+   ")"
+   "_C"
+   -> String::Replace
+   "Class : "
+   "Select DIR_DESCRIPTION FROM TBL_DIRECTORATE WHERE DIRECTORATEID='"
+   "'"
+   -> this::GetSingleData
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   " "
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " AND BANKBR_ID='02-056'"
+   " Bank TT : REB Branch"
+   " AND BANKBR_ID NOT IN ('02-056')"
+   " Bank TT : Other Branch"
+   " Bank TT:  All Branch"
+   " order by ACCOUNTNUMBER ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   "BANKADVICE_"
+   -> this::.ctor
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_str_Title"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Bank Advice For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".xls"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- BankBonusAdvice
+   "select * from VW_KPISLIP_SUM where PERIOD="
+   "select * from  VW_BONUSSLIP_SUM where PERIOD="
+   "Select DIR_DESCRIPTION FROM TBL_DIRECTORATE WHERE DIRECTORATEID='"
+   "'"
+   -> this::GetSingleData
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   "select DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL where DIR_DIVCELL_ID='"
+   "'"
+   -> this::GetSingleData
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " "
+   " AND BANKBR_ID='02-056'"
+   " AND BANKBR_ID NOT IN ('02-056')"
+   -> this::PeriodToMonth
+   -> this::.ctor
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Nobo Borsho Advice For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "NEWYEAR_BANK_ADVICE_"
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'KPI Advice For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "KPI_ADVICE_"
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Bonus Advice For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "FST_BONUS_ADVICE_"
+   " order by DIR_DIVCELL_ID,ACCOUNTNUMBER ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   " For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_str_Title"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".xls"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- DirectorateAdvice
+   "select * from VW_SALARY_SUM where PERIOD="
+   " "
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " order by DIR_DIVCELL_ID,EMPLOYEEID ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   "DIRADVICE_"
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "' "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- BonusDirectorateAdvice
+   "Select * FROM VW_KPISLIP_SUM  where PERIOD="
+   "Select * FROM VW_BONUSSLIP_SUM  where PERIOD="
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " order by DIR_DIVCELL_ID,EMPLOYEEID ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   -> this::.ctor
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Bangla New Year Allowance Directorate Advice for the Month of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "NEWYEAR_DIR_ADVICE_"
+   "Bangla New Year Allowance Directorate Advice"
+   "KPI_ADVICE_"
+   "_"
+   "KPI Directorate Advice"
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Bonus Directorate Advice for the Month of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "FST_BONUS_ADVICE_"
+   "_"
+   "Bonus Directorate Advice"
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vLogo"
+   "'"
+   -> Page::get_Server
+   "~/Images/logo.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vsign_ac"
+   "'"
+   -> Page::get_Server
+   "~/Images/sign_ac.jpg"
+   -> HttpServerUtility::MapPath
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "' "
+   " For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- .ctor
+   -> Object::.ctor

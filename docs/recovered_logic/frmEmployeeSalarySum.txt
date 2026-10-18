@@ -1,0 +1,218 @@
+=== RebPayRollWeb.frmEmployeeSalarySum
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   "July"
+   "June"
+   -> DateTime::get_Now
+   -> DateTime::get_Year
+   "Select CURR_PERIOD from TBL_COMPANY_INFO"
+   -> this::GetSingleData
+   -> String::Substring
+   "07"
+   "-"
+   " --- "
+   "-"
+   -> ListItem::.ctor
+   "select DIRECTORATEID, DIRECTORATEID as DIR_DESCRIPTION from TBL_DIRECTORATE order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+   "select DIRECTORATEID, DIRECTORATEID||' '||DIR_DESCRIPTION as DIR_DESCRIPTION from TBL_DIRECTORATE order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "ALL"
+   -> ListItemCollection::Insert
+
+-- drpDIRECTORATEID_SelectedIndexChanged
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+   -> ListControl::set_SelectedIndex
+
+-- drpDIR_DESCRIPTION_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> ListItemCollection::FindByValue
+   -> ListControl::ClearSelection
+   -> ListItem::set_Selected
+   -> ListControl::set_SelectedIndex
+
+-- fncSalarySum
+   -> ListControl::get_SelectedValue
+   -> String::Substring
+   "06"
+   -> this::fncOpenConnection
+   "SELECT e.EMPLOYEEID, e.NAME,DESIGNATIONID,e.DSG_DESCRIPTION,CADREID,e.CADRE_DESCRIPTION,e.DIR_DIVCELL_ID,e.MANAGEMENTID,e.MGMT_DESCRIPTION,DIRECTORATEID,e.DIR_DESCRIPTION,e.DIV_CEL,e.DIVISIONCELLID,e.DIVCEL_DESCRIPTION,e.SEX,e.TIN  FROM VW_EMPLOYEE_ALL e where EMPLOYEEID IN (select employeeid from TBL_PAYTRAN_DETAILS WHERE  period>="
+   " AND period<="
+   ") "
+   -> ListControl::get_SelectedIndex
+   " AND e.DIRECTORATEID='"
+   -> ListControl::get_Text
+   "'"
+   " order by e.employeeid"
+   -> this::GetTable
+   "Select  employeeid, period,PAYID,AD, sum(tPAID) as PAID from  (select employeeid, period,PAYID,AD, sum(case when AD='A' then AMOUNT else -AMOUNT end) tPAID FROM TBL_PAYTRAN_DETAILS WHERE period>="
+   " AND period<="
+   " GROUP BY employeeid, period,PAYID,AD  UNION ALL Select employeeid, period,PAYID,AD, sum(case when AD='A' then AMOUNT else -AMOUNT end) tPAID FROM SPECIALPAY_SEPERATE_TRAN WHERE    ( period>="
+   " AND period<="
+   ") and (WITHPAYSLIP<>'Y' or WITHPAYSLIP is null) GROUP BY employeeid, period,PAYID,AD) GROUP BY employeeid, period,PAYID,AD "
+   -> this::GetTable
+   "select employeeid, PAYID,PAYNAME ,AD  from  (select PT.employeeid, PT.PAYID,P.PAYNAME ,PT.AD FROM TBL_PAYTRAN_DETAILS PT,TBL_PAYCODE P  WHERE PT.PAYID=P.PAYID AND  period>="
+   " AND period<="
+   " GROUP BY employeeid, PT.PAYID,P.PAYNAME,PT.AD  UNION ALL select PT.employeeid, PT.PAYID,P.PAYNAME ,PT.AD FROM SPECIALPAY_SEPERATE_TRAN PT,TBL_PAYCODE P  WHERE PT.PAYID=P.PAYID AND  period>="
+   " AND period<="
+   "  and (WITHPAYSLIP<>'Y' or WITHPAYSLIP is null) GROUP BY employeeid, PT.PAYID,P.PAYNAME,PT.AD) group by employeeid, PAYID,PAYNAME ,AD order by employeeid, AD, PAYID,PAYNAME"
+   -> this::GetTable
+   -> this::.ctor
+   "EMPLOYEEID"
+   "0149"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "TIN"
+   "SEX"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "PAYID"
+   "PAYNAME"
+   "AD"
+   "EMPLOYEEID='"
+   "' AND PAYID='"
+   "' AND AD='"
+   "'"
+   -> DataTable::Select
+   "PERIOD"
+   -> String::Substring
+   "PAID"
+   -> None::.ctor
+   "07"
+   "08"
+   "09"
+   "10"
+   "11"
+   "12"
+   "01"
+   "02"
+   "03"
+   "04"
+   "05"
+   "06"
+   -> None::TryGetValue
+   "EMPLOYEEID"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "PAYID"
+   "PAYNAME"
+   "OPENNIG_AMT"
+   "ADJ_AMT"
+   "TOTAL_AMT"
+   "JUL_AMT"
+   "AUG_AMT"
+   "SEP_AMT"
+   "OCT_AMT"
+   "NOV_AMT"
+   "DEC_AMT"
+   "JAN_AMT"
+   "FEB_AMT"
+   "MAR_AMT"
+   "APR_AMT"
+   "MAY_AMT"
+   "JUN_AMT"
+   "FY_TOTAL"
+   "BAL_AMT"
+   "OTHER_AMT1"
+   "OTHER_AMT2"
+   "REMARKS1"
+   "REMARKS2"
+   "OTHERID"
+   -> this::.ctor
+   -> ReportDocument::SetDataSource
+   -> String::Substring
+   " - "
+   -> String::Substring
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Salary Statement For The  Financial Year "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vFinS"
+   "'"
+   -> String::Substring
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vFinE"
+   "'"
+   -> String::Substring
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   "pdfreports/"
+   "EMP_SAL_SUM_"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> HttpContext::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   -> Object::GetType
+   "pdfView"
+   "window.open('/"
+   "','_blank');"
+   -> ScriptManager::RegisterStartupScript
+
+-- Button1_Click
+
+-- BB_Click
+
+-- btnPrint_Click
+   -> this::fncSalarySum
+
+-- btnEmpEdit_Click
+   -> CommandEventArgs::get_CommandArgument
+   -> Page::get_Response
+   "frmEmployeeEditUI.aspx?EMPID="
+   -> HttpResponse::Redirect
+
+-- btnView_Click
+   -> CommandEventArgs::get_CommandArgument
+   -> Page::get_Response
+   "frmEmployeeViewUI.aspx?EMPID="
+   -> HttpResponse::Redirect
+
+-- grdEmpList_PageIndexChanged
+
+-- .ctor
+   -> Page::.ctor

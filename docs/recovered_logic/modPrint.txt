@@ -1,0 +1,96 @@
+=== RebPayRollWeb.BL.modPrint
+
+-- fncPrintPayslip
+   "Select max(Period) from TBL_PAYTRAN_DETAILS where EMPLOYEEID='"
+   "'"
+   -> this::GetSingleData
+   -> String::Substring
+   -> String::Substring
+   "select SD.*, BB.BANK_DESCRIPTION, BB.BRANCH_DESCRIPTION from VW_SALARY_DETAILS SD inner join VW_BANK_BRANCH BB on SD.BANKBR_ID=BB.BANKBR_ID  where Period="
+   " and SD.EMPLOYEEID='"
+   "'"
+   " Employee Id: "
+   " Year: "
+   ", Month"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::.ctor
+   "0"
+   ", "
+   -> this::GetFirstDateOfMonth
+   " to "
+   -> this::GetLastDateOfMonth
+   -> this::ToPrePeriod
+   -> this::GetPrevMiddleDateOfMonth
+   " to "
+   -> this::GetMiddleDateOfMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Payslip For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_payrollDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_attendenceDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "1"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "0"
+   -> FormulaFieldDefinition::set_Text
+   "select * from TBL_PAYTRAN_LOAN where to_number(to_Char(LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(ENDING_DATE,'yyyymm'))>="
+   " AND PERIOD="
+   " ORDER BY STARTING_DATE DESC"
+   "select * from TBL_PAYTRAN_LOAN where to_number(to_Char(LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(ENDING_DATE,'yyyymm'))>="
+   " AND PERIOD="
+   " AND EMPLOYEEID  in ("
+   ") ORDER BY STARTING_DATE DESC"
+   -> this::GetTable
+   -> ReportDocument::SetDataSource
+   -> ReportDocument::get_Subreports
+   "RptPayslipAdvance.rpt"
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "PAYSLIP_"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> HttpContext::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   -> Page::get_ClientScript
+   -> Object::GetType
+   "AlertCode"
+   "window.open('"
+   "','_blank');document.getElementById('myModal').style='display: none';"
+   -> ClientScriptManager::RegisterStartupScript
+
+-- fncPrintReport
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> HttpContext::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- .ctor
+   -> Object::.ctor

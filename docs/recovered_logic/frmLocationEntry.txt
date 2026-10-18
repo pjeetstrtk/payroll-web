@@ -1,0 +1,116 @@
+=== RebPayRollWeb.frmLocationEntry
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> Control::DataBind
+   -> this::fncReset
+
+-- gvCadreInfo_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   "Update"
+   -> Button::set_Text
+   -> WebControl::set_Enabled
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Control::get_ViewState
+   "rw"
+   -> GridViewRow::get_RowIndex
+   -> Control::set_Visible
+
+-- btnAddNew_Click
+   -> this::fncReset
+
+-- fncReset
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   "Save"
+   -> Button::set_Text
+   -> WebControl::set_Enabled
+   -> TextBox::set_Text
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Label::set_Text
+   -> Label::set_Text
+   -> Label::set_Text
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> Control::get_ViewState
+   "IsAdd"
+   "Maximum Location  ID is 99"
+   -> Label::set_Text
+   -> Control::Focus
+   "select * from TBL_LOCATION where LOCATIONID='"
+   "'"
+   -> this::GetTable
+   "Location Id Already Exists"
+   -> Label::set_Text
+   -> Control::Focus
+   -> Label::set_Text
+   "select * from TBL_LOCATION where LOCATION_DESCRIPTION='"
+   "'"
+   -> this::GetTable
+   "Location Description Already Exists"
+   -> Label::set_Text
+   -> Control::Focus
+   -> Label::set_Text
+   "INSERT INTO TBL_LOCATION (LOCATIONID, LOCATION_DESCRIPTION,CNC,MIN_TAX,LOC_GROUP) VALUES ('"
+   "' ,'"
+   "','C','"
+   "','N')"
+   -> this::ExecuteStatement_TXN
+   "INSERT INTO TBL_POLICY SELECT SEQ_TBL_POLICY.NEXTVAL, PAYCODE, EFF_PERIOD, "
+   ", BASIC_FROM, BASIC_TO, RATE, FIX_AMOUNT, MIN_AMOUNT, MAX_AMOUNT, PAY_GRADE, INCREMENT_NO from TBL_POLICY where LOCATION='02' "
+   -> this::ExecuteStatement_TXN
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> Control::DataBind
+   -> this::fncReset
+   "Inserted Successfully"
+   -> Label::set_Text
+   "select * from TBL_LOCATION where LOCATION_DESCRIPTION='"
+   "' and LOCATIONID<>'"
+   "'"
+   -> this::GetTable
+   "Location Description Already Exists"
+   -> Label::set_Text
+   -> Control::Focus
+   -> Label::set_Text
+   "update TBL_LOCATION set LOCATION_DESCRIPTION='"
+   "',MIN_TAX='"
+   "' where LOCATIONID='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Updated Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> Control::get_ViewState
+   "rw"
+   -> GridView::set_SelectedIndex
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::set_Text
+
+-- btnUpdate_Click
+
+-- .ctor
+   -> Page::.ctor

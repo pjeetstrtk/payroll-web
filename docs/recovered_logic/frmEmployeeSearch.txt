@@ -1,0 +1,54 @@
+=== RebPayRollWeb.frmEmployeeSearch
+
+-- Page_Load
+   -> Page::get_IsPostBack
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   -> Label::set_Text
+   "Salary Month "
+   -> Label::get_Text
+   -> this::PeriodToMonth
+   -> Label::set_Text
+
+-- btnSearch_Click
+   -> this::fncSearchEmp
+
+-- fncSearchEmp
+   -> Control::set_Visible
+   -> Control::set_Visible
+   -> TextBox::get_Text
+   "select * from VW_EMPLOYEE_ALL where EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   "NOOFINCREMENTSPAID"
+   -> Label::set_Text
+   "PRESENTPAYGRADE"
+   -> this::ToDouble
+   -> Label::get_Text
+   -> this::GetPayScaleBasic
+   -> Control::set_Visible
+   "EMPLOYEEID"
+   -> Label::set_Text
+   "DESIGNATIONID"
+   "NAME"
+   " ["
+   "DSG_DESCRIPTION"
+   " ]"
+   -> Label::set_Text
+   -> String::PadLeft
+   -> Label::set_Text
+   "DIR_DIVCELL_ID"
+   "select DSG_DESCRIPTION from TBL_DESIGNATION where DESIGNATIONID='"
+   "DESIGNATIONID"
+   "'"
+   -> this::GetSingleData
+   -> Label::set_Text
+   -> Label::set_Text
+   "MANAGEMENTID"
+   -> Label::set_Text
+   -> Control::set_Visible
+
+-- .ctor
+   -> Page::.ctor

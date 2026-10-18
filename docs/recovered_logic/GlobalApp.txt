@@ -1,0 +1,435 @@
+=== RebPayRollWeb.GlobalApp
+
+-- ToDouble
+
+-- ExecuteStatement
+   -> OracleCommand::.ctor
+   -> DbCommand::ExecuteNonQuery
+
+-- GetConnection
+   -> ConfigurationManager::get_ConnectionStrings
+   "ConnectionString"
+   -> OracleConnection::.ctor
+
+-- fncOpenConnection
+   -> this::GetConnection
+   -> DbConnection::get_State
+   -> this::fncCloseConnection
+   -> DbConnection::Open
+
+-- GetTable
+   -> this::fncOpenConnection
+   -> DataTable::.ctor
+   -> OracleDataAdapter::.ctor
+   -> DbDataAdapter::Fill
+   -> tok0x2b000003
+   -> DataTable::set_PrimaryKey
+   -> this::fncCloseConnection
+   -> this::fncCloseConnection
+
+-- GetSingleData
+   -> this::fncOpenConnection
+   -> DataTable::.ctor
+   -> OracleDataAdapter::.ctor
+   -> DbDataAdapter::Fill
+   -> this::fncCloseConnection
+   -> this::fncCloseConnection
+
+-- ExecuteStatement_TXN
+   -> this::fncOpenConnection
+   -> OracleConnection::BeginTransaction
+   -> OracleCommand::.ctor
+   -> DbCommand::ExecuteNonQuery
+   -> DbTransaction::Commit
+   -> this::fncCloseConnection
+   -> this::fncCloseConnection
+   -> this::fncCloseConnection
+
+-- LoadDropDown
+   -> ListItemCollection::Clear
+   -> None::.ctor
+   -> this::.ctor
+   -> BaseDataBoundControl::set_DataSource
+   "ItemValue"
+   -> ListControl::set_DataValueField
+   "ItemText"
+   -> ListControl::set_DataTextField
+   -> Control::DataBind
+
+-- LoadDropDownStr
+   -> ListItemCollection::Clear
+   -> None::.ctor
+   -> this::.ctor
+   -> BaseDataBoundControl::set_DataSource
+   "ItemCode"
+   -> ListControl::set_DataValueField
+   "ItemText"
+   -> ListControl::set_DataTextField
+   -> Control::DataBind
+
+-- ToDate
+   "TO_DATE('"
+   "yyyy/MM/dd"
+   "','yyyy/mm/dd')"
+   "NULL"
+
+-- Checked2Data
+   "1"
+   "0"
+
+-- ChecBox2Data
+   -> String::ToUpper
+   "ON"
+
+-- Data2CheckBox
+   "1"
+   "On"
+   "Off"
+
+-- GetCheckValue
+   "1"
+   "A"
+   "Y"
+
+-- Data2Checked
+   "1"
+   "A"
+   "Y"
+
+-- ToDateFormat
+   "dd/MM/yyyy"
+
+-- GetIndexFromDropList
+   -> ListItemCollection::FindByValue
+   -> ListItemCollection::IndexOf
+   -> ListItemCollection::FindByText
+   -> ListItemCollection::IndexOf
+
+-- CheckPeriod
+   -> String::Substring
+   -> String::Substring
+
+-- GetYearFromPeriod
+   -> String::Substring
+
+-- GetYearMonthPeriod
+   -> String::Substring
+
+-- ToNextPeriod
+   -> String::Substring
+   "12"
+   -> this::GetYearFromPeriod
+   "01"
+
+-- ToPrePeriod
+   -> String::Substring
+   "01"
+   -> this::GetYearFromPeriod
+   "12"
+
+-- LastMeterReading
+   -> String::.ctor
+
+-- YearFirstPeriod
+   -> this::GetYearFromPeriod
+   -> this::GetYearMonthPeriod
+   -> this::ToPrePeriod
+   -> this::GetYearMonthPeriod
+
+-- PeriodToDate
+   "1900-01-01"
+   "01"
+   -> String::Substring
+   "-"
+   -> String::Substring
+   "-"
+   "1900-01-01"
+
+-- PeriodLastDate
+   "1900-01-01"
+   "01"
+   -> String::Substring
+   "-"
+   -> String::Substring
+   "-"
+   "1900-01-01"
+   -> DateTime::AddMonths
+   -> DateTime::AddDays
+
+-- CheckPerodFormat
+   -> String::Substring
+   -> String::Substring
+
+-- PeriodToMonth
+   -> this::GetYearMonthPeriod
+   -> this::GetYearFromPeriod
+   "-"
+   "-"
+   "-"
+   "-"
+
+-- GetPeriodOfMonthNo
+   -> this::ToNextPeriod
+   -> this::ToPrePeriod
+
+-- Zero2Empty
+
+-- FractionRound
+   -> String::Split
+   "."
+
+-- FractionRound
+   -> String::IndexOf
+   -> String::Split
+   -> Math::Ceiling
+   -> Math::Floor
+
+-- isDate
+   -> DateTime::get_Year
+
+-- DateToPeriod
+   "yyyyMM"
+
+-- ToDateAsDate
+   -> DateTime::.ctor
+
+-- fncPrintPayslip
+   "SELECT CURR_PERIOD FROM TBL_COMPANY_INFO"
+   -> this::GetSingleData
+   "Select max(Period) from TBL_PAYTRAN_DETAILS where EMPLOYEEID='"
+   "'"
+   -> this::GetSingleData
+   -> String::Substring
+   -> String::Substring
+   "select SD.*, BB.BANK_DESCRIPTION, BB.BRANCH_DESCRIPTION from VW_SALARY_DETAILS SD inner join VW_BANK_BRANCH BB on SD.BANKBR_ID=BB.BANKBR_ID  where Period="
+   " and SD.EMPLOYEEID='"
+   "'"
+   " Employee Id: "
+   " Year: "
+   ", Month"
+   -> this::GetTable
+   -> this::.ctor
+   "0"
+   ", "
+   -> this::GetFirstDateOfMonth
+   " to "
+   -> this::GetLastDateOfMonth
+   -> this::ToPrePeriod
+   -> this::GetPrevMiddleDateOfMonth
+   " to "
+   -> this::GetMiddleDateOfMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Payslip For The Month Of "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_payrollDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_attendenceDuration"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "1"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "isCurrMonth"
+   "0"
+   -> FormulaFieldDefinition::set_Text
+   "select * from TBL_PAYTRAN_LOAN where to_number(to_Char(LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(ENDING_DATE,'yyyymm'))>="
+   " AND PERIOD="
+   " ORDER BY STARTING_DATE DESC"
+   "select * from TBL_PAYTRAN_LOAN where to_number(to_Char(LOANDATE,'yyyymm'))<="
+   " AND to_number(to_Char(ENDING_DATE,'yyyymm'))>="
+   " AND PERIOD="
+   " AND EMPLOYEEID  in ("
+   ") ORDER BY STARTING_DATE DESC"
+   -> this::GetTable
+   -> ReportDocument::SetDataSource
+   -> ReportDocument::get_Subreports
+   "RptPayslipAdvance.rpt"
+   -> ReportDocument::SetDataSource
+
+-- GetPrevMiddleDateOfMonth
+   -> String::Substring
+   "16/"
+   "/"
+   -> String::Substring
+   "dd-MMM-yyyy"
+
+-- GetMiddleDateOfMonth
+   -> String::Substring
+   "15/"
+   "/"
+   -> String::Substring
+   "dd-MMM-yyyy"
+
+-- GetJVGLCODE
+   "MANAGEMENTID="
+   " AND DIRECTORATEID='"
+   "' AND EMPLOYEETYPEID='"
+   "' AND PAYID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "NEW_GLCODE"
+
+-- GetFirstDateOfMonth
+   -> String::Substring
+   "01/"
+   "/"
+   -> String::Substring
+   "dd/MMM/yyyy"
+
+-- GetLastDateOfMonth
+   -> this::ToNextPeriod
+   -> this::GetFirstDateOfMonth
+   -> DateTime::AddDays
+   "dd/MMM/yyyy"
+
+-- GetPayScaleBasic
+   "Select * from TBL_PAYSCALE_2015 WHERE PAY_GRADE="
+   " AND INCREMENT_NUMBER="
+   -> this::GetTable
+   "BASIC"
+
+-- fncGetPrintFileName
+   "_"
+   "_"
+   "_"
+   -> DateTime::get_Now
+   "yyyyMMdd_HHmmss"
+
+-- fncCheckPermission
+   -> HttpContext::get_Session
+   "USER_TYPE"
+   -> HttpContext::get_Session
+   "USER_TYPE"
+   "ADM"
+   -> HttpContext::get_Response
+   "Login.aspx"
+   -> HttpResponse::Redirect
+   "MNG"
+   "ADM"
+   -> HttpContext::get_Session
+   "USRID"
+   -> HttpContext::get_Response
+   "Login.aspx"
+   -> HttpResponse::Redirect
+   -> HttpContext::get_Response
+   "Default.aspx"
+   -> HttpResponse::Redirect
+
+-- GetCurrentPeriod
+   "Select CURR_PERIOD from TBL_COMPANY_INFO"
+   -> this::GetSingleData
+
+-- fncCloseConnection
+   -> DbConnection::Close
+
+-- GetNotProcessed
+   -> this::GetCurrentPeriod
+   "Select EMPLOYEEID,NAME,DSG_DESCRIPTION,DIR_DIVCELL_ID from vw_employee_all  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL))  AND EMPLOYEEID not in ( Select EMPLOYEEID from  VW_SALARY_SUM where PERIOD="
+   ")  AND EMPLOYEEID NOT IN (SELECT EMPLOYEEID FROM TBL_NOT_PAID_EMP_BY_YMD WHERE PERIOD="
+   ") order by DIR_DIVCELL_ID,EMPLOYEEID"
+   -> this::GetTable
+
+-- GetOverTimeRate
+   -> this::fncOpenConnection
+   "select * from VW_EMPLOYEE_ALL where EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   "NOOFINCREMENTSPAID"
+   "PRESENTPAYGRADE"
+   -> this::ToDouble
+   -> this::GetPayScaleBasic
+   "DESIGNATIONID"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "3"
+   "4"
+   -> Math::Round
+   -> Math::Round
+   "66"
+   "68"
+   "69"
+
+-- .ctor
+   -> Object::.ctor
+
+-- .cctor
+   "Rvby"
+   "‡deªy"
+   "gvP©"
+   "Gwcªj"
+   "‡g"
+   "Ryb"
+   "RyjvB"
+   "AvMó"
+   "‡m‡Þ"
+   "A‡±v"
+   "b‡f"
+   "wW‡m"
+   "January"
+   "February"
+   "March"
+   "April"
+   "May"
+   "June"
+   "July"
+   "August"
+   "September"
+   "October"
+   "November"
+   "December"
+   "January"
+   "February"
+   "March"
+   "April"
+   "May"
+   "June"
+   "July"
+   "August"
+   "September"
+   "October"
+   "November"
+   "December"
+   "Rvbyqvix"
+   "‡deªyqvix"
+   "gvP©"
+   "Gwcªj"
+   "‡g"
+   "Ryb"
+   "RyjvB"
+   "AvMó"
+   "‡m‡Þ¤ei"
+   "A‡±vei"
+   "b‡f¯ei"
+   "wW‡m¤ei"
+   "01"
+   "13"
+   "14"
+   "15"
+   "16"
+   "17"
+   "18"
+   "19"
+   "20"
+   "21"
+   "22"
+   "40"
+   "41"
+   "47"
+   "48"

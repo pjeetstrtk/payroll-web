@@ -1,0 +1,1013 @@
+=== RebPayRollWeb.BL.Loans
+
+-- CPFGPF10
+   "select * from VW_SALARY_DETAILS where PERIOD="
+   " "
+   " and MANAGEMENTID in("
+   ")"
+   "_C"
+   -> String::Replace
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " and SUSPENDSTATUS="
+   "_"
+   " order by DIR_DIVCELL_ID,EMPLOYEEID ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   "CPFGPF10_"
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   " [Suspended] "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".xls"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- BFGI
+   "select * from VW_SALARY_DETAILS where PERIOD="
+   " "
+   " and MANAGEMENTID in("
+   ")"
+   "_C"
+   -> String::Replace
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " order by DIR_DIVCELL_ID,EMPLOYEEID ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   "BFGI_"
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   ".xls"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- CPFGPF_Statement
+   "select * from VW_SALARY_DETAILS where PERIOD="
+   " AND PAYID IN ('14','41') "
+   "select * from VW_SALARY_DETAILS where PERIOD="
+   " AND PAYID IN ('13','40') "
+   " and MANAGEMENTID in("
+   ")"
+   "_C"
+   -> String::Replace
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " order by DIR_DIVCELL_ID,EMPLOYEEID ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   "CPFGPF_INT_"
+   -> this::.ctor
+   "CPFGPF_"
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".xls"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- HB_Statement
+   -> this::GetCurrentPeriod
+   "select * from VW_SALARY_DETAILS where PERIOD="
+   " AND PAYID ='16' "
+   "select * from VW_SALARY_DETAILS where PERIOD="
+   " AND PAYID ='15' "
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " order by DIR_DIVCELL_ID,EMPLOYEEID ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   "HB_INT_"
+   -> this::.ctor
+   "HB_"
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".xls"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- fncLoanLedger
+   "202107"
+   "202206"
+   "-"
+   -> this::fncOpenConnection
+   "SELECT e.NAME,DESIGNATIONID,e.DSG_DESCRIPTION,CADREID,e.CADRE_DESCRIPTION,e.DIR_DIVCELL_ID,e.MANAGEMENTID,e.MGMT_DESCRIPTION,DIRECTORATEID,e.DIR_DESCRIPTION,e.DIV_CEL,e.DIVISIONCELLID,e.DIVCEL_DESCRIPTION,p.payname,adh.*  FROM VW_EMPLOYEE_ALL e inner join TBL_ADVANCE_HEADER  adh ON e.employeeid=adh.employeeid   inner join TBL_PAYCODE p ON adh.payid=p.payid where e.employeeid='"
+   "'  AND  LOAN_REF='"
+   "' order by e.employeeid"
+   -> this::GetTable
+   "Select  round(SUM(AMOUNT),2) T_INT_ACCUME FROM TBL_ADVANCE_INTACCUMM WHERE period<"
+   " AND LOAN_REF='"
+   "'"
+   -> this::GetSingleData
+   "Select PERIOD, round(SUM(AMOUNT),2) T_INT_ACCUME FROM TBL_ADVANCE_INTACCUMM WHERE period>="
+   " AND period<="
+   "  AND LOAN_REF='"
+   "' group by PERIOD"
+   -> this::GetTable
+   "Select ISPRINCIPLE, MIN(TRANDATE) mDATE FROM  TBL_ADVANCE_TRAN   WHERE  LOAN_REF='"
+   "' group by ISPRINCIPLE"
+   -> this::GetTable
+   "ISPRINCIPLE"
+   "Y"
+   "mDate"
+   "ISPRINCIPLE"
+   "N"
+   "mDate"
+   "select employeeid, SUM(CASE WHEN ISPRINCIPLE='Y' THEN  A.AMOUNT ELSE 0 END) AS  T_PRN,SUM(CASE WHEN ISPRINCIPLE='N' THEN  A.AMOUNT ELSE 0 END) AS  T_INT  FROM TBL_ADVANCE_TRAN A,TBL_ADVANCE_HEADER H  WHERE A.LOAN_REF=H.LOAN_REF AND  H.payid=15 and to_number(to_char(H.LOANDATE,'yyyyMM')) <"
+   " AND PERIOD<"
+   "  AND employeeid='"
+   "' and  A.LOAN_REF='"
+   "' GROUP BY employeeid order by employeeid"
+   -> this::GetTable
+   "select  period, SUM(T_prn)as T_PRN, SUM(T_int)as T_INT FROM (SELECT PERIOD,LOAN_REF, SUM(CASE WHEN ISPRINCIPLE='Y' THEN  AMOUNT ELSE 0 END) AS  T_PRN,  SUM(CASE WHEN ISPRINCIPLE='N' THEN  AMOUNT ELSE  0 END) AS  T_INT,SUM(CASE WHEN ISPRINCIPLE='Y' THEN  1 ELSE 0 END) AS  T_PRN_NOS,  SUM(CASE WHEN ISPRINCIPLE='N' THEN  1 ELSE  0 END) AS  T_INT_NOS  FROM TBL_ADVANCE_TRAN WHERE  period>="
+   " AND period<="
+   " and LOAN_REF='"
+   "' GROUP BY LOAN_REF,PERIOD)  GROUP BY period order by period"
+   -> this::GetTable
+   -> this::.ctor
+   -> this::GetCurrentPeriod
+   "EMPLOYEEID"
+   "LOANLDG_ "
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "PAYID"
+   "PAYNAME"
+   "LOAN_REF"
+   "LOANDATE"
+   -> this::isDate
+   "LOANDATE"
+   "P_AMOUNT"
+   "RATE_INTEREST"
+   "INTINONEINSTALLMENT"
+   "P_AMOUNTPAID"
+   "I_AMOUNTPAID"
+   "I_ACCUMMULATED"
+   "P_NOOFINSTALLMENTS"
+   "P_NOOFINSTALLMENTSPAID"
+   "I_NOOFINSTALLMENTS"
+   "I_NOOFINSTALLMENTSPAID"
+   "LOAN_CLOSING_DATE"
+   "INT_CLOSING_DATE"
+   "STARTING_DATE"
+   "ENDING_DATE"
+   "AMOUNT"
+   "MF"
+   "T_PRN"
+   "T_INT"
+   "PERIOD"
+   -> String::Substring
+   "PERIOD="
+   -> DataTable::Select
+   -> tok0x2b000002
+   -> None::.ctor
+   "07"
+   "08"
+   "09"
+   "10"
+   "11"
+   "12"
+   "01"
+   "02"
+   "03"
+   "04"
+   "05"
+   "06"
+   -> None::TryGetValue
+   "July - "
+   "PERIOD"
+   -> String::Substring
+   "August - "
+   "PERIOD"
+   -> String::Substring
+   "September - "
+   "PERIOD"
+   -> String::Substring
+   "October - "
+   "PERIOD"
+   -> String::Substring
+   "November - "
+   "PERIOD"
+   -> String::Substring
+   "December - "
+   "PERIOD"
+   -> String::Substring
+   "January - "
+   "PERIOD"
+   -> String::Substring
+   "February - "
+   "PERIOD"
+   -> String::Substring
+   "March - "
+   "PERIOD"
+   -> String::Substring
+   "April - "
+   "PERIOD"
+   -> String::Substring
+   "May - "
+   "PERIOD"
+   -> String::Substring
+   "June - "
+   "PERIOD"
+   -> String::Substring
+   "T_PRN"
+   "T_INT"
+   "FISCAL_YR"
+   "EMPLOYEEID"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "PAYID"
+   "PAYNAME"
+   "ACCOUNT_NO"
+   "LOAN_REF"
+   "LOANDATE"
+   "P_AMOUNT"
+   "RATE_INTEREST"
+   "INTINONEINSTALLMENT"
+   "P_AMOUNTPAID"
+   "I_AMOUNTPAID"
+   "I_ACCUMMULATED"
+   "P_NOOFINSTALLMENTS"
+   "P_NOOFINSTALLMENTSPAID"
+   "I_NOOFINSTALLMENTS"
+   "I_NOOFINSTALLMENTSPAID"
+   "LOAN_CLOSING_DATE"
+   "INT_CLOSING_DATE"
+   "STARTING_DATE"
+   "ENDING_DATE"
+   "AMOUNT"
+   "MF"
+   "T_PRN"
+   "T_INT"
+   "T_PRN_NOS"
+   "T_INT_NOS"
+   "T_ACM_NOS"
+   "T_ACCUM"
+   "ISPRINCIPLE"
+   "TRANDATE"
+   "DATE_DA_MO_YR"
+   "DESCRIPTION"
+   "DEBIT"
+   "CREDIT"
+   "BALANCE"
+   "INTEREST"
+   "INT_CREDIT"
+   "INT_BALANCE"
+   "REMARKS"
+   "INT_DEDUCT_DATE"
+   "ISPRINCIPLE"
+   "N"
+   "PRN_DEDUCT_DATE"
+   -> this::.ctor
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- HB_Schedule
+   "SELECT e.NAME,DESIGNATIONID,e.DSG_DESCRIPTION,CADREID,e.CADRE_DESCRIPTION,e.DIR_DIVCELL_ID,e.MANAGEMENTID,e.MGMT_DESCRIPTION,DIRECTORATEID,e.DIR_DESCRIPTION,e.DIV_CEL,e.DIVISIONCELLID,e.DIVCEL_DESCRIPTION,adh.employeeid,adh.p_amount,adh.p_amountpaid,adh.payid,p.payname  FROM VW_EMPLOYEE_ALL e inner join (SELECT employeeid,payid, SUM(p_amount)AS p_amount, SUM(p_amountpaid)AS p_amountpaid FROM TBL_ADVANCE_HEADER WHERE payid=15 and to_number(to_char(LOANDATE,'yyyyMM'))<"
+   " GROUP BY employeeid,payid) adh ON e.employeeid=adh.employeeid inner join TBL_PAYCODE p ON adh.payid=p.payid where adh.p_amount>0 order by e.employeeid"
+   -> this::GetTable
+   "SELECT e.NAME,DESIGNATIONID,e.DSG_DESCRIPTION,CADREID,e.CADRE_DESCRIPTION,e.DIR_DIVCELL_ID,e.MANAGEMENTID,e.MGMT_DESCRIPTION,DIRECTORATEID,e.DIR_DESCRIPTION,e.DIV_CEL,e.DIVISIONCELLID,e.DIVCEL_DESCRIPTION,adh.employeeid,adh.p_amount,adh.p_amountpaid,adh.payid,p.payname  FROM VW_EMPLOYEE_ALL e inner join (SELECT employeeid,payid, SUM(OPENING_BAL) AS p_amount,  0 AS p_amountpaid FROM TBL_LOAN_OPENING WHERE PERIOD ="
+   " AND payid=15 and OP_TYPE='P'  GROUP BY employeeid,payid) adh ON e.employeeid=adh.employeeid inner join TBL_PAYCODE p ON adh.payid=p.payid  order by e.employeeid"
+   -> this::GetTable
+   "SELECT employeeid, SUM(p_amount)AS p_amount, SUM(p_amountpaid)AS p_amountpaid FROM TBL_ADVANCE_HEADER WHERE payid=15 and (to_number(to_char(LOANDATE,'yyyyMM')) Between "
+   " AND "
+   ") GROUP BY employeeid"
+   -> this::GetTable
+   "select employeeid, SUM(CASE WHEN ISPRINCIPLE='Y' THEN  A.AMOUNT ELSE 0 END) AS  T_PRN FROM TBL_ADVANCE_TRAN A,TBL_ADVANCE_HEADER H  WHERE A.LOAN_REF=H.LOAN_REF AND  H.payid=15 and to_number(to_char(H.LOANDATE,'yyyyMM')) <"
+   " AND PERIOD<"
+   " GROUP BY employeeid order by employeeid"
+   -> this::GetTable
+   "select employeeid, period, SUM(T_prn) as T_PRN FROM VW_ADVTRAN_PERIOD_SUM WHERE payid='15' AND period>="
+   " AND period<="
+   " GROUP BY employeeid, period order by employeeid, period"
+   -> this::GetTable
+   -> this::.ctor
+   "EMPLOYEEID"
+   "0149"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "PAYID"
+   "PAYNAME"
+   "p_amount"
+   "p_amountpaid"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "p_amount"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "T_PRN"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "p_amount"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "PERIOD"
+   -> String::Substring
+   -> None::.ctor
+   "07"
+   "08"
+   "09"
+   "10"
+   "11"
+   "12"
+   "01"
+   "02"
+   "03"
+   "04"
+   "05"
+   "06"
+   -> None::TryGetValue
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "EMPLOYEEID"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "PAYID"
+   "PAYNAME"
+   "OPENNIG_AMT"
+   "ADJ_AMT"
+   "TOTAL_AMT"
+   "JUL_AMT"
+   "AUG_AMT"
+   "SEP_AMT"
+   "OCT_AMT"
+   "NOV_AMT"
+   "DEC_AMT"
+   "JAN_AMT"
+   "FEB_AMT"
+   "MAR_AMT"
+   "APR_AMT"
+   "MAY_AMT"
+   "JUN_AMT"
+   "FY_TOTAL"
+   "BAL_AMT"
+   "OTHER_AMT1"
+   "OTHER_AMT2"
+   "REMARKS1"
+   "REMARKS2"
+   "OTHERID"
+   -> this::fncOpenConnection
+   "HB_SCH_"
+   -> this::.ctor
+   -> String::Substring
+   " - "
+   -> String::Substring
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Statement of Loan and Deduction FY "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   ".xlsx"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- HB_Schedule_Interest
+   "SELECT EMPLOYEEID,SUM(ACCUM) AS ACCUM, SUM(PAID) PAID, sum(ADDITION) ADDITION FROM (  SELECT L.EMPLOYEEID,round(SUM(A.AMOUNT),2) ACCUM,0 PAID,0 ADDITION  FROM TBL_ADVANCE_INTACCUMM A,TBL_ADVANCE_HEADER L  WHERE A.loan_ref=L.loan_ref  AND L.payid=15 AND PERIOD<"
+   " GROUP BY L.employeeid   UNION ALL  SELECT L.EMPLOYEEID,0 ACCUM,round(SUM(A.AMOUNT),2) PAID,0 ADDITION FROM TBL_ADVANCE_TRAN A,TBL_ADVANCE_HEADER L  WHERE A.loan_ref=L.loan_ref AND L.payid=15 AND ISPRINCIPLE='N' AND  PERIOD<"
+   " GROUP BY L.employeeid  UNION ALL  SELECT L.EMPLOYEEID,0 ACCUM,0 AS PAID ,round(SUM(A.AMOUNT),2) ADDITION FROM TBL_ADVANCE_INTACCUMM A,TBL_ADVANCE_HEADER L  WHERE A.loan_ref=L.loan_ref  AND L.payid=15  AND  PERIOD>="
+   " AND PERIOD<="
+   " GROUP BY L.employeeid)  GROUP BY EMPLOYEEID "
+   -> this::GetTable
+   "SELECT L.EMPLOYEEID,A.Period,round(SUM(A.AMOUNT),2) T_PRN FROM TBL_ADVANCE_TRAN A,TBL_ADVANCE_HEADER L  WHERE A.loan_ref=L.loan_ref AND L.payid=15 AND ISPRINCIPLE='N' AND  PERIOD>="
+   " AND PERIOD<="
+   " GROUP BY L.employeeid ,A.Period"
+   -> this::GetTable
+   "SELECT e.NAME,DESIGNATIONID,e.DSG_DESCRIPTION,CADREID,e.CADRE_DESCRIPTION,e.DIR_DIVCELL_ID,e.MANAGEMENTID,e.MGMT_DESCRIPTION,DIRECTORATEID,e.DIR_DESCRIPTION,e.DIV_CEL,e.DIVISIONCELLID,e.DIVCEL_DESCRIPTION,e.employeeid,adh.INT_ADJ,adh.p_amountpaid   FROM VW_EMPLOYEE_ALL e inner join (SELECT employeeid,payid, SUM(I_ACCUMMULATED) AS INT_ADJ, SUM(i_amountpaid)AS p_amountpaid FROM TBL_ADVANCE_HEADER WHERE payid=15 GROUP BY employeeid,payid) adh ON e.employeeid=adh.employeeid  order by employeeid "
+   -> this::GetTable
+   -> this::.ctor
+   "EMPLOYEEID"
+   "0420"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "15"
+   "INT_ADJ"
+   -> this::ToDouble
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "ACCUM"
+   -> this::ToDouble
+   "PAID"
+   -> this::ToDouble
+   "ADDITION"
+   -> this::ToDouble
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "PERIOD"
+   -> String::Substring
+   -> None::.ctor
+   "07"
+   "08"
+   "09"
+   "10"
+   "11"
+   "12"
+   "01"
+   "02"
+   "03"
+   "04"
+   "05"
+   "06"
+   -> None::TryGetValue
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "EMPLOYEEID"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "PAYID"
+   "PAYNAME"
+   "OPENNIG_AMT"
+   "ADJ_AMT"
+   "TOTAL_AMT"
+   "JUL_AMT"
+   "AUG_AMT"
+   "SEP_AMT"
+   "OCT_AMT"
+   "NOV_AMT"
+   "DEC_AMT"
+   "JAN_AMT"
+   "FEB_AMT"
+   "MAR_AMT"
+   "APR_AMT"
+   "MAY_AMT"
+   "JUN_AMT"
+   "FY_TOTAL"
+   "BAL_AMT"
+   "OTHER_AMT1"
+   "OTHER_AMT2"
+   "REMARKS1"
+   "REMARKS2"
+   "OTHERID"
+   -> this::.ctor
+   -> String::Substring
+   " - "
+   -> String::Substring
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Statement of Loan and Deduction FY "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "HB_SCH_INT_"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   ".xlsx"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- HB_Schedule_Interest_prev
+   "select LOAN_REF from TBL_ADVANCE_TRAN where ISPRINCIPLE='N' and period <"
+   " group by LOAN_REF"
+   "select LOAN_REF from TBL_ADVANCE_TRAN where ISPRINCIPLE='N' and (period between "
+   " and "
+   ")  group by LOAN_REF"
+   "select EMPLOYEEID,round(sum(I.AMOUNT) ,2) AS T_OPENING FROM TBL_ADVANCE_HEADER H ,TBL_ADVANCE_INTACCUMM I WHERE H.LOAN_REF=I.LOAN_REF AND H.PAYID=15  and period <"
+   " AND to_number(to_char(H.ENDING_DATE,'yyyyMM'))>"
+   " AND H.LOAN_REF IN("
+   ")  group by EMPLOYEEID"
+   -> this::GetTable
+   "select EMPLOYEEID,round(sum(I.AMOUNT),2) AS T_OPENING FROM TBL_ADVANCE_HEADER H ,TBL_ADVANCE_INTACCUMM I WHERE H.LOAN_REF=I.LOAN_REF AND H.PAYID=15  and period <"
+   " AND to_number(to_char(H.ENDING_DATE,'yyyyMM'))>"
+   " AND H.LOAN_REF IN("
+   ")  AND H.LOAN_REF NOT IN ("
+   ") group by EMPLOYEEID"
+   -> this::GetTable
+   "SELECT LOAN_REF FROM (SELECT LOAN_REF FROM TBL_ADVANCE_TRAN WHERE ISPRINCIPLE='N' AND period <"
+   " UNION ALL  SELECT LOAN_REF FROM TBL_ADVANCE_TRAN WHERE ISPRINCIPLE='N' AND (period between "
+   " and "
+   ") ) GROUP BY LOAN_REF"
+   "SELECT employeeid,payid, SUM(AMOUNT) AS p_amount, SUM(i_amountpaid)AS p_amountpaid FROM TBL_ADVANCE_HEADER WHERE payid=15 and to_number(to_char(LOANDATE,'yyyyMM'))<"
+   " AND to_number(to_char(ENDING_DATE,'yyyyMM'))>"
+   " AND LOAN_REF IN ("
+   ") GROUP BY employeeid,payid order by  employeeid,payid "
+   "SELECT employeeid,payid, SUM(I_ACCUMMULATED)AS p_amount, SUM(i_amountpaid)AS p_amountpaid FROM TBL_ADVANCE_HEADER WHERE payid=15 and to_number(to_char(LOANDATE,'yyyyMM'))<"
+   " AND to_number(to_char(ENDING_DATE,'yyyyMM'))>"
+   " AND LOAN_REF IN ("
+   ") GROUP BY employeeid,payid order by  employeeid,payid "
+   "SELECT e.NAME,DESIGNATIONID,e.DSG_DESCRIPTION,CADREID,e.CADRE_DESCRIPTION,e.DIR_DIVCELL_ID,e.MANAGEMENTID,e.MGMT_DESCRIPTION,DIRECTORATEID,e.DIR_DESCRIPTION,e.DIV_CEL,e.DIVISIONCELLID,e.DIVCEL_DESCRIPTION,e.employeeid,adh.p_amount,adh.p_amountpaid   FROM VW_EMPLOYEE_ALL e inner join (SELECT employeeid,payid, SUM(I_ACCUMMULATED)AS p_amount, SUM(i_amountpaid)AS p_amountpaid FROM TBL_ADVANCE_HEADER WHERE payid=15 and LOAN_REF IN ("
+   ") GROUP BY employeeid,payid) adh ON e.employeeid=adh.employeeid  order by employeeid "
+   -> this::GetTable
+   -> this::GetTable
+   -> this::GetTable
+   "SELECT employeeid, SUM(I_ACCUMMULATED)AS p_amount, SUM(i_amountpaid)AS p_amountpaid FROM TBL_ADVANCE_HEADER WHERE payid=15 and (to_number(to_char(LOANDATE,'yyyyMM')) Between "
+   " AND "
+   ") GROUP BY employeeid"
+   -> this::GetTable
+   "select EMPLOYEEID, SUM(CASE WHEN ISPRINCIPLE='N' THEN  A.AMOUNT ELSE 0 END) AS  T_PRN FROM TBL_ADVANCE_TRAN A,TBL_ADVANCE_HEADER H  WHERE A.LOAN_REF=H.LOAN_REF AND  H.payid=15 and to_number(to_char(H.LOANDATE,'yyyyMM')) <"
+   " AND PERIOD<"
+   " AND H.LOAN_REF IN ("
+   ") GROUP BY employeeid order by employeeid"
+   -> this::GetTable
+   "select employeeid, period, SUM(T_INT)as T_PRN FROM VW_LOAN_PERIOD_PAID WHERE payid='16' AND period>="
+   " AND period<="
+   " GROUP BY employeeid, period order by employeeid, period"
+   -> this::GetTable
+   -> this::.ctor
+   "EMPLOYEEID"
+   "0420"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "15"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "T_OPENING"
+   "p_amount"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "T_OPENING"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "T_PRN"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "PERIOD"
+   -> String::Substring
+   -> None::.ctor
+   "07"
+   "08"
+   "09"
+   "10"
+   "11"
+   "12"
+   "01"
+   "02"
+   "03"
+   "04"
+   "05"
+   "06"
+   -> None::TryGetValue
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "EMPLOYEEID"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "PAYID"
+   "PAYNAME"
+   "OPENNIG_AMT"
+   "ADJ_AMT"
+   "TOTAL_AMT"
+   "JUL_AMT"
+   "AUG_AMT"
+   "SEP_AMT"
+   "OCT_AMT"
+   "NOV_AMT"
+   "DEC_AMT"
+   "JAN_AMT"
+   "FEB_AMT"
+   "MAR_AMT"
+   "APR_AMT"
+   "MAY_AMT"
+   "JUN_AMT"
+   "FY_TOTAL"
+   "BAL_AMT"
+   "OTHER_AMT1"
+   "OTHER_AMT2"
+   "REMARKS1"
+   "REMARKS2"
+   "OTHERID"
+   -> this::.ctor
+   -> String::Substring
+   " - "
+   -> String::Substring
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Statement of Loan and Deduction FY "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "HB_SCH_INT_"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   ".xlsx"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- CRISCOP
+   "select * from VW_SALARY_DETAILS where PERIOD="
+   " AND PAYID ='19' "
+   " and MANAGEMENTID in("
+   ")"
+   "_C"
+   -> String::Replace
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " order by DIR_DIVCELL_ID,EMPLOYEEID ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   "CRISCOP1a_"
+   -> this::.ctor
+   "CRISCOP_"
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".xls"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- AllLoan_Statement
+   "select * from VW_SALARY_DETAILS where PERIOD="
+   " AND PAYID in('16','41','46') "
+   "select * from VW_SALARY_DETAILS where PERIOD="
+   " AND PAYID in('13','15','19','40','47') "
+   " and DIRECTORATEID='"
+   "'"
+   "_"
+   " and DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " order by DIR_DIVCELL_ID,EMPLOYEEID ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   "LOAN_INT_"
+   -> this::.ctor
+   "LOAN_"
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".xls"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- HB_Certificate
+   "HB_Certificate"
+   "Select E.EMPLOYEEID,   E.NAME,   E.DIR_DESCRIPTION,E.DIVCEL_DESCRIPTION,L.TOTAL_AMT,(nvl(TOTAL_AMT,0)-nvl(TP_PAID,0)-nvl(TSP,0)) as BAL_AMT,  (nvl(L.TACCUM,0)-nvl(L.TSI,0)-nvl(T_I_PAID,0)) AS FY_TOTAL from  (Select  EMPLOYEEID,sum(P_AMOUNT) as TOTAL_AMT,sum(P_AMOUNTPAID) as TP_PAID, sum(nvl(I_AMOUNTPAID,0)+nvl(I_ACCUMMULATED,0)) as T_I_PAID, sum(T_PRN) TSP, sum(T_INT) TSI,sum(T_ACCUM) TACCUM from VW_ADV_LOAN_SUMMERY where EMPLOYEEID='"
+   "' and  PAYID='15' and    ENDING_DATE>SYSDATE group by EMPLOYEEID) L , VW_EMPLOYEE_ALL E where E.EMPLOYEEID=L.EMPLOYEEID and E.EMPLOYEEID='"
+   "'"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vCertToDate"
+   "'"
+   -> DateTime::get_Now
+   "dd/MM/yyyy"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "HBLOAN_CERT_"
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- LoanClosedList
+   -> this::GetFirstDateOfMonth
+   -> this::ToDate
+   -> this::GetLastDateOfMonth
+   -> this::ToDate
+   "SELECT LS.*,EA.NAME,EA.DSG_DESCRIPTION,EA.FATHERNAME,EA.SEX,EA.RELIGION,EA.EMPLOYEETYPEID,EA.REVENUEPROJECTID,EA.DESIGNATIONID,EA.CADREID,EA.PRESENTPAYGRADE,  EA.RETIREENDCONTRACTDATE,EA.DIR_DIVCELL_ID,EA.NID,EA.MOB_NO,EA.CADRE_DESCRIPTION,EA.MANAGEMENTID,EA.MGMT_DESCRIPTION,EA.DIV_CEL, DIRECTORATEID,EA.DIVISIONCELLID,EA.DIR_DESCRIPTION,EA.DIVCEL_DESCRIPTION  FROM VW_ADV_LOAN_SUMMERY LS inner join VW_EMPLOYEE_ALL EA ON LS.EMPLOYEEID=EA.EMPLOYEEID  WHERE LS.ENDING_DATE>="
+   " AND LS.ENDING_DATE<="
+   " "
+   " and EA.MANAGEMENTID in("
+   ")"
+   "_C"
+   -> String::Replace
+   " and EA.DIRECTORATEID='"
+   "'"
+   "_"
+   " and EA.DIR_DIVCELL_ID='"
+   "'"
+   "_"
+   " order by EA.DIR_DIVCELL_ID,EA.EMPLOYEEID ASC"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::PeriodToMonth
+   "LOANCLOSED_"
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".xls"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- .ctor
+   -> Object::.ctor

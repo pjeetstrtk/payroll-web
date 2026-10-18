@@ -1,0 +1,148 @@
+=== RebPayRollWeb.frmDivCellEntryUI
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::fncOpenConnection
+   "select DIRECTORATEID, DIR_DESCRIPTION from TBL_DIRECTORATE order by DIRECTORATEID asc"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "Select Directorate"
+   -> ListItemCollection::Insert
+   -> Control::DataBind
+   -> this::fncReset
+
+-- gvCadreInfo_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> Label::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> this::GetIndexFromDropList
+   -> ListControl::set_SelectedIndex
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   "Update"
+   -> Button::set_Text
+   -> WebControl::set_Enabled
+   -> WebControl::set_Enabled
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Control::get_ViewState
+   "rw"
+   -> GridViewRow::get_RowIndex
+   -> Control::set_Visible
+
+-- btnAddNew_Click
+   -> this::fncReset
+
+-- fncReset
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   -> ListControl::set_SelectedIndex
+   -> Label::set_Text
+   "Save"
+   -> Button::set_Text
+   -> WebControl::set_Enabled
+   -> WebControl::set_Enabled
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Label::set_Text
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+   -> ListControl::get_SelectedValue
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> Control::get_ViewState
+   "IsAdd"
+   "-"
+   "select * from TBL_DIVISIONSECTIONCELL where DIVCEL_DESCRIPTION='"
+   "'"
+   -> this::GetTable
+   "Div Cell Description Already Exists"
+   -> Label::set_Text
+   -> Color::get_Red
+   -> WebControl::set_ForeColor
+   -> Control::Focus
+   -> Label::set_Text
+   "INSERT INTO TBL_DIVISIONSECTIONCELL (DIRECTORATEID, DIVISIONCELLID, DIVCEL_DESCRIPTION, DIR_DIVCELL_ID)  VALUES ('"
+   "' ,'"
+   "','"
+   "','"
+   "')"
+   -> this::ExecuteStatement_TXN
+   "Inserted Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> Control::DataBind
+   "select * from TBL_DIVISIONSECTIONCELL where DIR_DIVCELL_ID<>'"
+   -> Label::get_Text
+   "' and DIVCEL_DESCRIPTION='"
+   "'"
+   -> this::GetTable
+   "Div Cell Description Already Exists"
+   -> Label::set_Text
+   -> Color::get_Red
+   -> WebControl::set_ForeColor
+   -> Control::Focus
+   -> Label::set_Text
+   "update TBL_DIVISIONSECTIONCELL set DIVCEL_DESCRIPTION='"
+   "' where DIR_DIVCELL_ID='"
+   -> Label::get_Text
+   "'"
+   -> this::ExecuteStatement_TXN
+   "Updated Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> Control::get_ViewState
+   "rw"
+   -> GridView::set_SelectedIndex
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::set_Text
+
+-- gvCadreInfo_RowDataBound
+
+-- btnEdit_Click
+   -> Control::get_NamingContainer
+   "lblCustomerID"
+   -> Control::FindControl
+   -> Label::get_Text
+   -> HtmlInputControl::set_Value
+   "btnUpdate"
+   -> Control::FindControl
+   -> Control::set_Visible
+
+-- delete
+   -> Control::get_NamingContainer
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   "Delete From TBL_DIVISIONSECTIONCELL where DIR_DIVCELL_ID="
+   -> this::ExecuteStatement_TXN
+   "Deleted Successfully"
+   -> Label::set_Text
+   -> this::fncReset
+
+-- btnDelete_Click
+   -> this::delete
+
+-- btnUpdate_Click
+
+-- drpDIRECTORATEID_SelectedIndexChanged
+   -> ListControl::get_SelectedValue
+   -> TextBox::get_Text
+   "-"
+   -> Label::set_Text
+
+-- .ctor
+   -> Page::.ctor

@@ -1,0 +1,327 @@
+=== RebPayRollWeb.frmDonation
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::fncOpenConnection
+   -> this::fncReset
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   -> Label::set_Text
+   " For Month Of "
+   -> Label::get_Text
+   -> this::PeriodToMonth
+   -> Label::set_Text
+   -> this::fncBind
+
+-- fncBind
+   "SELECT FM.FST_ID, FST_PERIOD, WITH_SALARY, FM.BASIC_PRC, AMOUNT, AD, MINIMUM, MAXIMUM, BASIC_MONTH, BASIC_DAY, KPI_DONATION, P_NAME ,F.PAYID,F.FST_NAME FROM TBL_FESTIVAL_MONTH FM,TBL_FESTIVAL F where FM.FST_ID=F.FST_ID AND FM.FST_ID=8 AND FM.FST_PERIOD="
+   -> Label::get_Text
+   -> this::GetTable
+   "FST_NAME"
+   -> Label::set_Text
+   "BASIC_PRC"
+   -> TextBox::set_Text
+   "MINIMUM"
+   -> TextBox::set_Text
+   "KPI_DONATION"
+   -> TextBox::set_Text
+   -> Control::set_Visible
+   -> this::fncBindDetails
+
+-- fncBindDetails
+   "select S.*,E.NAME,E.DSG_DESCRIPTION,E.DIR_DIVCELL_ID ,E.PRESENTPAYGRADE from SPECIALPAY_SEPERATE_TRAN S , VW_EMPLOYEE_ALL E where S.EMPLOYEEID=E.EMPLOYEEID AND S.PERIOD="
+   -> Label::get_Text
+   " AND  S.FST_ID=8"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- btnAddNew_Click
+   -> this::fncReset
+
+-- fncReset
+   -> TextBox::set_Text
+   -> TextBox::set_Text
+   "Save"
+   -> LinkButton::set_Text
+   -> Control::get_ViewState
+   "IsAdd"
+   -> Label::set_Text
+
+-- btnSave_Click
+   -> this::fncSave
+
+-- fncSave
+   -> Label::set_Text
+   "8"
+   -> Label::get_Text
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> CheckBox::get_Checked
+   "N"
+   "Y"
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> this::ToDouble
+   "Please Input Valid Amount"
+   -> Label::set_Text
+   "Please Input Valid Amount"
+   -> Label::set_Text
+   "SELECT FM.*,F.FST_NAME ,F.RELIGION,F.PAYID FROM TBL_FESTIVAL_MONTH FM,TBL_FESTIVAL F where FM.FST_ID=F.FST_ID AND FM.FST_PERIOD='"
+   "' AND FM.FST_ID='"
+   "'"
+   -> this::GetTable
+   "RELIGION"
+   -> Label::set_Text
+   "FST_NAME"
+   "PAYID"
+   -> Label::set_Text
+   "PAYID"
+   "INSERT INTO TBL_FESTIVAL_MONTH (FST_ID, FST_PERIOD, BASIC_PRC,WITH_SALARY,MINIMUM,BASIC_DAY,P_NAME,KPI_DONATION) VALUES ('"
+   "' ,'"
+   "' ,'"
+   "','"
+   "','"
+   "','"
+   "','"
+   "','"
+   "')"
+   -> this::ExecuteStatement_TXN
+   "Error On Updating"
+   -> Label::set_Text
+   -> Color::get_Red
+   -> WebControl::set_ForeColor
+   "Inserted Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> Thread::Sleep
+   "SELECT * FROM TBL_FESTIVAL F where FST_ID='"
+   "'"
+   -> this::GetTable
+   "RELIGION"
+   "FST_NAME"
+   "PAYID"
+   -> Label::set_Text
+   -> this::fncProcessPaySlip
+   -> Thread::Sleep
+   -> this::fncBind
+   -> this::fncBindDetails
+   -> Control::set_Visible
+   "update TBL_FESTIVAL_MONTH set BASIC_PRC='"
+   "',MINIMUM='"
+   "',BASIC_DAY='"
+   "',WITH_SALARY='"
+   ",P_NAME='"
+   "',KPI_DONATION='"
+   "'  where FST_PERIOD='"
+   "' AND FST_ID="
+   -> this::ExecuteStatement_TXN
+   "Error On Updating"
+   -> Label::set_Text
+   -> Color::get_Red
+   -> WebControl::set_ForeColor
+   "Updated Successfully"
+   -> Label::set_Text
+   -> Color::get_Green
+   -> WebControl::set_ForeColor
+   -> this::fncBind
+   -> this::fncProcessPaySlip
+   -> Thread::Sleep
+   -> this::fncBindDetails
+   -> Control::set_Visible
+
+-- gvCadreInfo_RowDataBound
+
+-- btnEdit_Click
+
+-- btnUpdate_Click
+
+-- btnSearch_Click
+   -> this::fncSearchEmp
+
+-- fncSearchEmp
+   -> Control::set_Visible
+   -> Label::set_Text
+   -> TextBox::get_Text
+   "select * from VW_EMPLOYEE_ALL where EMPLOYEEID='"
+   "'"
+   -> this::GetTable
+   "NOOFINCREMENTSPAID"
+   -> Label::set_Text
+   -> Control::set_Visible
+   "PRESENTPAYGRADE"
+   -> this::ToDouble
+   -> Label::get_Text
+   -> this::GetPayScaleBasic
+   "EMPLOYEEID"
+   -> Label::set_Text
+   "DESIGNATIONID"
+   "NAME"
+   " ["
+   "DSG_DESCRIPTION"
+   " ]"
+   -> Label::set_Text
+   -> String::PadLeft
+   -> Label::set_Text
+   "DIR_DIVCELL_ID"
+   -> Label::set_Text
+   "8"
+   "Select AMOUNT FROM SPECIALPAY_SEPERATE_TRAN  WHERE PERIOD ="
+   -> Label::get_Text
+   " AND EMPLOYEEID='"
+   -> TextBox::get_Text
+   "' AND FST_ID="
+   -> this::GetTable
+   "AMOUNT"
+   -> TextBox::set_Text
+   "Bonus Information Not Found"
+   -> Label::set_Text
+   "Please Input Valid Employee ID"
+   -> Label::set_Text
+
+-- fncProcessPaySlip
+   -> Control::set_Visible
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> TextBox::get_Text
+   "D"
+   "8"
+   -> this::GetCurrentPeriod
+   "Select EMPLOYEEID,AMOUNT FROM  TBL_EMP_LAST_SALARY"
+   -> this::GetTable
+   "DELETE FROM SPECIALPAY_SEPERATE_TRAN  WHERE PERIOD = "
+   -> Label::get_Text
+   "  AND FST_ID="
+   -> this::ExecuteStatement_TXN
+   "Error"
+   -> Label::set_Text
+   -> CheckBox::get_Checked
+   "N"
+   "Y"
+   "Select * from VW_EMPLOYEE_ALL WHERE ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL))"
+   -> this::GetTable
+   -> Label::get_Text
+   -> String::Substring
+   -> String::Substring
+   -> TextBox::get_Text
+   -> this::ToDouble
+   -> String::Substring
+   "NOOFINCREMENTSPAID"
+   "EMPLOYEEID"
+   "NAME"
+   "DSG_DESCRIPTION"
+   "PRESENTPAYGRADE"
+   "JOININGDATETOPOST"
+   -> this::ToDateAsDate
+   "CLASS"
+   -> this::GetPayScaleBasic
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "AMOUNT"
+   "1"
+   "2"
+   -> Math::Round
+   "INSERT INTO SPECIALPAY_SEPERATE_TRAN(PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AD, AMOUNT, PARTICULARS, WITHPAYSLIP, IS_CLOSED, SPECIAL_PAY, PERIOD, FST_ID) "
+   " VALUES("
+   ","
+   ",'"
+   "', "
+   ",'"
+   "', "
+   "0.00"
+   ",'"
+   "', '"
+   "', 'N', 'N', "
+   ", "
+   ")"
+   -> this::ExecuteStatement_TXN
+   "No Bonus"
+   -> this::fncChangeProgressValue
+   " Employee ["
+   " Bonus]  Total : "
+   "0.00"
+   -> Label::set_Text
+
+-- fncChangeProgressValue
+   "lblWait"
+   -> Control::FindControl
+   -> Label::set_Text
+
+-- btnEdit_Command
+
+-- btnUpdateEmp_Click
+   -> Label::set_Text
+   -> Label::get_Text
+   -> TextBox::get_Text
+   -> this::ToDouble
+   "Please Input Valid Amount"
+   -> Label::set_Text
+   "8"
+   "Select AMOUNT FROM SPECIALPAY_SEPERATE_TRAN  WHERE PERIOD ="
+   -> Label::get_Text
+   " AND EMPLOYEEID='"
+   -> TextBox::get_Text
+   "' AND FST_ID="
+   -> this::GetTable
+   "Update SPECIALPAY_SEPERATE_TRAN set AMOUNT="
+   " where PERIOD ="
+   -> Label::get_Text
+   " AND EMPLOYEEID='"
+   -> TextBox::get_Text
+   "' AND FST_ID="
+   -> this::ExecuteStatement_TXN
+   "Error.."
+   -> Label::set_Text
+   "Update Successfully"
+   -> Label::set_Text
+   -> this::fncBindDetails
+   -> Label::get_Text
+   -> String::Substring
+   -> String::Substring
+   -> CheckBox::get_Checked
+   "N"
+   "Y"
+   "INSERT INTO SPECIALPAY_SEPERATE_TRAN(PAYYEAR, PAYMONTH, EMPLOYEEID, PAYID, AD, AMOUNT, PARTICULARS, WITHPAYSLIP, IS_CLOSED, SPECIAL_PAY, PERIOD, FST_ID) "
+   " VALUES("
+   ","
+   ",'"
+   -> TextBox::get_Text
+   "', "
+   ",'D', "
+   "0.00"
+   ",'"
+   "', '"
+   "', 'N', 'N', "
+   ", "
+   ")"
+   -> this::ExecuteStatement_TXN
+   "Error.."
+   -> Label::set_Text
+   -> this::fncBindDetails
+   "Insert Successfully"
+   -> Label::set_Text
+
+-- grdEmpBonus_SelectedIndexChanged
+   -> GridView::get_SelectedRow
+   -> TableRow::get_Cells
+   -> TableCell::get_Text
+   -> TextBox::set_Text
+   -> this::fncSearchEmp
+
+-- drpFST_ID_SelectedIndexChanged
+   -> Control::set_Visible
+
+-- .ctor
+   -> Page::.ctor

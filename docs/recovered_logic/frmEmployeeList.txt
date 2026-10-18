@@ -1,0 +1,229 @@
+=== RebPayRollWeb.frmEmployeeList
+
+-- Page_Load
+   -> this::fncCheckPermission
+   -> Page::get_IsPostBack
+   -> this::fncOpenConnection
+   "select RLG_ID, RLG_NAME from TBL_RELIGION order by RLG_ID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "Any Religion"
+   -> ListItemCollection::Insert
+   "select EMP_STATUS_ID, EMP_STATUS_DESC from TBL_EMP_STATUS order by EMP_STATUS_ID"
+   -> this::GetTable
+   -> this::LoadDropDown
+   "Any Status"
+   -> ListItemCollection::Insert
+   "select DESIGNATIONID, DSG_DESCRIPTION from TBL_DESIGNATION order by DSG_DESCRIPTION"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "Any Designation"
+   -> ListItemCollection::Insert
+   "select CADREID, CADRE_DESCRIPTION from TBL_CADRE order by CADREID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "Any Cadre"
+   -> ListItemCollection::Insert
+   "select DIR_DIVCELL_ID, DIR_DIVCELL_ID||' '||DIVCEL_DESCRIPTION as DIVCEL_DESCRIPTION from TBL_DIVISIONSECTIONCELL order by DIRECTORATEID"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "All Div Cell "
+   -> ListItemCollection::Insert
+   "Select EMPLOYEETYPEID,EMP_TYPE_DESCRIPTION From TBL_EMPLOYEETYPE order by EMP_TYPE_DESCRIPTION"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "All Type"
+   -> ListItemCollection::Insert
+   "Select * From tbl_Accommodation"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "Any Accomodation"
+   -> ListItemCollection::Insert
+   "Select  REVENUEPROJECTID,'[' || REVENUEPROJECTID ||'] -' || REVENUE_PROJ_DESCRIPTION, REVENUE_PROJ_DESCRIPTION  From TBL_PROJECT_REVENUE Order By REVENUE_PROJ_DESCRIPTION"
+   -> this::GetTable
+   -> this::LoadDropDownStr
+   "Any Revenue Project"
+   -> ListItemCollection::Insert
+   -> ListItemCollection::Clear
+   "All"
+   -> this::fncSearchEmployee
+
+-- fncSearchEmployee
+   -> this::fncOpenConnection
+   -> Page::get_Application
+   "CURRENT_PERIOD"
+   "SELECT * FROM VW_EMPLOYEE_ALL  where ((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL))"
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+   -> TextBox::set_Text
+
+-- Button1_Click
+   -> ConfigurationManager::get_ConnectionStrings
+   "ConnectionString"
+   -> ConnectionStringSettings::get_ConnectionString
+   -> OracleConnection::.ctor
+   -> DbConnection::Open
+   "Select * from tbl_bank"
+   -> OracleDataAdapter::.ctor
+   -> DataTable::.ctor
+   -> DbDataAdapter::Fill
+   -> ReportDocument::.ctor
+   -> Page::get_Server
+   "rpt2.rpt"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::Load
+   -> ReportDocument::SetDataSource
+   -> Page::get_Server
+   "~/pdfreports/BiWeeklyReport.pdf"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   "<script language='javascript'>window.open('D:/BiWeeklyReport.pdf');</script>"
+   -> Page::get_Response
+   -> HttpResponse::Write
+   -> Page::get_Response
+   "<script>window.open('pdfreports/BiWeeklyReport.pdf','_blank')</script>"
+   -> HttpResponse::Write
+
+-- btnSearch_Click
+   -> this::fncSearch
+
+-- fncSearch
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_Text
+   -> TextBox::get_Text
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_Text
+   -> String::Substring
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   -> TextBox::get_Text
+   -> ListControl::get_SelectedIndex
+   -> ListControl::get_SelectedValue
+   "(1=1)"
+   -> this::fncOpenConnection
+   -> ListControl::get_SelectedValue
+   "C"
+   "Select CURR_PERIOD from TBL_COMPANY_INFO"
+   -> this::GetSingleData
+   "(((to_char(RETIREENDCONTRACTDATE,'yyyymm')>="
+   " ) or (RETIREENDCONTRACTDATE IS NULL)))"
+   " AND (EMPLOYEEID='"
+   "')"
+   " AND (DESIGNATIONID='"
+   "')"
+   " AND (PRESENTPAYGRADE ='"
+   "')"
+   " AND (NID Like '%"
+   "%')"
+   " AND (MOB_NO Like '%"
+   "%')"
+   " AND (M_STAUS ='"
+   "')"
+   " AND (NAME Like '%"
+   "%')"
+   " AND (SEX = '"
+   "')"
+   " AND (RELIGION = '"
+   "')"
+   " AND (SUSPENDSTATUS= '"
+   "')"
+   " AND (ACCOMODATION = '"
+   "')"
+   " AND (EMPLOYEETYPEID = '"
+   "')"
+   " AND (REVENUEPROJECTID = '"
+   "')"
+   " AND (CADREID = '"
+   "')"
+   " AND (ACCOUNT_NUMBER Like '%"
+   "%')"
+   " AND (DIR_DIVCELL_ID  = '"
+   "')"
+   "SELECT * FROM VW_EMPLOYEE_ALL Where "
+   " order by EMPLOYEEID"
+   -> TextBox::set_Text
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- BB_Click
+   -> ListControl::get_SelectedIndex
+   -> Page::get_Response
+   -> ListControl::get_SelectedValue
+   -> HttpResponse::Write
+
+-- SqlDataSource1_Selected
+   -> SqlDataSourceStatusEventArgs::get_AffectedRows
+   " Employees"
+   -> Label::set_Text
+
+-- btnPrint_Click
+   -> ConfigurationManager::get_ConnectionStrings
+   "ConnectionString"
+   -> ConnectionStringSettings::get_ConnectionString
+   -> OracleConnection::.ctor
+   -> DbConnection::Open
+   -> TextBox::get_Text
+   -> OracleDataAdapter::.ctor
+   -> DataTable::.ctor
+   -> DbDataAdapter::Fill
+   -> ReportDocument::.ctor
+   -> Page::get_Server
+   "~/Reports/RptListOfEmployeeBasic.rpt"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::Load
+   -> ReportDocument::SetDataSource
+   -> Page::get_Server
+   "~/pdfreports/BiWeeklyReport.pdf"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+   -> Page::get_Response
+   "<script>window.open('pdfreports/BiWeeklyReport.pdf','_blank')</script>"
+   -> HttpResponse::Write
+
+-- btnEmpEdit_Click
+   -> CommandEventArgs::get_CommandArgument
+   -> Page::get_Response
+   "frmEmployeeEditUI.aspx?EMPID="
+   -> HttpResponse::Redirect
+
+-- btnView_Click
+   -> CommandEventArgs::get_CommandArgument
+   -> Page::get_Response
+   "frmEmployeeViewUI.aspx?EMPID="
+   -> HttpResponse::Redirect
+
+-- grdEmpList_PageIndexChanged
+
+-- grdEmpList_PageIndexChanging
+   -> GridViewPageEventArgs::get_NewPageIndex
+   -> GridView::set_PageIndex
+   -> this::fncBind
+
+-- fncBind
+   -> TextBox::get_Text
+   -> this::GetTable
+   -> BaseDataBoundControl::set_DataSource
+   -> Control::DataBind
+
+-- .ctor
+   -> Page::.ctor

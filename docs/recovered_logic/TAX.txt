@@ -1,0 +1,217 @@
+=== RebPayRollWeb.BL.TAX
+
+-- TAX_Schedule
+   -> this::fncOpenConnection
+   "SELECT e.EMPLOYEEID, e.NAME,DESIGNATIONID,e.DSG_DESCRIPTION,CADREID,e.CADRE_DESCRIPTION,e.DIR_DIVCELL_ID,e.MANAGEMENTID,e.MGMT_DESCRIPTION,DIRECTORATEID,e.DIR_DESCRIPTION,e.DIV_CEL,e.DIVISIONCELLID,e.DIVCEL_DESCRIPTION,e.SEX,e.TIN  FROM VW_EMPLOYEE_ALL e where EMPLOYEEID IN (select employeeid from TBL_PAYTRAN_DETAILS WHERE payid='84' AND AMOUNT>0 AND  period>="
+   " AND period<="
+   ")  order by e.employeeid"
+   -> this::GetTable
+   "select employeeid, period, SUM(case when AD='A' then -AMOUNT else AMOUNT end )as T_PRN FROM TBL_PAYTRAN_DETAILS WHERE payid='84' AND period>="
+   " AND period<="
+   " GROUP BY employeeid, period order by employeeid, period"
+   -> this::GetTable
+   -> this::.ctor
+   "EMPLOYEEID"
+   "0149"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "TIN"
+   "SEX"
+   "EMPLOYEEID='"
+   "'"
+   -> DataTable::Select
+   -> tok0x2b000002
+   "PERIOD"
+   -> String::Substring
+   -> None::.ctor
+   "07"
+   "08"
+   "09"
+   "10"
+   "11"
+   "12"
+   "01"
+   "02"
+   "03"
+   "04"
+   "05"
+   "06"
+   -> None::TryGetValue
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "T_PRN"
+   "EMPLOYEEID"
+   "NAME"
+   "DESIGNATIONID"
+   "DSG_DESCRIPTION"
+   "CADREID"
+   "CADRE_DESCRIPTION"
+   "DIR_DIVCELL_ID"
+   "MANAGEMENTID"
+   "MGMT_DESCRIPTION"
+   "DIRECTORATEID"
+   "DIR_DESCRIPTION"
+   "DIV_CEL"
+   "DIVISIONCELLID"
+   "DIVCEL_DESCRIPTION"
+   "PAYID"
+   "PAYNAME"
+   "OPENNIG_AMT"
+   "ADJ_AMT"
+   "TOTAL_AMT"
+   "JUL_AMT"
+   "AUG_AMT"
+   "SEP_AMT"
+   "OCT_AMT"
+   "NOV_AMT"
+   "DEC_AMT"
+   "JAN_AMT"
+   "FEB_AMT"
+   "MAR_AMT"
+   "APR_AMT"
+   "MAY_AMT"
+   "JUN_AMT"
+   "FY_TOTAL"
+   "BAL_AMT"
+   "OTHER_AMT1"
+   "OTHER_AMT2"
+   "REMARKS1"
+   "REMARKS2"
+   "OTHERID"
+   -> this::.ctor
+   -> String::Substring
+   " - "
+   -> String::Substring
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'Income Tax Statement For The  Financial Year "
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vFinS"
+   "'"
+   -> String::Substring
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "vFinE"
+   "'"
+   -> String::Substring
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "TAX_SCH"
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- TAX_Statement
+   "select * from VW_SALARY_DETAILS where PERIOD='"
+   "' AND PAYID='84'"
+   "000"
+   " and DIRECTORATEID='"
+   "'"
+   " order by DIR_DESCRIPTION, EMPLOYEEID"
+   -> this::fncOpenConnection
+   -> this::GetTable
+   -> this::.ctor
+   -> this::PeriodToMonth
+   -> ReportDocument::get_DataDefinition
+   -> DataDefinition::get_FormulaFields
+   "v_monthOf"
+   "'"
+   "'"
+   -> FormulaFieldDefinition::set_Text
+   -> ReportDocument::SetDataSource
+   "TAX_STM_"
+   "pdfreports/"
+   "_"
+   -> this::fncGetPrintFileName
+   ".pdf"
+   -> Page::get_Server
+   "~/"
+   -> HttpServerUtility::MapPath
+   -> ReportDocument::ExportToDisk
+
+-- CalcTax
+   "Select * from vw_employee_all where employeeid='"
+   "' "
+   -> this::GetTable
+   "EMPLOYEEID"
+   "LOCATIONID"
+   "Select * from TBL_LOCATION where LOCATIONID='"
+   "'"
+   -> this::GetTable
+   "MIN_TAX"
+   -> this::ToDouble
+   "PRESENTPAYGRADE"
+   "DIR_DIVCELL_ID"
+   "DESIGNATIONID"
+   "SEX"
+   "NOOFINCREMENTSPAID"
+   -> this::GetPayScaleBasic
+   -> this::GetCurrentPeriod
+   "DATEOFFIRSTJOINING"
+   -> this::isDate
+   -> this::ToDateAsDate
+   "30-July-2021"
+   "01-July-2020"
+   -> DateTime::get_Year
+   -> DateTime::get_Month
+   -> DateTime::get_Year
+   -> DateTime::get_Month
+   -> this::FractionRound
+   "Select * from TBL_POLICY where PAYCODE='101' and EFF_PERIOD =(select max(EFF_PERIOD) from TBL_POLICY where EFF_PERIOD<="
+   ")  order by FIX_AMOUNT"
+   -> this::GetTable
+   "BASIC_FROM"
+   "BASIC_TO"
+   "Rate"
+   "F"
+   -> Math::Round
+   -> Math::Round
+   -> Math::Round
+   -> this::FractionRound
+   "F"
+   "Update TBL_EMP_LAST_SALARY set AMOUNT="
+   " Where PAYID='84' AND EMPLOYEEID ='"
+   "'"
+   -> this::ExecuteStatement_TXN
+   "INSERT INTO TBL_EMP_LAST_SALARY (   PAYYEAR, PAYMONTH, EMPLOYEEID,    PAYID, AMOUNT, AD,   PERIOD,ARREAR)  VALUES ( 10,10 ,'"
+   "' ,'84' ,"
+   ",'D' ,201805,'N' )"
+   -> this::ExecuteStatement_TXN
+   "delete from TBL_EMP_LAST_SALARY  Where PAYID='84' AND EMPLOYEEID ='"
+   "'"
+   -> this::ExecuteStatement_TXN
+
+-- .ctor
+   -> Object::.ctor
