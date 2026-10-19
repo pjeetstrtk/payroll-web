@@ -11,10 +11,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // CHANGE THIS PASSWORD after the first login (menu: Change Password).
-        DB::table('tbl_user')->updateOrInsert(
-            ['emp_id' => 'admin'],
-            ['user_name' => 'Administrator', 'user_pass' => Hash::make('Admin@12345'), 'user_type' => 'ADM', 'is_active' => 'Y']
-        );
+        
 
         if (! DB::table('tbl_company_info')->exists()) {
             DB::table('tbl_company_info')->insert(['company_name' => 'BREB', 'curr_period' => (int) date('Ym')]);

@@ -26,7 +26,7 @@ return new class extends Migration
         Schema::create('tbl_user', function (Blueprint $t) {
             $t->string('emp_id', 20)->primary();
             $t->string('user_name', 100);
-            $t->integer('user_pass');                 // bcrypt
+            $t->string('user_pass');                 // bcrypt
             $t->string('user_type', 5)->default('USR'); // ADM, MNG, USR
             $t->char('is_active', 1)->default('Y');
         });
@@ -50,7 +50,7 @@ return new class extends Migration
             $t->string('managementid', 10)->primary();
             $t->string('mgmt_description');
         });
-        Schema::create('tbl_designation', function (Blueprint $t) {
+                                                            Schema::create('tbl_designation', function (Blueprint $t) {
             $t->string('designationid', 10)->primary();
             $t->string('dsg_description');
             $t->string('class', 10)->nullable();
